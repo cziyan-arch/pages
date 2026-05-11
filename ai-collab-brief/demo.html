@@ -379,8 +379,42 @@ body {
 }
 
 @media (max-width: 900px) {
+  body { padding: 20px 12px; }
+  .page-header h1 { font-size: 20px; }
+  .page-header .subtitle { font-size: 13px; }
+  .page-header .desc { font-size: 12px; }
   .comparison { grid-template-columns: 1fr; }
-  .summary-grid { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .stage { margin-bottom: 36px; }
+  .stage-header { margin-bottom: 14px; }
+  .stage-title { font-size: 16px; }
+  .stage-connector { display: none; }
+  .panel { border-radius: 10px; }
+  .panel-before { margin-bottom: 12px; }
+  .chat-area { padding: 10px 10px; }
+  .bubble { font-size: 13px; padding: 7px 10px; }
+  .msg-name { font-size: 9px; }
+  .avatar { width: 28px; height: 28px; font-size: 9px; }
+  .output-area { padding: 14px 14px; }
+  .card-title { font-size: 10px; }
+  .item-block { font-size: 12px; padding: 5px 8px; }
+  .field-row { font-size: 12px; }
+  .field-label { min-width: 60px; font-size: 11px; }
+  .summary-section { padding: 20px 16px; }
+  .summary-section h2 { font-size: 15px; }
+  .summary-card { padding: 14px 10px; }
+  .summary-card .num { font-size: 24px; }
+  .summary-card .unit { font-size: 11px; }
+  .label-bar { font-size: 10px; letter-spacing: 1px; padding: 6px 12px; }
+}
+@media (max-width: 400px) {
+  body { padding: 12px 8px; }
+  .page-header h1 { font-size: 18px; }
+  .comparison { gap: 10px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .msg-content { max-width: 78%; }
+  .bubble { font-size: 12px; }
+  .output-header h3 { font-size: 13px; }
 }
 </style>
 </head>
