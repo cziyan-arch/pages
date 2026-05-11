@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客户AI协作平台 · 思考Brief</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f8f9fa;
+    color: #1a1a1a;
+    line-height: 1.8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 48px 40px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #111;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  .intro {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 36px;
+    padding: 16px 20px;
+    background: #f5f7fa;
+    border-radius: 8px;
+  }
+  .section {
+    margin-bottom: 36px;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 3px solid #2563eb;
+  }
+  .section p {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  .highlight {
+    background: #fffbeb;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border-left: 3px solid #f59e0b;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+  .layer-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .layer-card .layer-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1e40af;
+    margin-bottom: 6px;
+  }
+  .layer-card .ideal {
+    font-size: 14px;
+    color: #166534;
+    margin-bottom: 4px;
+  }
+  .layer-card .current {
+    font-size: 14px;
+    color: #991b1b;
+  }
+  .bullet-list {
+    margin: 12px 0;
+    padding-left: 20px;
+  }
+  .bullet-list li {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  .analogy-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .analogy-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #1e3a5f;
+  }
+  .question-block {
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .question-block .q-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 4px;
+  }
+  .question-block .q-desc {
+    font-size: 14px;
+    color: #666;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 13px;
+    color: #999;
+    text-align: right;
+  }
+  @media (max-width: 600px) {
+    .container { padding: 32px 24px; }
+    h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>客户AI协作平台 · 思考Brief</h1>
+  <div class="subtitle">Chris · 2026.05.11</div>
+
+  <div class="intro">
+    这不是一个产品需求文档，而是一个思考起点。我希望几个对AI有基本认知的一线同事帮我一起想这个问题。下面是我的思考路径和初步判断，欢迎挑战、补充、推翻。
+  </div>
+
+  <div class="section">
+    <div class="section-title">一、起点：一个观察</div>
+    <p>最近重度使用AI coding之后，有一个越来越强的判断：一个组织的AI化程度，核心指标是"AI能触达多少业务上下文"。</p>
+    <p>对内部文档做结构化、打通权限，这些是基本功。但对我们这样的乙方来说，真正的卡点不在内部——而在客户侧。</p>
+    <p>我们最核心的业务输入（brief、反馈、需求变更、决策逻辑），绝大部分通过当面沟通、微信对话、邮件这些传统方式进来。这些信息对AI完全不可见。</p>
+    <div class="highlight">内部做得再好，源头的元数据进不来，AI就只能在半真空里工作。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">二、一个类比</div>
+    <p>我最近训练自己的AI写作助手时经历了一个过程：AI问我问题，我回答，AI把我的回答蒸馏成结构化的认知框架。我什么都没"填表"，只是在自然对话，但产出是高度结构化的。</p>
+    <div class="highlight">AI采集信息的最佳方式不是让人填表，而是让人自然表达，AI在背后完成结构化。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">三、完整架构：乙方AI化的五层模型</div>
+    <p>从客户到交付，信息流转应该经过五层：</p>
+
+    <div class="layer-card">
+      <div class="layer-name">第1层 · 信号采集</div>
+      <div class="ideal">理想：客户的所有业务信号在产生瞬间被无损捕获，AI立刻可见</div>
+      <div class="current">现状：会议无记录、微信碎片化、电话零记录，全存在AM脑子里</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-name">第2层 · 蒸馏结构化</div>
+      <div class="ideal">理想：原始信号在数分钟内被翻译成结构化业务上下文</div>
+      <div class="current">现状：完全依赖人脑，交接靠口述，质量取决于个人水平</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-name">第3层 · 上下文底座</div>
+      <div class="ideal">理想：统一的、实时更新的知识库，AI可直接查询和推理</div>
+      <div class="current">现状：碎片化分布在星合、Excel、人脑、散落文档中</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-name">第4层 · AI工作流执行</div>
+      <div class="ideal">理想：AI基于完整上下文产出80-90%初稿，人审核调整</div>
+      <div class="current">现状：AI工具存在但缺乏上下文，在信息半真空中工作</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-name">第5层 · 交付与反馈闭环</div>
+      <div class="ideal">理想：客户反馈自动捕获，回流充实上下文底座</div>
+      <div class="current">现状：反馈通过同样的有损通道回来，无系统化捕获</div>
+    </div>
+
+    <div class="highlight">核心判断：大多数人（包括我们目前）在投入第四层（更好的AI工具），但饿死了第一到三层。瓶颈在上游，不在下游。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">四、解法方向：客户AI协作平台</div>
+    <p>如果有一个平台，能同时解决第一层和第二层的问题：</p>
+    <ul class="bullet-list">
+      <li>客户在平台上表达需求 → 完成信号采集</li>
+      <li>平台实时蒸馏 → 完成结构化</li>
+      <li>产出直接沉入上下文底座 → 喂养下游所有工作流</li>
+    </ul>
+    <p>它不是一个"给客户用的工具"，而是客户和我们协作的界面本身。协作过程自然产出结构化数据，不需要任何人额外做"录入"动作。</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">五、为什么这件事的优先级最高</div>
+    <div class="analogy-box">
+      <p>回想移动互联网时代，美团、滴滴这样的撮合平台做对了一件事：它们不只是做了C端APP让消费者方便下单，更关键的是做了B端客户端——商家得有接单系统，司机得有司机端。从源头改变供给侧的使用习惯和数据录入方式，平台才真正跑通。</p>
+    </div>
+    <p>我们现在的处境完全同构：</p>
+    <ul class="bullet-list">
+      <li>内部AI工作流 = C端APP（已经在建设）</li>
+      <li>客户侧的协作方式 = B端客户端（完全空白）</li>
+      <li>现状 = 只有C端没有B端的平台——需求数据进不来，工作流空转</li>
+    </ul>
+    <p>如果我们对内部的"客户端"做得再好、效率再高，但需求端不做改造，那就是个堰塞湖，永远跑不通。</p>
+    <div class="highlight">谁先把客户侧的"客户端"做出来，谁就占住了这个行业的平台位。客户一旦习惯用你的界面表达需求、看进展、做决策，迁移成本就起来了。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">六、这个平台成立的前提</div>
+    <p>客户不会因为"帮乙方更好接收信息"而改变行为。平台必须让客户自身获得价值：</p>
+    <ul class="bullet-list">
+      <li>更快看到进展、更实时地调整方向</li>
+      <li>表达需求后立刻得到AI反馈（方案雏形、可行性判断、排期预估）</li>
+      <li>决策质量因为平台而提升（历史数据、竞品参考、效果预测）</li>
+    </ul>
+    <div class="highlight">本质：客户以为自己在用一个协作工具，但系统在后台完成了信号采集和蒸馏。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">七、我想请你们帮我想的问题</div>
+
+    <div class="question-block">
+      <div class="q-title">1. 形态问题</div>
+      <div class="q-desc">这个平台应该长什么样？是一个独立产品、一个飞书/微信的插件、还是嵌入在现有交付流程里的某种东西？</div>
+    </div>
+    <div class="question-block">
+      <div class="q-title">2. 切入点问题</div>
+      <div class="q-desc">从哪个场景切入最小阻力？什么类型的客户互动最适合先做试验？</div>
+    </div>
+    <div class="question-block">
+      <div class="q-title">3. 价值感知问题</div>
+      <div class="q-desc">客户在第一次使用时，最快能感知到什么价值？什么能让他们愿意继续用？</div>
+    </div>
+    <div class="question-block">
+      <div class="q-title">4. 现实约束</div>
+      <div class="q-desc">你日常跟客户协作中，信息损耗最大的环节是哪里？如果能解决一个点，你会选哪个？</div>
+    </div>
+
+    <p style="margin-top:16px; font-size:14px; color:#666;">不需要给完整答案，给直觉、给案例、给你一线看到的真实场景就行。</p>
+  </div>
+
+  <div class="footer">Chris · 2026.05.11</div>
+
+</div>
+</body>
+</html>
