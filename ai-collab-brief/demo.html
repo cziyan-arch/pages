@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI信息蒸馏 · 全项目生命周期Demo</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0f0f1a;
+  color: #333;
+  min-height: 100vh;
+  padding: 40px 24px;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.page-header h1 {
+  font-size: 26px;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.page-header .subtitle {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+}
+.page-header .desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  max-width: 1260px;
+  margin: 0 auto;
+}
+.stage {
+  margin-bottom: 48px;
+  position: relative;
+}
+.stage-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+.stage-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.stage-number.s1 { background: #dc2626; }
+.stage-number.s2 { background: #f59e0b; }
+.stage-number.s3 { background: #8b5cf6; }
+.stage-number.s4 { background: #06b6d4; }
+.stage-number.s5 { background: #ec4899; }
+.stage-number.s6 { background: #10b981; }
+.stage-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+.stage-date {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-left: auto;
+}
+.stage-connector {
+  position: absolute;
+  left: 17px;
+  top: 52px;
+  bottom: -32px;
+  width: 2px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ===== COMPARISON GRID ===== */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.panel {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* ===== LEFT PANEL: WeChat ===== */
+.panel-before {
+  background: #ededed;
+}
+.label-bar {
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: center;
+}
+.label-before {
+  background: #666;
+  color: #fff;
+}
+.label-after {
+  background: #1e40af;
+  color: #fff;
+}
+.wechat-header {
+  background: #ededed;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+.chat-area {
+  padding: 12px 14px;
+  background: #ededed;
+  max-height: none;
+}
+.chat-time {
+  text-align: center;
+  margin: 10px 0;
+}
+.chat-time span {
+  font-size: 10px;
+  color: #999;
+  background: #dadada;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.msg-row {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.msg-row.other { flex-direction: row; }
+.msg-row.self { flex-direction: row-reverse; }
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+.msg-row.other .avatar { margin-right: 7px; }
+.msg-row.self .avatar { margin-left: 7px; }
+.av-li { background: #4a90d9; }
+.av-zhao { background: #e85d5d; }
+.av-wang { background: #f5a623; }
+.av-am { background: #7b68ee; }
+.av-lu { background: #2dd4bf; }
+.av-zhou { background: #a78bfa; }
+.msg-content { max-width: 72%; }
+.msg-name {
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 2px;
+  padding-left: 3px;
+}
+.msg-row.self .msg-name { text-align: right; padding-right: 3px; }
+.bubble {
+  padding: 8px 11px;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.msg-row.other .bubble { background: #fff; color: #333; }
+.msg-row.self .bubble { background: #95ec69; color: #000; }
+.voice-bubble {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+}
+.voice-icon {
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid #999;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+}
+.voice-len { font-size: 11px; color: #999; }
+.chat-footer {
+  padding: 8px 14px;
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  background: #e8e8e8;
+  border-top: 1px solid #d9d9d9;
+}
+
+/* ===== RIGHT PANEL: Output ===== */
+.panel-after {
+  background: #fff;
+}
+.output-header {
+  background: linear-gradient(135deg, #1e40af, #1e3a5f);
+  padding: 14px 20px;
+  color: #fff;
+}
+.output-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.output-header .meta {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.output-area {
+  padding: 16px 18px;
+}
+.card {
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e40af;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1.5px solid #e8f0fe;
+}
+.field-row {
+  display: flex;
+  margin-bottom: 5px;
+  align-items: baseline;
+  font-size: 13px;
+}
+.field-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 70px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.field-value { color: #222; font-size: 13px; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  margin-right: 3px;
+}
+.tag-red { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.tag-blue { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.tag-green { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.tag-yellow { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+.tag-purple { background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+.tag-pink { background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; }
+.priority-high {
+  display: inline-block; padding: 1px 6px; background: #dc2626;
+  color: #fff; border-radius: 3px; font-size: 10px; font-weight: 600;
+}
+.priority-medium {
+  display: inline-block; padding: 1px 6px; background: #f59e0b;
+  color: #fff; border-radius: 3px; font-size: 10px; font-weight: 600;
+}
+.item-block {
+  padding: 6px 10px;
+  border-left: 3px solid #2563eb;
+  margin-bottom: 6px;
+  border-radius: 0 5px 5px 0;
+  font-size: 12px;
+  background: #f8fafc;
+  line-height: 1.6;
+}
+.item-block.risk {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+  color: #991b1b;
+}
+.item-block.todo {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+.item-block.change {
+  border-left-color: #ec4899;
+  background: #fdf2f8;
+}
+.item-block.insight {
+  border-left-color: #10b981;
+  background: #f0fdf4;
+}
+.item-block .label {
+  font-weight: 600;
+  color: #1e40af;
+  font-size: 11px;
+}
+.owner-tag {
+  display: inline-block; padding: 0 5px; background: #e5e7eb;
+  border-radius: 2px; font-size: 10px; color: #555; margin-left: 4px;
+}
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.score-bar {
+  flex: 1; height: 5px; background: #e5e7eb; border-radius: 3px; overflow: hidden;
+}
+.score-fill { height: 100%; border-radius: 3px; }
+.score-label { font-size: 11px; color: #666; min-width: 40px; }
+
+/* ===== SUMMARY SECTION ===== */
+.summary-section {
+  max-width: 1260px;
+  margin: 48px auto 0;
+  padding: 32px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+}
+.summary-section h2 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.summary-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.summary-card .num {
+  font-size: 32px;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 4px;
+}
+.summary-card .unit {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ===== FOOTER ===== */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 900px) {
+  .comparison { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>AI 信息蒸馏 · 全项目生命周期</h1>
+  <div class="subtitle">理想L9改款上市传播 · 从需求到复盘的6个阶段</div>
+  <div class="desc">同一个项目，左边是你每天实际收到的信息，右边是AI可以在2分钟内自动产出的结构化输出。<br>全程无需任何人额外"填表"或"录入"。</div>
+</div>
+
+<div class="timeline">
+
+<!-- ================================ STAGE 1 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s1">1</div>
+    <div class="stage-title">需求采集</div>
+    <div class="stage-date">5月7日 - 5月8日</div>
+  </div>
+  <div class="stage-connector"></div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周三 14:22</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">L9改款马上要官宣了，传播这块你们开始准备吧</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">大概6月中发布，具体日期还没最终定</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">智驾这块升级很大，要重点打。家庭场景不能丢，这是L9的基本盘</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">别只做图文了，短视频和达人一起考虑进来。这次想试试事件营销，搞个大家会讨论的话题</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周三 15:07</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">预算150-200含达人，竞品问界M9和小鹏X9都在打智驾注意差异化</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-wang">王哥</div>
+          <div class="msg-content">
+            <div class="msg-name">王建国 · 市场部</div>
+            <div class="bubble">AEB主动刹车升级行业首创级别，但技术部还没确认口径要等下周一</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">达人别找纯车评人要找生活方式类的。微博涉及自动驾驶表述要过法务别用那四个字</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">方案下周三前给我，周四跟老板过</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">8条消息 · 3人 · 2天 · 核心信息散落在各处</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>理想L9改款 · 上市传播需求卡</h3>
+        <div class="meta">自动生成 · 信息完整度72%</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">基本信息</div>
+          <div class="field-row"><span class="field-label">项目</span><span class="field-value">理想L9改款上市传播</span></div>
+          <div class="field-row"><span class="field-label">发布时间</span><span class="field-value">6月中旬（待定）</span></div>
+          <div class="field-row"><span class="field-label">方案截止</span><span class="field-value">5月14日 <span class="priority-high">紧急</span></span></div>
+          <div class="field-row"><span class="field-label">预算</span><span class="field-value">150-200万（含达人）</span></div>
+          <div class="field-row"><span class="field-label">决策链</span><span class="field-value">李明轩→其上级（周四汇报）</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">传播重点</div>
+          <div class="field-row"><span class="tag tag-red">核心</span><span class="field-value">智驾升级（需差异化竞品）</span></div>
+          <div class="field-row"><span class="tag tag-blue">基本盘</span><span class="field-value">家庭场景</span></div>
+          <div class="field-row"><span class="tag tag-green">预留</span><span class="field-value">AEB主动刹车（待口径确认）</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">客户要求</div>
+          <div class="item-block"><span class="label">形式</span> 短视频+达人+事件营销，不限图文</div>
+          <div class="item-block"><span class="label">达人</span> 生活方式类为主，非纯车评</div>
+          <div class="item-block"><span class="label">竞品</span> 问界M9/小鹏X9，需明确差异化</div>
+        </div>
+        <div class="card">
+          <div class="card-title">红线禁忌</div>
+          <div class="item-block risk">禁止使用"自动驾驶"→ 用"智能驾驶/智驾辅助"</div>
+          <div class="item-block risk">AEB口径确认前不入方案正文</div>
+        </div>
+        <div class="card">
+          <div class="card-title">待确认</div>
+          <div class="item-block todo">AEB口径 <span class="owner-tag">王建国 · 周一</span></div>
+          <div class="item-block todo">发布日期 <span class="owner-tag">李明轩</span></div>
+          <div class="item-block todo">预算上限 <span class="owner-tag">赵莉 · 看方案后</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ STAGE 2 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s2">2</div>
+    <div class="stage-title">方案反馈</div>
+    <div class="stage-date">5月15日</div>
+  </div>
+  <div class="stage-connector"></div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周四 10:15</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">方案看了，整体方向ok，几个点说一下</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">第一个事件营销那个idea不错但调子太年轻了，L9用户35-45为主，别搞得太潮</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">第二，社媒传播节奏拉长一点，现在计划两周太短了，给一个月的window</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">达人那页数量可以再加，但别超预算，看看能不能谈几个置换的</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">我补充一下，智驾部分的数据对比图昨天老板提了意见，不要直接对比竞品跑分，改成场景化描述</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">还有个好消息，AEB口径确认了可以用了，我把技术部给的文档转你们</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">修改版周一给我就行，不急了，发布日期定了6月18</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">7条消息 · 方向确认+4个修改意见+2个新信息，混在一起</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>方案评审结论 · V1反馈</h3>
+        <div class="meta">自动生成 · 基于5.15群聊</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">总体判断</div>
+          <div class="item-block"><span class="label">结论</span> 方向通过，需修改4处细节，周一提交V2</div>
+        </div>
+        <div class="card">
+          <div class="card-title">需修改项</div>
+          <div class="item-block change"><span class="label">修改1</span> 事件营销调性：降低年轻化，匹配35-45岁用户群体</div>
+          <div class="item-block change"><span class="label">修改2</span> 传播节奏：从2周拉长到1个月window</div>
+          <div class="item-block change"><span class="label">修改3</span> 达人数量增加，探索置换合作控预算</div>
+          <div class="item-block change"><span class="label">修改4</span> 智驾对比：禁止跑分对比，改为场景化描述（老板直接意见）</div>
+        </div>
+        <div class="card">
+          <div class="card-title">新增信息</div>
+          <div class="item-block insight"><span class="label">确认</span> AEB口径已获批，可正式纳入方案</div>
+          <div class="item-block insight"><span class="label">确认</span> 发布日期锁定：6月18日</div>
+          <div class="item-block insight"><span class="label">资料</span> 技术部AEB文档已转发（待接收归档）</div>
+        </div>
+        <div class="card">
+          <div class="card-title">客户偏好沉淀（自动更新知识库）</div>
+          <div class="item-block"><span class="label">新规则</span> L9传播调性不宜过度年轻化，目标用户35-45</div>
+          <div class="item-block"><span class="label">新规则</span> 智驾对比禁止用数据跑分，只用场景化表达</div>
+        </div>
+        <div class="card">
+          <div class="card-title">时间线更新</div>
+          <div class="field-row"><span class="field-label">V2截止</span><span class="field-value">5月19日（周一）</span></div>
+          <div class="field-row"><span class="field-label">发布日</span><span class="field-value">6月18日（已锁定）</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ STAGE 3 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s3">3</div>
+    <div class="stage-title">达人选号</div>
+    <div class="stage-date">5月21日 - 5月23日</div>
+  </div>
+  <div class="stage-connector"></div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周三 11:30</span></div>
+        <div class="msg-row self">
+          <div class="avatar av-am">小陈</div>
+          <div class="msg-content">
+            <div class="msg-name">陈颖 AM</div>
+            <div class="bubble">李总赵姐，达人list发了飞书文档，一共筛了28个，麻烦看一下</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周三 16:45</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">看了一遍，@陈颖 3号那个亲子博主不行，之前跟竞品合作过。7号和12号不错。15号粉丝量可以但内容质量一般</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">我觉得8号那个旅行博主挺好的跟我们调性很搭，但她报价应该偏高你们问过没</div>
+          </div>
+        </div>
+        <div class="msg-row self">
+          <div class="avatar av-am">小陈</div>
+          <div class="msg-content">
+            <div class="msg-name">陈颖 AM</div>
+            <div class="bubble">8号报价25w，确实偏高。可以谈，或者考虑置换</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">25太贵了。20以内可以考虑。另外你们list里缺户外运动类的，L9的用户也有很多爱户外的爸爸</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">对了补充一条规则，所有达人近3个月不能有竞品合作</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周五 09:20</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">再补几个：21号那个科技数码博主我觉得可以用来做智驾内容，他之前分析小鹏那期播放量很高。22号pass，她人设翻车过</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">跨3天 · 审批意见、偏好、价格、排除规则混在一起</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>达人选号 · 客户审批追踪</h3>
+        <div class="meta">28人送审 · 实时更新</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">审批状态汇总</div>
+          <div class="field-row"><span class="tag tag-green">通过</span><span class="field-value">7号、12号、21号（科技数码→智驾内容）</span></div>
+          <div class="field-row"><span class="tag tag-yellow">待议</span><span class="field-value">8号（旅行博主，调性匹配但报价25w超预算→压到20以内）、15号（量ok质一般）</span></div>
+          <div class="field-row"><span class="tag tag-red">否决</span><span class="field-value">3号（竞品合作史）、22号（人设翻车）</span></div>
+          <div class="field-row"><span class="tag tag-blue">待补充</span><span class="field-value">户外运动类（客户指出缺失：L9用户有户外爸爸群体）</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">选号规则沉淀（自动更新）</div>
+          <div class="item-block"><span class="label">硬性规则</span> 近3个月无竞品合作</div>
+          <div class="item-block"><span class="label">价格线</span> 单人不超过20万</div>
+          <div class="item-block"><span class="label">类型偏好</span> 亲子+旅行+户外运动，非纯车评</div>
+          <div class="item-block"><span class="label">否决因素</span> 人设翻车/历史争议</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Action Items</div>
+          <div class="item-block todo">8号达人议价（目标20w以内）<span class="owner-tag">陈颖</span></div>
+          <div class="item-block todo">补充户外运动类达人3-5人 <span class="owner-tag">陈颖</span></div>
+          <div class="item-block todo">竞品合作史核查（全list）<span class="owner-tag">媒介组</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ STAGE 4 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s4">4</div>
+    <div class="stage-title">内容审核</div>
+    <div class="stage-date">6月3日 - 6月5日</div>
+  </div>
+  <div class="stage-connector"></div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周二 14:00</span></div>
+        <div class="msg-row self">
+          <div class="avatar av-am">小陈</div>
+          <div class="msg-content">
+            <div class="msg-name">陈颖 AM</div>
+            <div class="bubble">赵姐，7号达人的脚本终稿和12号达人的小红书图文发您审了</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周二 17:30</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">7号脚本看了，整体ok，两个修改：1.开头那段别用"颠覆"这个词我们品牌不用这种夸张表述 2.中间讲智驾那段时长压缩到40秒以内，现在太长了观众会跳</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">12号图文第三张图文案有个错误，"L9 Max"车型名称要大写，M是大写。另外结尾那个引导话术太硬了改柔和点</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">我也看了一下，7号达人脚本里提到了价格区间，这个不要提。没有官方定价之前所有内容不准出现价格相关信息</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">另外21号科技博主的智驾测评脚本，里面那个跟特斯拉FSD对比的段落删掉，我们不主动跟特斯拉比</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周四 11:00</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">修改版看了可以了，7号和12号过了。21号也ok。走下一步吧</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">跨3天 · 修改意见、品牌规则、审核通过混在同一个对话流里</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>内容审核 · 第一轮反馈汇总</h3>
+        <div class="meta">3条内容 · 6.3-6.5 · 已全部通过</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">审核结果</div>
+          <div class="field-row"><span class="tag tag-green">通过</span><span class="field-value">7号达人视频脚本（V2通过）</span></div>
+          <div class="field-row"><span class="tag tag-green">通过</span><span class="field-value">12号达人小红书图文（V2通过）</span></div>
+          <div class="field-row"><span class="tag tag-green">通过</span><span class="field-value">21号科技博主智驾测评脚本（V2通过）</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">V1修改记录</div>
+          <div class="item-block change"><span class="label">7号 · 修改1</span> 删除"颠覆"用词（品牌禁用夸张表述）</div>
+          <div class="item-block change"><span class="label">7号 · 修改2</span> 智驾段落压缩至40秒以内</div>
+          <div class="item-block change"><span class="label">7号 · 修改3</span> 删除价格区间信息</div>
+          <div class="item-block change"><span class="label">12号 · 修改1</span> 车型名称"L9 Max"大写修正</div>
+          <div class="item-block change"><span class="label">12号 · 修改2</span> 结尾引导话术改柔和</div>
+          <div class="item-block change"><span class="label">21号 · 修改1</span> 删除与特斯拉FSD对比段落</div>
+        </div>
+        <div class="card">
+          <div class="card-title">品牌规则沉淀（自动入库）</div>
+          <div class="item-block risk"><span class="label">新禁忌</span> 官方定价公布前，所有内容禁止出现价格信息</div>
+          <div class="item-block risk"><span class="label">新禁忌</span> 不主动与特斯拉做对比</div>
+          <div class="item-block risk"><span class="label">风格规则</span> 品牌不使用"颠覆"等夸张表述</div>
+          <div class="item-block"><span class="label">格式规范</span> 车型名称统一大写：L9 Max</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ STAGE 5 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s5">5</div>
+    <div class="stage-title">执行期调整</div>
+    <div class="stage-date">6月16日 - 6月20日</div>
+  </div>
+  <div class="stage-connector"></div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周一 08:50</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">紧急通知，发布会从18号推迟到20号了，对外别说原因，技术部那边有个问题要修</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">所有达人的排期往后顺推两天，17号之前的预热内容照发，18号之后的全部hold</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">8号达人那边有个问题，她19号要出国，本来18号发布当天做直播的，现在推了她做不了了。你们赶紧找backup</div>
+          </div>
+        </div>
+        <div class="msg-row self">
+          <div class="avatar av-am">小陈</div>
+          <div class="msg-content">
+            <div class="msg-name">陈颖 AM</div>
+            <div class="bubble">收到，8号达人这边我联系了她能不能16号提前录，明天给反馈</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">如果她实在不行就换人吧，时间紧了别纠结。另外微博开屏的排期也要跟平台重新谈，本来卡着18号的</div>
+          </div>
+        </div>
+        <div class="chat-time"><span>周二 15:20</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-wang">王哥</div>
+          <div class="msg-content">
+            <div class="msg-name">王建国 · 市场部</div>
+            <div class="bubble">还有个变化，老板今天决定AEB这个点要做成单独的传播事件，不是放在整体传播里了。你们准备一个专门的AEB传播mini方案，周三给我</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">突发变更 · 时间线/排期/人员/策略多重调整交织</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>紧急变更追踪 · 6.16-6.20</h3>
+        <div class="meta">3项变更 · 4个待办 · 影响范围：全部</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">关键变更</div>
+          <div class="item-block change"><span class="label">日期变更</span> 发布会6.18→6.20（技术问题，对外保密）<span class="priority-high">紧急</span></div>
+          <div class="item-block change"><span class="label">排期变更</span> 17号前照发；18号后全部hold顺推2天</div>
+          <div class="item-block change"><span class="label">策略变更</span> AEB从整体传播独立出来，做单独传播事件（老板决策）</div>
+        </div>
+        <div class="card">
+          <div class="card-title">受影响执行项</div>
+          <div class="item-block risk"><span class="label">高风险</span> 8号达人19号出国，与新发布日冲突→方案A:16号提前录 / 方案B:换人</div>
+          <div class="item-block risk"><span class="label">需协调</span> 微博开屏排期需与平台重新谈（原卡18号）</div>
+          <div class="item-block"><span class="label">新增</span> AEB专项传播mini方案（周三前出）</div>
+        </div>
+        <div class="card">
+          <div class="card-title">紧急Action Items</div>
+          <div class="item-block todo">8号达人沟通提前录制可行性 <span class="owner-tag">陈颖 · 周二反馈</span></div>
+          <div class="item-block todo">微博开屏排期重新协调 <span class="owner-tag">媒介组 · 尽快</span></div>
+          <div class="item-block todo">AEB独立传播mini方案 <span class="owner-tag">策略组 · 周三前</span></div>
+          <div class="item-block todo">所有达人排期更新并逐一确认 <span class="owner-tag">陈颖 · 今日内</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">保密提醒</div>
+          <div class="item-block risk">推迟原因（技术问题）属内部信息，对外/对达人统一口径：发布日6.20</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ STAGE 6 ================================ -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-number s6">6</div>
+    <div class="stage-title">复盘总结</div>
+    <div class="stage-date">7月5日</div>
+  </div>
+  <div class="comparison">
+    <div class="panel panel-before">
+      <div class="label-bar label-before">BEFORE · 原始群聊 + 电话</div>
+      <div class="wechat-header">理想汽车-传播项目群(6)</div>
+      <div class="chat-area">
+        <div class="chat-time"><span>周五 10:00</span></div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">整体这波做得不错，数据我看了微博话题2.3亿阅读，超预期了</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">几个点说一下：7号达人那条视频效果最好播放800w+但12号的小红书数据一般，可能是选题角度问题</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">AEB那个单独的事件做得很好，微信指数涨了300%，老板很满意。下次新品也这么搞</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">复盘会上说一下，户外博主那几条效果出乎意料的好，以后L9传播常态化配置户外类达人</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-zhao">赵姐</div>
+          <div class="msg-content">
+            <div class="msg-name">赵莉 · 品牌部</div>
+            <div class="bubble">但有个问题你们注意，这次有两条达人内容评论区出现了价格讨论引导不当，下次brief里要明确写不引导价格讨论</div>
+          </div>
+        </div>
+        <div class="msg-row other">
+          <div class="avatar av-li">李总</div>
+          <div class="msg-content">
+            <div class="msg-name">李明轩 · 品牌部</div>
+            <div class="bubble">下个月有个OTA推送的传播需求，到时候还找你们，预算比这次小但周期更短</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">复盘反馈+经验+问题+新需求，全部口头化无结构</div>
+    </div>
+
+    <div class="panel panel-after">
+      <div class="label-bar label-after">AFTER · AI蒸馏输出</div>
+      <div class="output-header">
+        <h3>项目复盘 · L9改款上市传播</h3>
+        <div class="meta">自动生成 · 关联全程6阶段数据</div>
+      </div>
+      <div class="output-area">
+        <div class="card">
+          <div class="card-title">核心数据</div>
+          <div class="field-row"><span class="field-label">微博话题</span><span class="field-value">2.3亿阅读（超预期）</span></div>
+          <div class="field-row"><span class="field-label">最佳内容</span><span class="field-value">7号达人视频 · 播放800万+</span></div>
+          <div class="field-row"><span class="field-label">AEB事件</span><span class="field-value">微信指数+300%（老板满意，确认为长期模式）</span></div>
+          <div class="field-row"><span class="field-label">客户满意度</span><span class="field-value">高（原话："整体做得不错"、"超预期"）</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">经验沉淀（自动入库）</div>
+          <div class="item-block insight"><span class="label">验证有效</span> 户外运动类达人与L9用户高度匹配 → 后续常态化配置</div>
+          <div class="item-block insight"><span class="label">验证有效</span> 技术亮点做独立事件传播（AEB模式）→ 复制到后续新品</div>
+          <div class="item-block insight"><span class="label">待优化</span> 12号小红书数据一般，可能是选题角度问题 → 下次调整切入角度</div>
+        </div>
+        <div class="card">
+          <div class="card-title">问题记录</div>
+          <div class="item-block risk"><span class="label">风险事件</span> 2条达人内容评论区出现价格讨论引导不当</div>
+          <div class="item-block"><span class="label">改进措施</span> 后续brief必须明确写入"不引导价格讨论"</div>
+        </div>
+        <div class="card">
+          <div class="card-title">客户偏好知识库 · 本项目累计更新</div>
+          <div class="score-row"><span class="score-label">新增规则</span><div class="score-bar"><div class="score-fill" style="width:100%;background:#2563eb;"></div></div><span style="font-size:11px;color:#2563eb;font-weight:600;">9条</span></div>
+          <div class="score-row"><span class="score-label">达人标签</span><div class="score-bar"><div class="score-fill" style="width:60%;background:#8b5cf6;"></div></div><span style="font-size:11px;color:#8b5cf6;font-weight:600;">6个</span></div>
+          <div class="score-row"><span class="score-label">禁忌表达</span><div class="score-bar"><div class="score-fill" style="width:80%;background:#dc2626;"></div></div><span style="font-size:11px;color:#dc2626;font-weight:600;">5条</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">下一项目线索</div>
+          <div class="item-block"><span class="label">预告</span> L9 OTA推送传播（下月启动，预算较小，周期更短）<span class="owner-tag">待正式brief</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end timeline -->
+
+<!-- ===== SUMMARY ===== -->
+<div class="summary-section">
+  <h2>这一个项目，AI累计自动捕获了什么</h2>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="num">47</div>
+      <div class="unit">条客户消息被结构化</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">9</div>
+      <div class="unit">条品牌规则自动沉淀</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">5</div>
+      <div class="unit">条禁忌表达入库</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">6</div>
+      <div class="unit">个达人偏好标签</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">3</div>
+      <div class="unit">条可复用经验</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">0</div>
+      <div class="unit">次需要人手动录入</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  <p>所有右侧内容均为AI基于左侧原始对话自动生成，无需任何人额外操作。</p>
+  <p style="margin-top:4px;">下一个新项目启动时，AI已经带着这个项目积累的全部认知开始工作。</p>
+  <p style="margin-top:12px; opacity:0.5;">客户AI协作平台 · 概念Demo · Chris · 2026.05</p>
+</div>
+
+</body>
+</html>
