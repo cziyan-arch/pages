@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>滴滴公关稿件创作中心 - 使用指南</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.8; }
+
+.header {
+  background: linear-gradient(135deg, #F38031, #FF9A56);
+  color: white;
+  padding: 60px 40px;
+  text-align: center;
+}
+.header h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+.header p { font-size: 18px; opacity: 0.9; }
+.header .logo {
+  width: 64px; height: 64px; background: rgba(255,255,255,0.2);
+  border-radius: 16px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: bold; margin-bottom: 20px;
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+.section {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.section h2 {
+  font-size: 22px;
+  color: #F38031;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #FFF3EB;
+}
+.section h3 {
+  font-size: 17px;
+  color: #333;
+  margin: 20px 0 10px;
+}
+
+.step-list { counter-reset: step; list-style: none; padding: 0; }
+.step-list li {
+  counter-increment: step;
+  padding: 16px 16px 16px 60px;
+  position: relative;
+  margin-bottom: 12px;
+  background: #FFFAF7;
+  border-radius: 8px;
+  border-left: 3px solid #F38031;
+}
+.step-list li::before {
+  content: counter(step);
+  position: absolute; left: 16px; top: 16px;
+  width: 32px; height: 32px;
+  background: #F38031; color: white;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 14px;
+}
+
+.role-card {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px;
+}
+.role-card .card {
+  flex: 1; min-width: 200px;
+  padding: 20px;
+  background: #FFFAF7;
+  border-radius: 10px;
+  border: 1px solid #FFE4D0;
+}
+.role-card .card h4 {
+  color: #F38031;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.role-card .card p {
+  font-size: 14px;
+  color: #666;
+}
+
+.info-box {
+  background: #FFF3EB;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 15px;
+}
+.info-box strong { color: #F38031; }
+
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: #F38031;
+  color: white;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+tr:hover td { background: #FFFAF7; }
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.feature-item {
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+.feature-item .icon {
+  width: 40px; height: 40px;
+  background: #FFF3EB;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.feature-item h4 { font-size: 15px; margin-bottom: 6px; color: #333; }
+.feature-item p { font-size: 13px; color: #666; }
+
+.workflow {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 8px; margin: 20px 0; justify-content: center;
+}
+.workflow .node {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #F38031;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #F38031;
+}
+.workflow .arrow {
+  color: #F38031;
+  font-size: 20px;
+}
+
+.tip {
+  background: #f0fdf4;
+  border-left: 3px solid #22c55e;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 12px 0;
+  font-size: 14px;
+  color: #166534;
+}
+
+.footer {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D</div>
+  <h1>滴滴公关稿件创作中心</h1>
+  <p>团队使用指南</p>
+</div>
+
+<div class="container">
+
+  <!-- 快速开始 -->
+  <div class="section">
+    <h2>快速开始</h2>
+    <div class="info-box">
+      <strong>访问地址：</strong>http://47.95.255.213:3000<br>
+      <strong>初始密码：</strong>didi2026（登录后请立即修改）
+    </div>
+    <ol class="step-list">
+      <li>在浏览器中打开上方地址，进入登录页面</li>
+      <li>输入分配给你的邮箱（如 pr04@didi.com）和初始密码</li>
+      <li>首次登录后，点击左侧「设置」修改你的昵称和密码</li>
+      <li>开始使用系统创作和管理稿件</li>
+    </ol>
+    <div class="tip">建议将网址添加到浏览器收藏夹，方便日常访问。</div>
+  </div>
+
+  <!-- 角色说明 -->
+  <div class="section">
+    <h2>角色与权限</h2>
+    <p>系统分为三种角色，不同角色看到的功能和权限不同：</p>
+    <div class="role-card">
+      <div class="card">
+        <h4>撰稿人</h4>
+        <p>创建稿件、使用AI生成内容、提交审核、根据反馈修改稿件</p>
+      </div>
+      <div class="card">
+        <h4>总监</h4>
+        <p>审核撰稿人提交的稿件、给出修改意见、AI辅助审改、通过或打回</p>
+      </div>
+      <div class="card">
+        <h4>副总裁</h4>
+        <p>终审稿件、最终审批通过、查看全局数据看板</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 稿件工作流 -->
+  <div class="section">
+    <h2>稿件工作流程</h2>
+    <p>每篇稿件经过以下流程，确保质量把控：</p>
+    <div class="workflow">
+      <div class="node">创建草稿</div>
+      <span class="arrow">&rarr;</span>
+      <div class="node">提交审核</div>
+      <span class="arrow">&rarr;</span>
+      <div class="node">总监审核</div>
+      <span class="arrow">&rarr;</span>
+      <div class="node">VP审核</div>
+      <span class="arrow">&rarr;</span>
+      <div class="node">通过发布</div>
+    </div>
+    <div class="tip">审核人可以「通过」或「打回」稿件。打回后撰稿人修改后可重新提交。</div>
+  </div>
+
+  <!-- 撰稿人操作指南 -->
+  <div class="section">
+    <h2>撰稿人操作指南</h2>
+
+    <h3>创建新稿件</h3>
+    <ol class="step-list">
+      <li>点击左侧「稿件管理」，再点击右上角「新建稿件」</li>
+      <li>填写标题，选择稿件类型（原型稿/公众号版/媒体版）和业务线</li>
+      <li>在「素材/要点」框中输入原始素材、会议纪要或写作要点</li>
+      <li>点击「AI 生成」，系统将根据素材自动生成符合滴滴品牌风格的稿件</li>
+      <li>在正文编辑区域修改润色，满意后点击「保存」</li>
+    </ol>
+
+    <h3>AI 写作功能</h3>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="icon">&#9997;</div>
+        <h4>素材生成稿件</h4>
+        <p>输入要点或素材，AI自动生成完整的品牌风格稿件</p>
+      </div>
+      <div class="feature-item">
+        <div class="icon">&#128260;</div>
+        <h4>稿件变形</h4>
+        <p>原型稿通过后可一键生成公众号版和媒体版</p>
+      </div>
+      <div class="feature-item">
+        <div class="icon">&#128202;</div>
+        <h4>字数统计</h4>
+        <p>实时显示正文字数，方便控制稿件篇幅</p>
+      </div>
+    </div>
+
+    <h3>提交审核</h3>
+    <ol class="step-list">
+      <li>确认稿件内容无误后，在稿件详情页点击「提交审核」</li>
+      <li>稿件状态变为「总监审核中」，等待总监审阅</li>
+      <li>如被打回，根据审核意见修改后重新提交</li>
+    </ol>
+  </div>
+
+  <!-- 总监操作指南 -->
+  <div class="section">
+    <h2>总监操作指南</h2>
+
+    <h3>审核稿件</h3>
+    <ol class="step-list">
+      <li>点击左侧「审核中心」查看待审稿件列表</li>
+      <li>点击稿件进入详情，阅读全文</li>
+      <li>可选择三种操作：「通过」转给VP审核、「打回」退回修改、「AI审改」智能修改</li>
+    </ol>
+
+    <h3>AI 智能审改</h3>
+    <ol class="step-list">
+      <li>在审核面板中输入修改指令（如"第三段太长，压缩到3句"）</li>
+      <li>也可以点击麦克风按钮，用语音输入修改意见</li>
+      <li>点击「AI修改」，系统根据指令自动修改稿件内容</li>
+      <li>查看修改前后的对比（红色为删除，绿色为新增）</li>
+      <li>满意后点击「通过」提交给VP审核</li>
+    </ol>
+    <div class="tip">语音输入支持自然语言，像跟同事说话一样描述修改需求即可。</div>
+  </div>
+
+  <!-- VP操作指南 -->
+  <div class="section">
+    <h2>VP 操作指南</h2>
+    <ol class="step-list">
+      <li>在「审核中心」查看已通过总监审核的稿件</li>
+      <li>进行终审，选择「通过」完成审批，或「打回」退回修改</li>
+      <li>通过后的原型稿可生成公众号版和媒体版两个变形版本</li>
+    </ol>
+  </div>
+
+  <!-- 稿件库 -->
+  <div class="section">
+    <h2>稿件库</h2>
+    <p>稿件库是团队的内容资产中心，所有历史稿件集中管理。</p>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="icon">&#128194;</div>
+        <h4>上传历史稿件</h4>
+        <p>支持上传 Word (.docx) 文件，系统自动解析内容入库</p>
+      </div>
+      <div class="feature-item">
+        <div class="icon">&#128269;</div>
+        <h4>搜索与筛选</h4>
+        <p>按关键词搜索，按分类筛选，快速找到需要的参考稿件</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 个人设置 -->
+  <div class="section">
+    <h2>个人设置</h2>
+    <ol class="step-list">
+      <li>点击左侧「设置」进入个人信息页</li>
+      <li>修改昵称：输入新昵称后点击「保存」</li>
+      <li>修改密码：输入当前密码和新密码后点击「确认修改」</li>
+    </ol>
+    <div class="info-box">
+      <strong>提醒：</strong>首次登录后请务必修改初始密码，确保账号安全。
+    </div>
+  </div>
+
+  <!-- 常见问题 -->
+  <div class="section">
+    <h2>常见问题</h2>
+    <h3>忘记密码怎么办？</h3>
+    <p>联系管理员重置密码。</p>
+
+    <h3>AI生成的内容可以直接用吗？</h3>
+    <p>AI生成的内容基于滴滴品牌风格指南，但建议根据具体场景进行人工润色和调整后再提交审核。</p>
+
+    <h3>稿件被打回后怎么处理？</h3>
+    <p>查看审核意见，在稿件详情页直接修改内容，修改完成后重新点击「提交审核」。</p>
+
+    <h3>支持手机访问吗？</h3>
+    <p>目前建议使用电脑浏览器访问，获得最佳操作体验。</p>
+  </div>
+
+</div>
+
+<div class="footer">
+  滴滴出行 公关部 &copy; 2026
+</div>
+
+</body>
+</html>
