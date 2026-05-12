@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI改造工作纲领</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: #f5f3ef;
+    color: #1a1a1a;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
+    background: #fffef9;
+  }
+
+  /* 顶部 */
+  .header {
+    text-align: center;
+    padding-bottom: 48px;
+    border-bottom: 3px double #2a2a2a;
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    color: #666;
+    letter-spacing: 2px;
+  }
+  .header .date {
+    font-size: 13px;
+    color: #999;
+    margin-top: 8px;
+  }
+
+  /* 架构总览条 */
+  .arch-bar {
+    display: flex;
+    gap: 0;
+    margin: 0 0 48px;
+    border: 1.5px solid #2a2a2a;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .arch-bar .layer {
+    flex: 1;
+    padding: 18px 16px;
+    text-align: center;
+    border-right: 1.5px solid #2a2a2a;
+    position: relative;
+  }
+  .arch-bar .layer:last-child { border-right: none; }
+  .arch-bar .layer .num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #c0392b;
+    display: block;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .arch-bar .layer .name {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .arch-bar .layer .desc {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+  }
+  .arch-bar .arrow {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #999;
+    font-size: 14px;
+  }
+
+  /* 纵向流向指示 */
+  .flow-indicator {
+    text-align: center;
+    margin: -16px 0 32px;
+    color: #aaa;
+    font-size: 20px;
+    letter-spacing: 8px;
+  }
+
+  /* 大章节 */
+  .chapter {
+    margin-bottom: 56px;
+  }
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2a2a2a;
+  }
+  .chapter-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #c0392b;
+    line-height: 1;
+  }
+  .chapter-title-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .chapter-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .chapter-scope {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  /* 横向输出标注 */
+  .lateral-output {
+    background: #f0ebe3;
+    border-left: 4px solid #c0392b;
+    padding: 14px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .lateral-output .label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #c0392b;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .lateral-output p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+
+  /* 节 */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-left: 14px;
+    border-left: 3px solid #c0392b;
+    letter-spacing: 1px;
+  }
+
+  /* 正文段落 */
+  p.body {
+    font-size: 15px;
+    color: #2a2a2a;
+    margin-bottom: 14px;
+    text-indent: 2em;
+    text-align: justify;
+  }
+  p.body-no-indent {
+    font-size: 15px;
+    color: #2a2a2a;
+    margin-bottom: 14px;
+    text-align: justify;
+  }
+
+  /* 要点列表 */
+  .points {
+    margin: 12px 0 16px 2em;
+  }
+  .points li {
+    font-size: 14.5px;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.75;
+    list-style: none;
+    position: relative;
+    padding-left: 18px;
+  }
+  .points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    background: #c0392b;
+    border-radius: 50%;
+  }
+  .points li strong {
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  /* 项目卡片 */
+  .project-card {
+    border: 1.5px solid #d0c8b8;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    background: #fdfcf7;
+  }
+  .project-card .project-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .project-card .priority {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .priority.p1 { background: #c0392b; }
+  .priority.p2 { background: #d4740a; }
+  .priority.p3 { background: #2874a6; }
+  .priority.p4 { background: #1e8449; }
+  .project-card .project-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .project-card .field {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #444;
+  }
+  .project-card .field .fl {
+    font-weight: 700;
+    color: #666;
+    display: inline-block;
+    width: 72px;
+    flex-shrink: 0;
+  }
+
+  /* 五层模型 */
+  .five-layers {
+    margin: 20px 0;
+  }
+  .layer-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 2px;
+  }
+  .layer-num-col {
+    width: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #c0392b;
+    color: #fff;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 4px 0 0 4px;
+  }
+  .layer-content {
+    flex: 1;
+    padding: 16px 20px;
+    background: #f7f3ec;
+    border-radius: 0 4px 4px 0;
+  }
+  .layer-content .layer-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+  }
+  .layer-content .layer-desc {
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .layer-content .layer-status {
+    font-size: 12.5px;
+    color: #999;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* 资源表格 */
+  .res-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .res-table th {
+    background: #2a2a2a;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .res-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e0dcd4;
+    color: #333;
+    vertical-align: top;
+  }
+  .res-table tr:nth-child(even) td { background: #faf8f3; }
+
+  /* 时间线 */
+  .timeline {
+    margin: 20px 0 20px 20px;
+    border-left: 2px solid #c0392b;
+    padding-left: 24px;
+  }
+  .timeline .node {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline .node::before {
+    content: '';
+    position: absolute;
+    left: -31px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: #c0392b;
+    border-radius: 50%;
+    border: 2px solid #fffef9;
+  }
+  .timeline .node .time {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c0392b;
+    margin-bottom: 4px;
+  }
+  .timeline .node .event {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* 引用块 */
+  .insight-box {
+    background: #2a2a2a;
+    color: #e8e2d6;
+    padding: 24px 28px;
+    border-radius: 6px;
+    margin: 24px 0;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+  .insight-box .tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #c0392b;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    padding-top: 40px;
+    border-top: 3px double #2a2a2a;
+    margin-top: 48px;
+  }
+  .footer p {
+    font-size: 12px;
+    color: #aaa;
+    letter-spacing: 1px;
+  }
+
+  /* 分隔 */
+  .divider {
+    text-align: center;
+    margin: 40px 0;
+    color: #ccc;
+    letter-spacing: 12px;
+    font-size: 12px;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { padding: 40px 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 顶部 -->
+  <div class="header">
+    <h1>AI 改造工作纲领</h1>
+    <div class="subtitle">汽车事业部 AI 工程队</div>
+    <div class="date">2026年5月  ·  内部工作文件  ·  V1.0</div>
+  </div>
+
+  <!-- 架构总览 -->
+  <div class="arch-bar">
+    <div class="layer">
+      <span class="num">I</span>
+      <span class="name">理论构建层</span>
+      <span class="desc">行业级 · 为什么做</span>
+    </div>
+    <div class="layer">
+      <span class="num">II</span>
+      <span class="name">工程改造层</span>
+      <span class="desc">部门级 · 做什么</span>
+    </div>
+    <div class="layer">
+      <span class="num">III</span>
+      <span class="name">技术资源层</span>
+      <span class="desc">底座级 · 用什么做</span>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <div class="tag">纲领定位</div>
+    这份文件是AI工程队全部工作的顶层设计。三层纵向递进：第一层回答"为什么做"，站在行业生态高度构建理论，同时横向支撑对上汇报和对外发声；第二层回答"做什么"，拆解为四个核心改造项目，横向输出为工程队的指导文件和工作要求；第三层回答"用什么做"，明确人、工具、能力和协作架构。三层之间不是并列关系，而是自上而下的推导关系——理论指导方向，方向决定项目，项目拉动资源。
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 第一层：理论构建 -->
+  <!-- ============================================================ -->
+
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">I</div>
+      <div class="chapter-title-group">
+        <div class="chapter-title">理论构建层</div>
+        <div class="chapter-scope">视角：营销行业甲乙方生态 · 超越部门日常</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">AI公司为什么要做咨询</div>
+      <p class="body">2025年下半年开始，一个信号越来越明确：Anthropic、OpenAI这些大模型公司不再只卖API，开始亲自下场做企业咨询和服务。OpenAI组建了专业服务团队帮企业部署AI，Anthropic直接嵌入客户的业务流程做共创。这不是巧合，而是它们撞上了一堵墙——模型再强，到了具体行业场景里，缺乏领域知识和业务理解，AI就是空转。</p>
+      <p class="body">这个趋势对营销行业的意义是：AI模型公司正在向"服务"方向走，而营销公司天然就站在服务一侧。双方在"AI+行业知识"这个交叉点上会相遇。问题是谁先跑到交叉点：是AI公司学会做营销，还是营销公司学会用AI。答案取决于速度，而不是起点。</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">营销公司的结构性机会</div>
+      <p class="body">以蓝标为代表的营销服务公司，过去20年积累了三类资产：行业认知（懂汽车、懂快消、懂互联网的垂直经验）、客户认知（懂每个客户的偏好、决策链路、历史合作模式）、执行网络（达人资源、媒介采买、内容生产的供给体系）。这三类资产在传统模式下的变现方式是"卖人头"——客户按人天付费，公司靠堆人赚钱。</p>
+      <p class="body">AI改变的不是这三类资产的价值，而是变现方式。当AI能做掉70%的执行动作（写稿、做图、选号、排期）之后，"卖人头"的模式会快速塌缩——客户不需要那么多人了。但"行业认知"和"客户认知"反而升值了，因为AI要产出高质量内容，恰恰依赖这两层认知作为上下文输入。</p>
+      <p class="body">换句话说：AI时代营销公司的核心竞争力从"有多少能干活的人"变成"有多少能喂给AI的知识"。谁率先把行业认知和客户认知结构化、数据化，谁就掌握了AI时代的定价权。</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">四层价值模型</div>
+      <p class="body">我们用一个四层模型来判断AI在营销行业中的位置和边界：</p>
+      <ul class="points">
+        <li><strong>第一层：技能层</strong>——文案撰写、平面设计、视频剪辑、数据报表。AI已经能做到80分，且成本趋近于零。这一层不值得用人了。</li>
+        <li><strong>第二层：行业认知层</strong>——汽车行业的传播节奏、竞品动态、媒介生态、达人选号逻辑。AI和人协作的最佳地带。AI做信息处理和初步判断，人做校准和决策。</li>
+        <li><strong>第三层：客户认知层</strong>——这个品牌方负责人的审美偏好、这家车企的内部决策链、这个项目的潜规则。同样是AI与人协作的核心地带，但更依赖长期积累的隐性知识。</li>
+        <li><strong>第四层：共识与决策层</strong>——跨部门协调、说服客户、拍板风险决策、处理突发公关。这一层只有人能做，AI至多辅助信息整理。</li>
+      </ul>
+      <p class="body">这个模型的操作含义是：第一层全面AI化释放人力，第二三层建立"人+AI"的协作工作流，第四层集中人的精力。AI工程队的全部工作，本质上都是在第一层做替代、在第二三层做增强。</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">三阶段演进路径</div>
+      <p class="body">AI改造营销行业不可能一步到位，必须经历三个阶段：</p>
+      <ul class="points">
+        <li><strong>第一阶段：提效</strong>——不是目的，是起点。核心产出不是省了多少钱或快了多少倍，而是两件事：让团队具备AI基础认知和动手能力；在提效过程中识别出有好认知、有know-how的人。本质是练兵和选将。</li>
+        <li><strong>第二阶段：工作流重构</strong>——用更高级的AI工程能力改造现有工作流，创造全新工作流。每个环节的协作方式、质量标准、人力配比都重新定义。产出是组织能力的跃升。</li>
+        <li><strong>第三阶段：商业模式创新</strong>——过去不可能存在的产品形态和服务模式出现。营销公司从卖人力和经验变成卖AI系统和数据资产。真正意义上的"AI改造行业"——不是做同样的事更快，是做以前不可能的事。</li>
+      </ul>
+      <p class="body">三个阶段不能跳。过去三年行业里95%的失败案例，都是还没学会走就想飞。AI工程队当前的工作定位是第一阶段到第二阶段的过渡——在提效中沉淀知识库和工作流，为工作流重构积累基础。</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">对外视野：客户AI协作平台</div>
+      <p class="body">除了对内改造，还有一个更大的方向：面向客户建立AI协作平台。这个构想基于一个核心洞察——行业AI投入集中在第4层（AI执行生成内容），但瓶颈其实在上游的第1-3层（客户需求的采集、理解和结构化）。如果上游是空的，AI再强也只是在半真空里工作。</p>
+      <p class="body">这个方向的完整逻辑用五层信息链路模型来描述：</p>
+      <div class="five-layers">
+        <div class="layer-row">
+          <div class="layer-num-col">1</div>
+          <div class="layer-content">
+            <div class="layer-title">信号采集 — 客户信号无损捕获</div>
+            <div class="layer-desc">客户在表达需求时产生的所有信号（Brief、口头沟通、修改意见、审美倾向）被完整记录，而不是全靠AM的脑子。</div>
+            <div class="layer-status">现状：信号全在AM脑子里，换人即丢失，传递必衰减。</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-col">2</div>
+          <div class="layer-content">
+            <div class="layer-title">蒸馏结构化 — 原始信号翻译为结构化上下文</div>
+            <div class="layer-desc">把客户说的"感觉不对"、"再高端一点"这类模糊表达翻译成AI可以理解和执行的结构化指令——品牌调性参数、内容风格标签、竞品参照坐标。</div>
+            <div class="layer-status">现状：完全依赖人脑翻译，水平参差不齐，同一句话不同人理解不同。</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-col">3</div>
+          <div class="layer-content">
+            <div class="layer-title">上下文底座 — 统一知识库供AI查询推理</div>
+            <div class="layer-desc">把品牌历史、行业知识、客户偏好、合作历史沉淀为统一的知识底座，AI在执行任何任务前都能从中获取完整上下文。</div>
+            <div class="layer-status">现状：碎片化散落在各处——个人电脑、微信群、邮件、共享盘，无系统化。</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-col">4</div>
+          <div class="layer-content">
+            <div class="layer-title">AI工作流执行 — 基于完整上下文产出</div>
+            <div class="layer-desc">AI基于前三层提供的完整上下文，执行文案生成、策略推导、达人匹配等具体任务。质量由上下文决定。</div>
+            <div class="layer-status">现状：大多数AI应用直接在这一层发力，但因为缺上下文，产出质量离可用差距很大。</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-col">5</div>
+          <div class="layer-content">
+            <div class="layer-title">交付与反馈闭环 — 客户反馈回流充实底座</div>
+            <div class="layer-desc">客户对产出的反馈（通过、修改、打回及原因）系统化回流，充实第3层的知识底座，让AI越用越准。</div>
+            <div class="layer-status">现状：反馈散落在微信对话中，无系统化捕获，不会变成组织记忆。</div>
+          </div>
+        </div>
+      </div>
+      <p class="body">这个方向类比：美团做了商家端，滴滴做了司机端——它们没有替代商家和司机，而是给供给侧一个更好的工具来服务需求侧。我们要做的"客户AI协作平台"也是同样的逻辑：不是替代客户做决策，而是给客户一个表达需求的界面，同时在后台完成信号采集和蒸馏，为AI工作流注入高质量上下文。</p>
+      <p class="body">这个方向现阶段不做产品开发，而是作为理论构建的一部分，指导内部改造的架构设计——所有对内的知识库建设、工作流设计，都要兼容未来对外开放的可能性。同时，这个方向的思考本身就是高价值的行业输出内容。</p>
+    </div>
+
+    <div class="lateral-output">
+      <div class="label">横向输出</div>
+      <p>向上：为潘飞/彭浩提供AI战略的行业级叙事框架，证明"我们不是在蹭热点做提效工具，而是在重构行业"<br>
+      向外：AI工程队公众号（"AI营销进行时"系列）的理论内容源泉——四层价值模型、三阶段路径、五层信息链路模型均可独立成文，建立行业话语权</p>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============================================================ -->
+  <!-- 第二层：工程改造规划 -->
+  <!-- ============================================================ -->
+
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">II</div>
+      <div class="chapter-title-group">
+        <div class="chapter-title">工程改造层</div>
+        <div class="chapter-scope">视角：汽车事业部AI工程队 · 项目级执行</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">总目标</div>
+      <p class="body">两个月内（2026年5月-7月），以理想汽车为统一试点客户，跑通四个方向的MVP，用真实案例建立内部信任和对外叙事。核心衡量标准不是"做了一个AI工具"，而是"证明AI可以改变这个环节的工作方式"。</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">方法论</div>
+      <p class="body">每个项目的推进遵循同一套方法：</p>
+      <ul class="points">
+        <li><strong>选场景</strong>——从团队日常工作中选出高频、痛点明确、产出可量化的场景。不做"万能工具"，做"一个场景上的十倍效率"。</li>
+        <li><strong>建知识库</strong>——围绕该场景沉淀品牌知识、行业知识、客户偏好。知识库不是一次性建设，而是在使用中持续充实。</li>
+        <li><strong>造Skill</strong>——开发具体的AI能力单元（Skill），每个Skill解决一个具体任务（如"根据品牌调性改写社交媒体文案"）。</li>
+        <li><strong>串工作流</strong>——多个Skill串联成完整工作流，配合人工审核节点，形成可重复执行的SOP。</li>
+        <li><strong>跑数据</strong>——用真实业务跑通全流程，收集效率数据（时间、人力、质量评分），作为推广的硬证据。</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">四个核心项目</div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="priority p1">P1 最高优先级</span>
+          <span class="project-name">传统公关文案AI改造</span>
+        </div>
+        <div class="field"><span class="fl">为什么先做</span> 基础最好、思路最清晰、最快出结果。公关文案是团队日常最大的工作量来源，痛点明确（人困马乏、质量不稳定），且文案类任务是当前AI最成熟的应用场景。</div>
+        <div class="field"><span class="fl">改什么</span> 把公关稿件的"接Brief→理解需求→搜集素材→撰写初稿→内部审核→客户修改→定稿"全流程用AI重构。重点不是让AI写稿替代人，而是建立"品牌知识库+AI初稿+人工精修"的协作模式，让一个人做三个人的活，且质量更稳定。</div>
+        <div class="field"><span class="fl">试点客户</span> 理想汽车</div>
+        <div class="field"><span class="fl">关键人物</span> 孙鹏超——理想团队成员，重度AI使用者，在理想客户的文案工作上产出质量极高。P1成熟后由他负责组建"传统公关AI文案中台"，跨客户输出AI文案能力。</div>
+        <div class="field"><span class="fl">产品规划</span> 一期：理想汽车单品牌试点（知识库+3-5个高频Skill+稿件管理闭环）→ 二期：标准化品牌工作台（支持业务同学自建Skill+AI审稿Agent+客户偏好沉淀）→ 三期：多品牌推广，形成团队级内容资产。</div>
+        <div class="field"><span class="fl">成功标准</span> 单篇公关稿件从Brief到可提交初稿的时间缩短60%以上；客户一次通过率提升（需建立基线数据）。</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="priority p2">P2</span>
+          <span class="project-name">社会化运营AI改造</span>
+        </div>
+        <div class="field"><span class="fl">为什么做</span> 社会化运营的核心痛点是"追热点"——热点出来后窗口期极短，需要快速判断"这个热点跟我的品牌有没有关系"、"怎么结合"、"什么平台发什么内容"。目前全靠人脑反应，质量取决于个人水平，遇到周末或人手不足就会错过。</div>
+        <div class="field"><span class="fl">改什么</span> 热点监测（自动发现）→ 品牌适配判断（这个热点值不值得追、怎么追）→ 多平台素材初稿生成（微博/抖音/小红书各一版）。核心不是替代创意，而是把"从发现热点到出第一版素材"的时间从半天压缩到半小时。</div>
+        <div class="field"><span class="fl">试点客户</span> 奕派</div>
+        <div class="field"><span class="fl">成功标准</span> 热点响应时间从"隔天"缩短到"2小时内出初稿"；单月社交内容产出量提升3倍以上。</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="priority p3">P3</span>
+          <span class="project-name">创意策略AI改造</span>
+        </div>
+        <div class="field"><span class="fl">为什么做</span> 竞标和整合传播策略是团队最"吃高手"的环节——需要拆解Brief、分析竞品、推导策略、包装方案。目前完全依赖少数资深策略人员，产能瓶颈明显，且知识不沉淀（做完就散了）。</div>
+        <div class="field"><span class="fl">改什么</span> Brief拆解（AI辅助理解客户需求的深层意图和关键约束）→ 竞品分析（AI自动拉取和整理竞品动态）→ 策略推导（基于行业知识库和客户历史，AI给出策略方向建议）→ 方案包装（AI辅助生成方案框架和视觉建议）。核心是让策略经验不再只存在于几个人脑中，而是沉淀为AI可用的知识资产。</div>
+        <div class="field"><span class="fl">试点场景</span> 下一次竞标项目实战验证</div>
+        <div class="field"><span class="fl">成功标准</span> 竞标方案准备周期缩短40%；策略框架的结构化程度可量化提升。</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="priority p4">P4</span>
+          <span class="project-name">达芬奇Auto协作改造</span>
+        </div>
+        <div class="field"><span class="fl">为什么做</span> 达芬奇是集团战略级产品（星合AI平台），但实际状态是空壳——未接入既往投放数据和第三方达人数据（无RAG），一线团队用的是阉割版。但它的API可以开放给我们，政治上又必须跟星合绑定。这是一个"利用泡沫"的机会。</div>
+        <div class="field"><span class="fl">改什么</span> 不在达芬奇上面等它变好，而是拿它的API自己搭建"需求翻译层"——选号（模糊需求→达人组合推荐+理由）、脚本审核（品牌调性匹配度检查）、数据复盘（投放效果归因分析）。成果挂在"星合生态"名下，帮贾梦团队填充空壳。</div>
+        <div class="field"><span class="fl">协作方</span> 贾梦（首席产品官）/ 庞亭亭（技术落地负责人）——已确认可开放API</div>
+        <div class="field"><span class="fl">政治定位</span> 对贾梦："我们一线用下来方向很对，想一起深化，我有数据有人有场景。" 对彭浩/潘飞：验证投资人信里"星合AI平台"的承诺。</div>
+        <div class="field"><span class="fl">成功标准</span> 跑通3-5个真实选号案例，证明"AI+数据"比纯经验选号更优；以星合共建试点的名义进入集团汇报口径。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">团队能力基线</div>
+      <p class="body">2026年5月12日完成的AI能力评估问卷（13人回收）揭示了一个远超预期的起点：</p>
+      <ul class="points">
+        <li>100%日活使用，0人选"基本不用"——不需要从零教育认知</li>
+        <li>85%遇到不满意会"拆解任务分步修正"——已具备高级使用姿势</li>
+        <li>核心障碍是"太忙没时间学"（46%）和"工具能力不够"（38%），而不是"不愿意用"</li>
+      </ul>
+      <p class="body">头部5人（崔子晔、张梓琳、李国新、孙博文、王思宇）已有稳定工作流，可作为种子用户和内测员。腰部8人需要的是"现成可用的流程模板"，不是更多AI知识。这意味着AI工程队的产出方向应该是：做出好用的Skill和工作流模板，让腰部团队直接上手用，而不是搞培训课。</p>
+    </div>
+
+    <div class="lateral-output">
+      <div class="label">横向输出</div>
+      <p>对AI工程队：每个项目的详细PRD、工作要求、验收标准，作为日常执行的指导文件<br>
+      对一线业务同学：改造后的工作流SOP、Skill使用手册、上手培训<br>
+      对管理层：阶段性成果汇报（效率数据、案例展示）</p>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============================================================ -->
+  <!-- 第三层：技术与资源基础 -->
+  <!-- ============================================================ -->
+
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">III</div>
+      <div class="chapter-title-group">
+        <div class="chapter-title">技术资源层</div>
+        <div class="chapter-scope">视角：支撑体系 · 人 + 工具 + 架构</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">人：谁来做</div>
+      <table class="res-table">
+        <tr>
+          <th style="width:20%">角色</th>
+          <th style="width:28%">人员</th>
+          <th>职责与定位</th>
+        </tr>
+        <tr>
+          <td><strong>方向把控</strong></td>
+          <td>Chris（本人）</td>
+          <td>理论构建、项目优先级决策、关键协作方沟通、成果汇报。70%精力在AI实证，30%维护基本盘。</td>
+        </tr>
+        <tr>
+          <td><strong>工程队长</strong></td>
+          <td>陈思琦</td>
+          <td>AI工程队核心执行者。与Chris高频同步，确保方向一致。负责项目分配、进度跟踪、质量把关。</td>
+        </tr>
+        <tr>
+          <td><strong>工程队员</strong></td>
+          <td>高明翰、唐嘉晨、王心玲、游舒雅、周文棋</td>
+          <td>5人小组。按项目制分配到P1-P4，每人主导或参与1-2个方向。周一/三组会，周五学习分享。</td>
+        </tr>
+        <tr>
+          <td><strong>种子用户</strong></td>
+          <td>崔子晔、李国新、张梓琳</td>
+          <td>头部3人。内测员+需求提出方+使用反馈第一手来源。他们的真实使用数据是产品迭代的依据。</td>
+        </tr>
+        <tr>
+          <td><strong>文案中台预备</strong></td>
+          <td>孙鹏超</td>
+          <td>理想团队成员，P1公关文案AI成熟后，由他负责组建跨客户的"AI文案中台"。</td>
+        </tr>
+        <tr>
+          <td><strong>外部协作</strong></td>
+          <td>贾梦 / 庞亭亭</td>
+          <td>达芬奇产品团队。提供API接口和平台架构支撑。合作姿态：共建而非竞争。</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">AI能力架构：三层底座</div>
+      <p class="body">支撑四个核心项目的技术架构分为三层，每一层都是上一层的基础：</p>
+
+      <p class="body-no-indent" style="font-weight:700; margin-top:20px; margin-bottom:8px;">底座一：知识库层</p>
+      <p class="body">这是整个AI改造的地基。没有知识库，AI就是在真空中工作。需要建设三类知识库：</p>
+      <ul class="points">
+        <li><strong>品牌知识库</strong>——以品牌为单位，沉淀品牌调性、视觉规范、历史稿件、客户反馈偏好、审批红线。每服务一个品牌就积累一份"品牌记忆"。首先以理想汽车为试点建设完整版。</li>
+        <li><strong>行业知识库</strong>——汽车行业的传播节奏、竞品动态、媒介生态特征、达人生态数据。对应行业周报和竞争格局分析的系统化沉淀。</li>
+        <li><strong>客户偏好库</strong>——每个客户对接人的审美偏好、常见修改模式、敏感词、历史上通过率高的内容特征。这是第三层"客户认知"的数据化形态。</li>
+      </ul>
+
+      <p class="body-no-indent" style="font-weight:700; margin-top:20px; margin-bottom:8px;">底座二：AI工程协作层</p>
+      <p class="body">知识库有了，需要一层"工程层"来把知识变成能力：</p>
+      <ul class="points">
+        <li><strong>Skill开发</strong>——每个Skill是一个独立的AI能力单元，解决一个具体任务。比如"理想汽车公关稿初稿生成"、"热点品牌适配度评估"、"达人选号推荐"。Skill是最小可交付单元。</li>
+        <li><strong>Agent编排</strong>——多个Skill串联成Agent，处理复杂的多步骤任务。比如"从Brief到策略方案"需要Brief拆解、竞品分析、策略推导、方案包装四个Skill串联。</li>
+        <li><strong>工作流管理</strong>——Agent加上人工审核节点、反馈循环，形成完整的工作流。工作流是最终交付给一线业务同学使用的产品形态。</li>
+      </ul>
+
+      <p class="body-no-indent" style="font-weight:700; margin-top:20px; margin-bottom:8px;">底座三：前端交付层</p>
+      <p class="body">再好的AI能力，如果一线同学用不起来就等于零：</p>
+      <ul class="points">
+        <li><strong>工作台界面</strong>——按角色和场景组织的操作界面。不同岗位看到不同的Skill组合。不做大而全的平台，做精准的场景入口。</li>
+        <li><strong>审稿系统</strong>——AI初稿+人工精修+客户反馈的闭环。每次修改都回流为知识库的养分。</li>
+        <li><strong>数据看板</strong>——跟踪AI改造的效果数据：效率提升、质量变化、使用率、知识库增长。为汇报和迭代提供依据。</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">工具链与平台选型</div>
+      <table class="res-table">
+        <tr>
+          <th style="width:22%">用途</th>
+          <th style="width:28%">工具/平台</th>
+          <th>说明</th>
+        </tr>
+        <tr>
+          <td>主力AI引擎</td>
+          <td>Claude（Anthropic）</td>
+          <td>文案生成、策略推导、知识蒸馏的核心模型。Claude Code作为开发主力。</td>
+        </tr>
+        <tr>
+          <td>代码协作</td>
+          <td>GitHub</td>
+          <td>AI工程队代码仓库已建立。Skill、Agent、工作流的版本管理。</td>
+        </tr>
+        <tr>
+          <td>达人数据</td>
+          <td>达芬奇API / 星合平台</td>
+          <td>达人资源库、投放数据、效果数据。通过API获取，自主搭建翻译层。</td>
+        </tr>
+        <tr>
+          <td>搜索与信息采集</td>
+          <td>博查搜索 / Tavily</td>
+          <td>中文热点监测、行业信息采集。已配置MCP。</td>
+        </tr>
+        <tr>
+          <td>内部协作</td>
+          <td>飞书</td>
+          <td>文档、日历、任务管理、审批流。lark-cli已配置全域权限。</td>
+        </tr>
+        <tr>
+          <td>前端部署</td>
+          <td>GitHub Pages / 内部服务器</td>
+          <td>原型和工具的快速部署。内部Demo先上Pages，正式版迁内部。</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">应用之间如何配合</div>
+      <p class="body">整个技术架构的协作逻辑是一条流水线：知识库提供上下文 → AI工程层调用知识库生产Skill和Agent → 前端交付层把Skill/Agent包装为一线可用的界面 → 一线使用产生的反馈和新数据回流到知识库。这是一个飞轮：用得越多，知识库越厚，AI越准，用的人越多。</p>
+      <p class="body">四个项目共享同一套底座，但各有侧重：P1（公关文案）和P2（社会化运营）重度依赖品牌知识库和客户偏好库；P3（创意策略）重度依赖行业知识库和竞品数据；P4（达芬奇Auto）依赖达人数据API和行业知识库。知识库的建设优先级由此决定——先建品牌知识库（服务P1/P2），同步推进行业知识库（服务P3/P4）。</p>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============================================================ -->
+  <!-- 执行节奏 -->
+  <!-- ============================================================ -->
+
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num" style="font-size:28px;">+</div>
+      <div class="chapter-title-group">
+        <div class="chapter-title">执行节奏</div>
+        <div class="chapter-scope">2026年5月 — 7月 两个月冲刺</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="node">
+        <div class="time">5月（已完成 / 进行中）</div>
+        <div class="event">
+          AI工程队kick-off（5月8日）· 问卷基线数据回收（5月12日）· 客户AI协作平台Brief和Demo上线 · P1-P4方向确认 · 理想汽车确定为统一试点
+        </div>
+      </div>
+      <div class="node">
+        <div class="time">5月下旬</div>
+        <div class="event">
+          理想汽车品牌知识库V1完成 · P1第一个Skill上线内测（公关稿初稿生成）· 碰贾梦对齐达芬奇API合作框架 · 种子用户（崔子晔/李国新/张梓琳）开始内测
+        </div>
+      </div>
+      <div class="node">
+        <div class="time">6月上旬</div>
+        <div class="event">
+          P1知识库+3-5个高频Skill跑通 · P2热点监测+素材生成原型上线 · P4拿到达芬奇API、开始自主搭建 · 第一轮效率数据回收
+        </div>
+      </div>
+      <div class="node">
+        <div class="time">6月下旬</div>
+        <div class="event">
+          P1全流程闭环（从Brief到可提交初稿）· P3竞标方案辅助工具原型 · 孙鹏超文案中台角色正式明确 · 腰部团队开始使用P1产出的工作流模板
+        </div>
+      </div>
+      <div class="node">
+        <div class="time">7月</div>
+        <div class="event">
+          四个方向MVP全部跑通 · 收集完整效率对比数据 · 编写第一版成果汇报（给彭浩/潘飞）· AI营销进行时公众号持续发文（理论层内容转化）· 评估是否启动第二品牌扩展
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <p>汽车事业部 AI 工程队  ·  内部工作文件  ·  2026.05</p>
+  </div>
+
+</div>
+</body>
+</html>
