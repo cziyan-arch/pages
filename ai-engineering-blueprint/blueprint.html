@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI改造工作纲领 · 全景架构图</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: #e8e4dc;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 1080px;
+    margin: 40px auto;
+    background: #1a1a1a;
+    padding: 48px 40px 40px;
+    color: #e8e2d6;
+  }
+
+  /* 标题区 */
+  .title-bar {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .title-bar h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .title-bar .sub {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 3px;
+  }
+
+  /* 最高纲领条 */
+  .top-banner {
+    background: linear-gradient(135deg, #8e1e1e 0%, #c0392b 100%);
+    border-radius: 6px;
+    padding: 18px 28px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .top-banner .label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+  }
+  .top-banner .text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+
+  /* 层区域 */
+  .layer-zone {
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .layer-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    margin-right: 14px;
+  }
+  .layer-badge.l1 { background: #c0392b; }
+  .layer-badge.l2 { background: #d4740a; }
+  .layer-badge.l3 { background: #2874a6; }
+
+  .layer-info .layer-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  .layer-info .layer-scope {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+  }
+
+  .layer-body {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .layer-main {
+    flex: 1;
+    background: #252525;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #333;
+  }
+
+  .layer-lateral {
+    width: 220px;
+    background: #2a2520;
+    border-radius: 8px;
+    padding: 16px 18px;
+    border: 1px solid #3d3428;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .layer-lateral::before {
+    content: '→';
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 16px;
+  }
+  .lateral-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #c0392b;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .lateral-item {
+    font-size: 12.5px;
+    color: #b0a898;
+    line-height: 1.7;
+    margin-bottom: 6px;
+    padding-left: 12px;
+    position: relative;
+  }
+  .lateral-item::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: #c0392b;
+    font-weight: 700;
+  }
+
+  /* 理论层的三个框架 */
+  .frameworks {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  .fw-card {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 14px;
+    text-align: center;
+  }
+  .fw-card .fw-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .fw-card .fw-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e8e2d6;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .fw-card .fw-items {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.6;
+  }
+
+  /* 纵向连接线 */
+  .flow-arrow {
+    text-align: center;
+    padding: 8px 0;
+    position: relative;
+  }
+  .flow-arrow .line {
+    display: inline-block;
+    width: 2px;
+    height: 20px;
+    background: #444;
+  }
+  .flow-arrow .arrow-text {
+    font-size: 10px;
+    color: #666;
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* 工程层的4个项目 */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .proj-card {
+    background: #1a1a1a;
+    border-radius: 6px;
+    padding: 14px 16px;
+    border: 1px solid #444;
+    position: relative;
+  }
+  .proj-card .proj-p {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .proj-p.pp1 { background: #c0392b; }
+  .proj-p.pp2 { background: #d4740a; }
+  .proj-p.pp3 { background: #2874a6; }
+  .proj-p.pp4 { background: #1e8449; }
+  .proj-card .proj-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .proj-card .proj-desc {
+    font-size: 11.5px;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .proj-card .proj-meta {
+    font-size: 11px;
+    color: #666;
+  }
+  .proj-card .proj-meta span {
+    margin-right: 12px;
+  }
+  .proj-card .proj-meta strong {
+    color: #b0a898;
+    font-weight: 500;
+  }
+
+  /* 技术层三底座 */
+  .infra-cols {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .infra-col {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 14px;
+  }
+  .infra-col .infra-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #333;
+    letter-spacing: 1px;
+  }
+  .infra-col .infra-item {
+    font-size: 11.5px;
+    color: #999;
+    line-height: 1.6;
+    padding-left: 10px;
+    margin-bottom: 3px;
+    position: relative;
+  }
+  .infra-col .infra-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+  .infra-col:nth-child(1) .infra-item::before { background: #c0392b; }
+  .infra-col:nth-child(2) .infra-item::before { background: #d4740a; }
+  .infra-col:nth-child(3) .infra-item::before { background: #2874a6; }
+
+  /* 人 + 工具 */
+  .resource-bar {
+    display: flex;
+    gap: 10px;
+  }
+  .res-block {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .res-block .res-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #666;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .res-block .res-content {
+    font-size: 12px;
+    color: #b0a898;
+    line-height: 1.7;
+  }
+  .res-block .res-content strong {
+    color: #e8e2d6;
+    font-weight: 500;
+  }
+
+  /* 五层模型（精简版） */
+  .five-mini {
+    margin-top: 14px;
+    border-top: 1px solid #333;
+    padding-top: 12px;
+  }
+  .five-mini .five-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #b0a898;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .five-bars {
+    display: flex;
+    gap: 4px;
+  }
+  .five-bar {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .five-bar.b1 { background: #3d1f1f; color: #e8a0a0; }
+  .five-bar.b2 { background: #3d2e1f; color: #e8c8a0; }
+  .five-bar.b3 { background: #3d3a1f; color: #e8e0a0; }
+  .five-bar.b4 { background: #1f3d2a; color: #a0e8b8; }
+  .five-bar.b5 { background: #1f2a3d; color: #a0c8e8; }
+  .five-bar .bar-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* 飞轮 */
+  .flywheel {
+    margin-top: 24px;
+    background: #252525;
+    border: 1px dashed #444;
+    border-radius: 8px;
+    padding: 18px 24px;
+    text-align: center;
+  }
+  .flywheel .fw-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #666;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  .flywheel .fw-chain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .flywheel .fw-node {
+    font-size: 12px;
+    color: #e8e2d6;
+    padding: 6px 14px;
+    background: #333;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .flywheel .fw-arrow {
+    font-size: 14px;
+    color: #c0392b;
+    padding: 0 6px;
+  }
+
+  /* 时间轴 */
+  .timeline-section {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+  }
+  .timeline-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .tl-row {
+    display: flex;
+    gap: 6px;
+  }
+  .tl-node {
+    flex: 1;
+    background: #252525;
+    border-radius: 6px;
+    padding: 12px;
+    border-top: 3px solid;
+    text-align: center;
+  }
+  .tl-node:nth-child(1) { border-color: #c0392b; }
+  .tl-node:nth-child(2) { border-color: #d4740a; }
+  .tl-node:nth-child(3) { border-color: #d4a40a; }
+  .tl-node:nth-child(4) { border-color: #2874a6; }
+  .tl-node:nth-child(5) { border-color: #1e8449; }
+  .tl-node .tl-time {
+    font-size: 11px;
+    font-weight: 700;
+    color: #e8e2d6;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .tl-node .tl-event {
+    font-size: 10.5px;
+    color: #999;
+    line-height: 1.5;
+  }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid #333;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- 标题 -->
+  <div class="title-bar">
+    <h1>AI 改造工作纲领</h1>
+    <div class="sub">全 景 架 构 图  ·  汽车事业部 AI 工程队  ·  2026.05</div>
+  </div>
+
+  <!-- 最高纲领 -->
+  <div class="top-banner">
+    <div class="label">最高纲领</div>
+    <div class="text">AI 重构广告行业 — 成为行业级实证</div>
+  </div>
+
+  <!-- ====== 第一层：理论构建 ====== -->
+  <div class="layer-zone">
+    <div class="layer-header">
+      <div class="layer-badge l1">I</div>
+      <div class="layer-info">
+        <div class="layer-name">理论构建层</div>
+        <div class="layer-scope">行业级视角 · 为什么做 · 超越部门日常</div>
+      </div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-main">
+        <div class="frameworks">
+          <div class="fw-card">
+            <span class="fw-icon">◇</span>
+            <div class="fw-name">四层价值模型</div>
+            <div class="fw-items">
+              技能层（AI替代）<br>
+              行业认知层（人+AI）<br>
+              客户认知层（人+AI）<br>
+              共识决策层（只有人）
+            </div>
+          </div>
+          <div class="fw-card">
+            <span class="fw-icon">◈</span>
+            <div class="fw-name">三阶段路径</div>
+            <div class="fw-items">
+              提效（练兵选将）<br>
+              ↓<br>
+              工作流重构（能力跃升）<br>
+              ↓<br>
+              商业模式创新
+            </div>
+          </div>
+          <div class="fw-card">
+            <span class="fw-icon">◆</span>
+            <div class="fw-name">行业趋势判断</div>
+            <div class="fw-items">
+              AI公司下场做咨询<br>
+              营销公司的交叉点机会<br>
+              "卖人头"→"卖知识"<br>
+              知识结构化 = 定价权
+            </div>
+          </div>
+        </div>
+        <!-- 五层模型 -->
+        <div class="five-mini">
+          <div class="five-title">客户AI协作平台 · 五层信息链路模型（远期方向）</div>
+          <div class="five-bars">
+            <div class="five-bar b1"><span class="bar-num">1</span>信号<br>采集</div>
+            <div class="five-bar b2"><span class="bar-num">2</span>蒸馏<br>结构化</div>
+            <div class="five-bar b3"><span class="bar-num">3</span>上下文<br>底座</div>
+            <div class="five-bar b4"><span class="bar-num">4</span>AI工作流<br>执行</div>
+            <div class="five-bar b5"><span class="bar-num">5</span>交付<br>反馈闭环</div>
+          </div>
+        </div>
+      </div>
+      <div class="layer-lateral">
+        <div class="lateral-tag">横向输出</div>
+        <div class="lateral-item">对P / 彭浩的行业级AI战略叙事</div>
+        <div class="lateral-item">公众号「AI营销进行时」系列理论文章</div>
+        <div class="lateral-item">行业演讲 / 白皮书的理论框架</div>
+        <div class="lateral-item">投资人信AI板块素材</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 连接线 -->
+  <div class="flow-arrow">
+    <span class="line"></span>
+    <span class="arrow-text">理论指导方向 ↓</span>
+  </div>
+
+  <!-- ====== 第二层：工程改造 ====== -->
+  <div class="layer-zone">
+    <div class="layer-header">
+      <div class="layer-badge l2">II</div>
+      <div class="layer-info">
+        <div class="layer-name">工程改造层</div>
+        <div class="layer-scope">部门级执行 · 做什么 · 四大改造项目</div>
+      </div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-main">
+        <div class="projects-grid">
+          <div class="proj-card">
+            <span class="proj-p pp1">P1</span>
+            <div class="proj-name">传统公关文案改造</div>
+            <div class="proj-desc">品牌知识库 + AI初稿 + 人工精修，一个人做三个人的活</div>
+            <div class="proj-meta">
+              <span><strong>试点</strong> 理想汽车</span>
+              <span><strong>关键人</strong> 孙鹏超</span>
+            </div>
+          </div>
+          <div class="proj-card">
+            <span class="proj-p pp2">P2</span>
+            <div class="proj-name">社会化运营改造</div>
+            <div class="proj-desc">热点监测 + 品牌适配 + 多平台素材初稿，半天→半小时</div>
+            <div class="proj-meta">
+              <span><strong>试点</strong> 奕派</span>
+            </div>
+          </div>
+          <div class="proj-card">
+            <span class="proj-p pp3">P3</span>
+            <div class="proj-name">创意策略改造</div>
+            <div class="proj-desc">Brief拆解 + 竞品分析 + 策略推导 + 方案包装</div>
+            <div class="proj-meta">
+              <span><strong>试点</strong> 下一次竞标实战</span>
+            </div>
+          </div>
+          <div class="proj-card">
+            <span class="proj-p pp4">P4</span>
+            <div class="proj-name">达芬奇Auto协作改造</div>
+            <div class="proj-desc">拿API自建需求翻译层：选号 / 脚本审核 / 数据复盘</div>
+            <div class="proj-meta">
+              <span><strong>协作</strong> 贾梦 / 庞亭亭</span>
+              <span><strong>挂靠</strong> 星合生态</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layer-lateral">
+        <div class="lateral-tag">横向输出</div>
+        <div class="lateral-item">各项目PRD / 验收标准</div>
+        <div class="lateral-item">改造后工作流SOP</div>
+        <div class="lateral-item">Skill使用手册</div>
+        <div class="lateral-item">阶段性效率数据报告</div>
+        <div class="lateral-item">AI文案中台组建方案</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 连接线 -->
+  <div class="flow-arrow">
+    <span class="line"></span>
+    <span class="arrow-text">项目拉动资源 ↓</span>
+  </div>
+
+  <!-- ====== 第三层：技术资源 ====== -->
+  <div class="layer-zone">
+    <div class="layer-header">
+      <div class="layer-badge l3">III</div>
+      <div class="layer-info">
+        <div class="layer-name">技术资源层</div>
+        <div class="layer-scope">底座级支撑 · 用什么做 · 人 + 工具 + 架构</div>
+      </div>
+    </div>
+    <div class="layer-body" style="flex-direction:column; gap:10px;">
+      <div class="layer-main" style="flex:none;">
+        <!-- 三底座 -->
+        <div class="infra-cols">
+          <div class="infra-col">
+            <div class="infra-title">知识库层</div>
+            <div class="infra-item">品牌知识库（调性/规范/历史稿件）</div>
+            <div class="infra-item">行业知识库（竞品/媒介/达人生态）</div>
+            <div class="infra-item">客户偏好库（审美/修改模式/红线）</div>
+          </div>
+          <div class="infra-col">
+            <div class="infra-title">AI工程协作层</div>
+            <div class="infra-item">Skill开发（最小AI能力单元）</div>
+            <div class="infra-item">Agent编排（多Skill串联）</div>
+            <div class="infra-item">工作流管理（+人工审核节点）</div>
+          </div>
+          <div class="infra-col">
+            <div class="infra-title">前端交付层</div>
+            <div class="infra-item">场景化工作台界面</div>
+            <div class="infra-item">AI审稿 + 反馈闭环系统</div>
+            <div class="infra-item">效果数据看板</div>
+          </div>
+        </div>
+        <!-- 人和工具 -->
+        <div class="resource-bar">
+          <div class="res-block">
+            <div class="res-label">团队</div>
+            <div class="res-content">
+              <strong>队长</strong> 陈思琦 · <strong>队员</strong> 高明翰 / 唐嘉晨 / 王心玲 / 游舒雅 / 周文棋<br>
+              <strong>种子用户</strong> 崔子晔 / 李国新 / 张梓琳 · <strong>预备</strong> 孙鹏超（文案中台）
+            </div>
+          </div>
+          <div class="res-block">
+            <div class="res-label">工具链</div>
+            <div class="res-content">
+              <strong>AI</strong> Claude（主力）· <strong>代码</strong> GitHub · <strong>数据</strong> 达芬奇API<br>
+              <strong>搜索</strong> 博查 / Tavily · <strong>协作</strong> 飞书 · <strong>部署</strong> GitHub Pages
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 飞轮 -->
+  <div class="flywheel">
+    <div class="fw-label">核心飞轮</div>
+    <div class="fw-chain">
+      <span class="fw-node">知识库沉淀</span>
+      <span class="fw-arrow">→</span>
+      <span class="fw-node">Skill/Agent产出</span>
+      <span class="fw-arrow">→</span>
+      <span class="fw-node">一线使用</span>
+      <span class="fw-arrow">→</span>
+      <span class="fw-node">反馈+新数据</span>
+      <span class="fw-arrow">→</span>
+      <span class="fw-node">知识库增厚</span>
+      <span class="fw-arrow">⟳</span>
+    </div>
+  </div>
+
+  <!-- 时间轴 -->
+  <div class="timeline-section">
+    <div class="timeline-title">执 行 节 奏  ·  2026</div>
+    <div class="tl-row">
+      <div class="tl-node">
+        <div class="tl-time">5月上旬</div>
+        <div class="tl-event">Kick-off<br>问卷基线<br>方向确认</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-time">5月下旬</div>
+        <div class="tl-event">知识库V1<br>P1首个Skill<br>对齐贾梦</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-time">6月上旬</div>
+        <div class="tl-event">P1闭环跑通<br>P2原型上线<br>拿达芬奇API</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-time">6月下旬</div>
+        <div class="tl-event">P3策略原型<br>文案中台启动<br>腰部推广</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-time">7月</div>
+        <div class="tl-event">四方向MVP<br>效率数据报告<br>管理层汇报</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    汽车事业部 AI 工程队  ·  内部工作文件  ·  2026.05
+  </div>
+
+</div>
+</body>
+</html>
