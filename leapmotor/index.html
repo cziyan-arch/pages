@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零跑C系列搜索优化与竞品拦截策略 5W2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f6f7;
+    color: #1f2329;
+    line-height: 1.75;
+    font-size: 14px;
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    padding: 48px 56px 80px;
+  }
+  /* Header */
+  .report-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #e8e8e8;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2329;
+    margin-bottom: 4px;
+  }
+  .report-header .subtitle {
+    font-size: 15px;
+    color: #646a73;
+    margin-bottom: 8px;
+  }
+  .report-header .meta {
+    font-size: 13px;
+    color: #8f959e;
+  }
+  .report-header .meta span { margin-right: 20px; }
+
+  /* Tabs */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 36px;
+    border-bottom: 2px solid #e8e8e8;
+  }
+  .tab-btn {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #646a73;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: #3370ff; }
+  .tab-btn.active {
+    color: #3370ff;
+    border-bottom-color: #3370ff;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Section */
+  .section { margin-bottom: 44px; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2329;
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 4px solid #3370ff;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #8f959e;
+    margin: -8px 0 16px 16px;
+    font-style: italic;
+  }
+  .sub-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2329;
+    margin: 24px 0 12px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 13px;
+  }
+  th {
+    background: #3370ff;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  tr:hover td { background: #f7f8fa; }
+
+  /* Priority tags */
+  .ptag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .ptag-p0 { background: #fff2f0; color: #ff4d4f; }
+  .ptag-p1 { background: #fff7e6; color: #fa8c16; }
+  .ptag-p2 { background: #e6f7ff; color: #1890ff; }
+  .ptag-p3 { background: #f5f5f5; color: #8f959e; }
+
+  /* Callout boxes */
+  .callout {
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .callout-blue {
+    background: #f0f5ff;
+    border-left: 3px solid #3370ff;
+  }
+  .callout-blue strong { color: #3370ff; }
+  .callout-yellow {
+    background: #fffbf0;
+    border-left: 3px solid #ff9500;
+  }
+  .callout-yellow strong { color: #ff9500; }
+  .callout-gray {
+    background: #f9f9f9;
+    border-left: 3px solid #8f959e;
+  }
+  .callout-red {
+    background: #fff2f0;
+    border-left: 3px solid #ff4d4f;
+  }
+  .callout-red strong { color: #ff4d4f; }
+
+  /* Competitor card headers */
+  .comp-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  .comp-header {
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+  }
+  .comp-header.lixiang { background: #1a1a2e; }
+  .comp-header.byd { background: #c4262e; }
+  .comp-header.deepal { background: #00a76f; }
+  .comp-header.tangdmi { background: #8b572a; }
+  .comp-body { padding: 16px 20px; }
+
+  /* Action cards */
+  .action-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 10px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .action-num {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #3370ff, #5b8def);
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .action-body { flex: 1; }
+  .action-tags { margin-bottom: 4px; }
+  .car-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+  .car-tag.c10 { background: #e6f7ff; color: #096dd9; }
+  .car-tag.c16 { background: #f6ffed; color: #389e0d; }
+  .car-tag.c11 { background: #fff7e6; color: #d46b08; }
+  .action-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2329;
+    margin-bottom: 4px;
+  }
+  .action-how {
+    font-size: 13px;
+    color: #4e5969;
+  }
+  .action-ref {
+    font-size: 12px;
+    color: #8f959e;
+    margin-top: 4px;
+  }
+
+  /* SOP flow */
+  .flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .flow-col {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .flow-col h4 {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 14px;
+    color: #fff;
+    background: #3370ff;
+    margin: 0;
+  }
+  .flow-col ul {
+    padding: 12px 14px 12px 30px;
+    font-size: 13px;
+    color: #4e5969;
+  }
+  .flow-col li { margin-bottom: 6px; }
+
+  /* SOP criteria list */
+  .criteria-list {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+  .criteria-list li {
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #4e5969;
+  }
+
+  /* Footer */
+  .report-footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid #e8e8e8;
+    font-size: 12px;
+    color: #8f959e;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    .page { padding: 24px 20px 40px; }
+    .flow-grid { grid-template-columns: 1fr; }
+    table { font-size: 12px; }
+    th, td { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- Header -->
+<div class="report-header">
+  <h1>零跑C系列搜索优化与竞品拦截策略</h1>
+  <div class="subtitle">5W2（2026年5月5日 - 5月11日）</div>
+  <div class="meta">
+    <span>数据采集：2026-05-13</span>
+    <span>覆盖车型：C10 / C16 / C11</span>
+    <span>数据来源：小红书MCP（10组搜索，约220条笔记）</span>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('strategy')">搜索优化与竞品拦截</button>
+  <button class="tab-btn" onclick="switchTab('sop')">热点监测SOP</button>
+</div>
+
+<!-- ==================== TAB 1: 策略文档 ==================== -->
+<div id="tab-strategy" class="tab-content active">
+
+<div class="callout callout-blue">
+  <strong>核心目标：</strong>通过搜索词占位和竞品内容拦截，驱动A3（兴趣人群）增长，优化CPC/CPTI。<br>
+  <strong>核心原则：</strong>搜索优化 > 热点追踪。热点是锦上添花，搜索词占位才是基本盘。
+</div>
+
+<!-- 一、内容缺口诊断 -->
+<div class="section">
+  <h2 class="section-title">一、内容缺口诊断（按车型）</h2>
+
+  <h3 class="sub-title">C10 内容缺口</h3>
+  <table>
+    <thead>
+      <tr><th>缺口词</th><th>当前内容质量评估</th><th>缺口等级</th><th>补充优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>C10 800V快充体验</td>
+        <td>几乎无专门内容。800V是C10同级唯一卖点但搜不到相关优质内容</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> 核心差异化卖点无内容支撑</td>
+      </tr>
+      <tr>
+        <td>C10 续航/充电</td>
+        <td>存在"续航缩水血泪控诉"等负面(32赞)，无有力正面续航实测来对冲</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p1">P1</span> 需要车主真实续航数据内容</td>
+      </tr>
+      <tr>
+        <td>C10 vs 海狮06 对比</td>
+        <td>有内容但多为小KOL，单帖468评说明需求旺盛。莉卡626赞视频是目前最强</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p1">P1</span> 急需更多头部对比内容占位</td>
+      </tr>
+      <tr>
+        <td>C10 智驾/CNAP体验</td>
+        <td>有内容但数量不足，竞品海狮06天神之眼B讨论更多</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td>C10 空间/实用性</td>
+        <td>"家庭用车首选C系怎么挑"(966赞)覆盖部分，缺C10单独空间测评</td>
+        <td>轻度缺口</td>
+        <td><span class="ptag ptag-p2">P2</span></td>
+      </tr>
+      <tr>
+        <td>C10 提车用车体验</td>
+        <td>"26款C10提车一个月感受"(748赞/442评)，质量不错</td>
+        <td>基本覆盖</td>
+        <td><span class="ptag ptag-p3">P3</span> 持续补充即可</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout callout-red">
+    <strong>关键发现：</strong>C10的800V快充是同价位唯一配置，但平台上几乎搜不到充电体验内容。这是最大的搜索缺口。
+  </div>
+
+  <h3 class="sub-title">C16 内容缺口</h3>
+  <table>
+    <thead>
+      <tr><th>缺口词</th><th>当前内容质量评估</th><th>缺口等级</th><th>补充优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>C16 vs 理想L6</td>
+        <td>有对比但互动一般。全新理想L6即将上市，对比内容将面临全面更新需求</td>
+        <td>紧急缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> 新L6上市前必须抢先布局</td>
+      </tr>
+      <tr>
+        <td>C16 纯电续航280km</td>
+        <td>无专门内容展示280km纯电体验，而这是对理想L6(212km)的核心优势</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> 必须做，且要在新L6上市前</td>
+      </tr>
+      <tr>
+        <td>C16 床车/露营</td>
+        <td>"最适合做床车的SUV"(3782赞)是C16最爆内容形态，但仅此一条头部</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p1">P1</span> 高ROI方向，加大复制</td>
+      </tr>
+      <tr>
+        <td>C16 冰箱+后排屏+一键成床</td>
+        <td>有内容但零散，缺少"组合拳"式配置体验内容</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td>C16 vs 唐DMi（六座）</td>
+        <td>内容较多，二胎/带娃角度活跃。"二胎宝妈选车记"(262赞)口碑偏正面</td>
+        <td>轻度缺口</td>
+        <td><span class="ptag ptag-p2">P2</span> 继续保持亲子角度产出</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout callout-red">
+    <strong>关键发现：</strong>全新理想L6已进工信部（51度大电池+4激光雷达可选），C16 vs L6的对比格局即将改变。必须在新L6上市前密集产出对比内容，建立"C16更划算"的搜索印象。
+  </div>
+
+  <h3 class="sub-title">C11 内容缺口</h3>
+  <table>
+    <thead>
+      <tr><th>缺口词</th><th>当前内容质量评估</th><th>缺口等级</th><th>补充优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>C11 vs 深蓝S07</td>
+        <td>需求极度旺盛——多帖评论量爆表(289/265/173/143/122/117评)，零跑方有影响力对比内容极少</td>
+        <td>最严重缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> C11最大战场，必须立即投入</td>
+      </tr>
+      <tr>
+        <td>C11 NAPPA座椅体验</td>
+        <td>NAPPA真皮全系标配是C11核心差异点(S07/海狮06全系无)，但无专门展示</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> 最容易感知的差异化卖点</td>
+      </tr>
+      <tr>
+        <td>C11 华为ADS对标</td>
+        <td>深蓝S07主打华为ADS(官方联名)，C11 CNAP缺同等声量的智驾实测</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p0">P0</span> 被华为叙事压制</td>
+      </tr>
+      <tr>
+        <td>C11 vs 海狮06</td>
+        <td>"C11和海狮06我emo了"(358赞)有热度，零跑方主导对比不足</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td>C11 双叉臂底盘</td>
+        <td>无内容。前双叉臂 vs 竞品麦弗逊，20万级才有的配置但无人讲</td>
+        <td>严重缺口</td>
+        <td><span class="ptag ptag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td>C11 女性用车/孕妈选车</td>
+        <td>"孕妈选车记"(16赞)等内容很弱</td>
+        <td>中度缺口</td>
+        <td><span class="ptag ptag-p2">P2</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout callout-red">
+    <strong>关键发现：</strong>C11 vs 深蓝S07是三个车型中纠结度最高的战场（评论数远超其他对比组合），但零跑方几乎无有力对比内容主导叙事。深蓝靠"华为ADS"叙事占据了智驾高地。
+  </div>
+</div>
+
+<!-- 二、竞品内容拦截策略 -->
+<div class="section">
+  <h2 class="section-title">二、竞品内容拦截策略</h2>
+
+  <div class="callout callout-yellow">
+    <strong>拦截原则——同维度拦截：</strong>竞品在什么维度上建立认知，就在同一维度上正面回应。例如竞品主打充电速度，就用充电数据反击，不要跳到智驾或配置去"打岔"。同维度回应才能真正拦截搜索流量，跨维度回应只会让用户觉得答非所问。
+  </div>
+
+  <!-- 海狮06 -->
+  <div class="comp-card">
+    <div class="comp-header byd">2.1 海狮06 EV（C10/C11共同竞品）</div>
+    <div class="comp-body">
+      <table>
+        <thead>
+          <tr><th>竞品热点词/话题</th><th>拦截角度</th><th>对应C系优势</th><th>内容形式建议</th><th>车型</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"海狮06缺点合集"(509赞/328评)</td>
+            <td>负面情绪截流</td>
+            <td>C10同价位800V+更高配置</td>
+            <td>图文："海狮06车主最想改的5个地方，C10全解决了"</td>
+            <td><span class="car-tag c10">C10</span></td>
+          </tr>
+          <tr>
+            <td>"买车前10大问题"(1209赞/749收藏)</td>
+            <td>复制FAQ高收藏格式</td>
+            <td>C10全维度对标回答</td>
+            <td>图文："零跑C10购买前必看10个问题"</td>
+            <td><span class="car-tag c10">C10</span></td>
+          </tr>
+          <tr>
+            <td>"产品使用说明书"系列(上1594赞)</td>
+            <td>体系化教育内容对标</td>
+            <td>C10/C11功能丰富度</td>
+            <td>系列图文："零跑隐藏功能大全"</td>
+            <td><span class="car-tag c10">C10</span><span class="car-tag c11">C11</span></td>
+          </tr>
+          <tr>
+            <td>海狮06充电速度（非800V）</td>
+            <td>同维度拦截——充电速度碾压</td>
+            <td>C10 800V快充，同价位唯一</td>
+            <td>视频：同一充电站计时对比</td>
+            <td><span class="car-tag c10">C10</span></td>
+          </tr>
+          <tr>
+            <td>"提车即emo"(101赞/208评)</td>
+            <td>负面情绪截流——购后不满转化</td>
+            <td>C10提车体验+售后服务</td>
+            <td>视频："提车一个月，C10让我惊喜的地方"</td>
+            <td><span class="car-tag c10">C10</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 深蓝S07 -->
+  <div class="comp-card">
+    <div class="comp-header deepal">2.2 深蓝S07（C11核心竞品）</div>
+    <div class="comp-body">
+      <table>
+        <thead>
+          <tr><th>竞品热点词/话题</th><th>拦截角度</th><th>对应C系优势</th><th>内容形式建议</th><th>车型</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"华为乾崑×深蓝S07"华为ADS智驾(521赞)</td>
+            <td>同维度拦截——日常通勤场景PK</td>
+            <td>C11 CNAP城区NOA实际体验</td>
+            <td>视频："15万城区通勤实测：CNAP vs 华为ADS"</td>
+            <td><span class="car-tag c11">C11</span></td>
+          </tr>
+          <tr>
+            <td>"黑马S07卖爆了"(151赞)</td>
+            <td>用配置清单打破"爆款=最优"</td>
+            <td>S07全系无NAPPA/按摩/通风/HUD/香氛，C11全有</td>
+            <td>图文清单："15万配置天花板"</td>
+            <td><span class="car-tag c11">C11</span></td>
+          </tr>
+          <tr>
+            <td>赵今麦明星代言+达人全链路投放</td>
+            <td>用真实车主体验对冲明星代言</td>
+            <td>C11车主真实反馈+配置体感</td>
+            <td>视频："不看明星看配置"</td>
+            <td><span class="car-tag c11">C11</span></td>
+          </tr>
+          <tr>
+            <td>S07底盘操控宣传</td>
+            <td>同维度拦截——底盘硬实力对比</td>
+            <td>C11前双叉臂 vs S07麦弗逊（20万级配置）</td>
+            <td>视频：过减速带/弯道体感对比</td>
+            <td><span class="car-tag c11">C11</span></td>
+          </tr>
+          <tr>
+            <td>S07达人覆盖亲子场景(四娃妈1331赞)</td>
+            <td>同维度拦截——亲子场景+舒适性</td>
+            <td>C11 NAPPA座椅+通风+后排空间</td>
+            <td>视频："孕妈选车，坐进去就知道选谁"</td>
+            <td><span class="car-tag c11">C11</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 理想L6 -->
+  <div class="comp-card">
+    <div class="comp-header lixiang">2.3 理想L6（C16核心竞品）</div>
+    <div class="comp-body">
+      <table>
+        <thead>
+          <tr><th>竞品热点词/话题</th><th>拦截角度</th><th>对应C系优势</th><th>内容形式建议</th><th>车型</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"全新L6工信部备案"(339赞/606转)</td>
+            <td>抢占决策窗口——拦截等等党</td>
+            <td>C16已上市，配置+价格确定可提车</td>
+            <td>图文："等新L6还是现在买C16？帮你算笔账"</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>钟文泽评测(9914赞)头部KOL背书</td>
+            <td>中腰部达人密集产出+车主真实故事</td>
+            <td>C16真实使用场景（床车3782赞验证）</td>
+            <td>视频：车主决策故事"不等新L6了"</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>新L6电池升级51度(约240-260km纯电)</td>
+            <td>同维度拦截——续航正面对比</td>
+            <td>C16纯电280km，仍有优势</td>
+            <td>视频："增程SUV纯电续航对比实测"</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>"理想L6值不值25万"价格讨论</td>
+            <td>同维度拦截——价格正面碾压</td>
+            <td>C16顶配17万 vs L6起步25万</td>
+            <td>图文："差出的8万你能买什么"</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>"被锁电了?"理想负面信号</td>
+            <td>负面情绪截流</td>
+            <td>C16无类似争议+OTA透明</td>
+            <td>图文：C16车主OTA体验+续航稳定性</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 唐DMi -->
+  <div class="comp-card">
+    <div class="comp-header tangdmi">2.4 唐DMi/唐L（C16六座竞品）</div>
+    <div class="comp-body">
+      <table>
+        <thead>
+          <tr><th>竞品热点词/话题</th><th>拦截角度</th><th>对应C系优势</th><th>内容形式建议</th><th>车型</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"二胎宝妈选车"亲子场景(262赞)</td>
+            <td>同维度拦截——亲子场景PK</td>
+            <td>C16独立二排+过道可调 vs 唐固定二排</td>
+            <td>视频：二胎家庭一日用车Vlog</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>26款唐DMI新款外观</td>
+            <td>用"里子"对冲"面子"</td>
+            <td>C16冰箱+后排屏+一键成床组合拳</td>
+            <td>图文：不看外观看功能配置对比</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+          <tr>
+            <td>唐L增程续航(215km纯电)</td>
+            <td>同维度拦截——纯电续航对比</td>
+            <td>C16增程280km vs 唐L 215km</td>
+            <td>视频："一周通勤不加油的增程SUV"</td>
+            <td><span class="car-tag c16">C16</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 三、犹豫用户转化策略 -->
+<div class="section">
+  <h2 class="section-title">三、犹豫用户转化策略（按疑虑类型）</h2>
+  <div class="section-desc">针对A3（兴趣）阶段犹豫用户，按核心疑虑类型匹配内容方案，降低CPC/CPTI</div>
+
+  <div class="callout callout-gray">
+    <strong>数据信号：</strong>评论量远超点赞量 = 用户处于购买决策阶段。如C11 vs S07帖289评/235赞、C10 vs 海狮06帖468评/75赞——评论区就是零跑达人内容最应该出现的地方。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th style="width:100px;">疑虑类型</th><th>适用车型</th><th>内容切入角度</th><th>推荐表达方式</th><th>参考选题</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>价格值不值</strong></td>
+        <td><span class="car-tag c16">C16</span> vs L6</td>
+        <td>差价可视化：8万换算成装修/旅行/教育</td>
+        <td>车主真实算账贴</td>
+        <td>"差出的8万能装修一个房间"(107赞验证)</td>
+      </tr>
+      <tr>
+        <td><strong>价格值不值</strong></td>
+        <td><span class="car-tag c10">C10</span><span class="car-tag c11">C11</span></td>
+        <td>配置密度对比：同价位碾压，让"值"可视化</td>
+        <td>清单式图文：逐项配置有无对比</td>
+        <td>"15万买到NAPPA/HUD/双叉臂——竞品全都没有"</td>
+      </tr>
+      <tr>
+        <td><strong>品牌信任度</strong></td>
+        <td><span class="car-tag c10">C10</span></td>
+        <td>"小品牌靠谱吗"——真实车主长期反馈替代品牌叙事</td>
+        <td>提车N个月真实反馈Vlog</td>
+        <td>"C10提车一个月感受"(748赞/442评已验证)</td>
+      </tr>
+      <tr>
+        <td><strong>品牌信任度</strong></td>
+        <td><span class="car-tag c16">C16</span></td>
+        <td>品牌溢价拆解：把"理想值"的心理锚点用配置打破</td>
+        <td>从纠结到选择的心路历程帖</td>
+        <td>"不等新L6了，说说我为什么选了C16"</td>
+      </tr>
+      <tr>
+        <td><strong>续航焦虑</strong></td>
+        <td><span class="car-tag c10">C10</span></td>
+        <td>800V快充同价位唯一——用充电计时让速度差肉眼可见</td>
+        <td>视频：同一充电站双车计时对比</td>
+        <td>"C10 800V充电15分钟续航+200km实测"</td>
+      </tr>
+      <tr>
+        <td><strong>续航焦虑</strong></td>
+        <td><span class="car-tag c16">C16</span></td>
+        <td>280km vs L6约240km/唐L 215km，一周通勤证明"不加油"</td>
+        <td>Vlog：一周通勤不加油挑战</td>
+        <td>"C16 280km一周通勤不加油实测"</td>
+      </tr>
+      <tr>
+        <td><strong>续航焦虑</strong></td>
+        <td><span class="car-tag c10">C10</span></td>
+        <td>存在"续航缩水"负面，需用真实数据对冲</td>
+        <td>多场景续航实测</td>
+        <td>"C10真实续航：高速/城区/空调全开"</td>
+      </tr>
+      <tr>
+        <td><strong>智驾信任</strong></td>
+        <td><span class="car-tag c11">C11</span></td>
+        <td>华为ADS心智极强——日常通勤场景PK，不比参数比体感</td>
+        <td>双车同路线对比实测视频</td>
+        <td>"CNAP vs 华为ADS，上下班谁更省心"</td>
+      </tr>
+      <tr>
+        <td><strong>空间/实用性</strong></td>
+        <td><span class="car-tag c16">C16</span></td>
+        <td>二胎家庭核心关切：六座灵活性+带娃便利性</td>
+        <td>家庭一日用车Vlog</td>
+        <td>"C16独立二排+过道可调 vs 唐固定二排"</td>
+      </tr>
+      <tr>
+        <td><strong>空间/实用性</strong></td>
+        <td><span class="car-tag c16">C16</span></td>
+        <td>床车/露营最爆内容形态(3782赞)，但仅一条头部</td>
+        <td>露营/自驾Vlog</td>
+        <td>"冰箱+后排屏+一键成床"</td>
+      </tr>
+      <tr>
+        <td><strong>舒适配置感知</strong></td>
+        <td><span class="car-tag c11">C11</span></td>
+        <td>NAPPA真皮全系标配——不用懂参数，坐上去就知道</td>
+        <td>座椅横评：触感/按摩/通风体感视频</td>
+        <td>"开了一周C11和S07，座上去就知道选谁"</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 四、执行优先级TOP10 -->
+<div class="section">
+  <h2 class="section-title">四、执行优先级 TOP10</h2>
+  <div class="section-desc">按P0缺口+竞品紧迫度+数据验证排序</div>
+
+  <div class="action-card">
+    <div class="action-num">1</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c11">C11</span></div>
+      <div class="action-title">C11配置天花板清单：NAPPA/按摩/通风/HUD/香氛/双叉臂，S07全都没有</div>
+      <div class="action-how">图文清单。逐项列C11 vs S07配置有无对比，用"15万买到的配置天花板"为钩子。不用懂参数，一张图看完差距。</div>
+      <div class="action-ref">依据：C11最大战场+最严重内容缺口+S07配置短板明确</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">2</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c10">C10</span></div>
+      <div class="action-title">C10 800V充电实测：计时充电+续航增长可视化</div>
+      <div class="action-how">视频。同一充电站，C10和竞品（海狮06）同时充电计时。画面分屏：左C10充15分钟+200km，右竞品充30分钟+150km。让差距肉眼可见。</div>
+      <div class="action-ref">依据：核心差异化卖点零内容，P0缺口</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">3</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c16">C16</span></div>
+      <div class="action-title">"不等新L6了"C16车主决策故事</div>
+      <div class="action-how">图文/视频。真实车主心路历程：原来想等新L6→算完账发现C16顶配17万 vs L6起步25万→配置对比后下定。重点写"我原来觉得理想值，直到..."的反转。</div>
+      <div class="action-ref">依据：新L6上市在即，窗口期紧迫</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">4</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c11">C11</span></div>
+      <div class="action-title">C11 vs S07城区智驾日常通勤实测</div>
+      <div class="action-how">视频。同一条通勤路线，C11 CNAP vs S07华为ADS实测。不比参数比体感：谁更流畅、谁介入更少、谁处理路口更好。标题："15万城区通勤：CNAP vs 华为ADS谁更好用"</div>
+      <div class="action-ref">依据：被华为叙事压制，需要体验向内容对冲</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">5</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c16">C16</span></div>
+      <div class="action-title">C16增程纯电280km一周通勤不加油实测</div>
+      <div class="action-how">视频Vlog。记录一周通勤全程纯电：周一出发满电→每天路程+剩余电量→周五还剩多少。用日历+数字让280km变成具体感受。</div>
+      <div class="action-ref">依据：续航优势无内容支撑，P0缺口</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">6</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c10">C10</span></div>
+      <div class="action-title">"纠结C10和海狮06？5个场景秒选"</div>
+      <div class="action-how">图文。5个真实使用场景PK（充电/空间/智驾/配置/保值），每个场景给结论。不说"C10好"，说"在这个场景下你更需要哪个"。</div>
+      <div class="action-ref">依据：468评说明对比需求极旺</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">7</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c16">C16</span></div>
+      <div class="action-title">C16二胎家庭一日用车Vlog</div>
+      <div class="action-how">视频。从早上送娃上学→买菜→接娃放学→周末全家出游，展示独立二排+过道可调+后排屏+冰箱在真实家庭场景中的使用。</div>
+      <div class="action-ref">依据：亲子场景已验证高互动</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">8</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c10">C10</span></div>
+      <div class="action-title">C10购买前必看10问（FAQ格式）</div>
+      <div class="action-how">图文。模仿海狮06"买车前10大问题"(1209赞/749收藏)的高收藏格式。10个购车常见问题+简明回答，信息密度高=高收藏。</div>
+      <div class="action-ref">依据：模仿海狮06的成功内容格式</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">9</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c11">C11</span></div>
+      <div class="action-title">C11座椅横评：NAPPA真皮 vs 竞品普通皮/仿皮触感对比</div>
+      <div class="action-how">视频。用手触摸+特写镜头对比NAPPA真皮和竞品皮革的质感差异。加上按摩功能演示、座椅通风体感。不用懂参数，摸上去就知道差距。</div>
+      <div class="action-ref">依据：最容易感知的差异化，用户不用懂参数</div>
+    </div>
+  </div>
+
+  <div class="action-card">
+    <div class="action-num">10</div>
+    <div class="action-body">
+      <div class="action-tags"><span class="car-tag c16">C16</span></div>
+      <div class="action-title">"C16 vs L6 算账贴"——8万差价可视化</div>
+      <div class="action-how">图文。C16顶配17万 vs L6起步25万，8万差价=装修一个房间/全家三次出国游/孩子两年辅导班。用具体生活场景让差价有温度。</div>
+      <div class="action-ref">依据：已有107赞内容验证角度</div>
+    </div>
+  </div>
+</div>
+
+<!-- 五、数据附录 -->
+<div class="section">
+  <h2 class="section-title">五、数据附录</h2>
+
+  <h3 class="sub-title">搜索执行记录</h3>
+  <table>
+    <thead>
+      <tr><th>搜索组</th><th>关键词</th><th>结果数</th><th>关键发现</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>零跑C10 (最新)</td><td>22</td><td>头部内容"刀法精准"1660赞；负面信号"续航缩水"存在</td></tr>
+      <tr><td>2</td><td>零跑C16 (最新)</td><td>22</td><td>"床车"3782赞是C16最强内容形态；27款谍照已出</td></tr>
+      <tr><td>3</td><td>零跑C11 (最新)</td><td>22</td><td>官方"一图读懂"1717赞；"由爱转失望"负面需关注</td></tr>
+      <tr><td>4</td><td>深蓝S07 (最新)</td><td>22</td><td>华为ADS是绝对核心叙事；"卖爆了"势能上升</td></tr>
+      <tr><td>5</td><td>理想L6 (最新)</td><td>22</td><td>新L6工信部备案是最大新闻；钟文泽9914赞</td></tr>
+      <tr><td>6</td><td>海狮06 (最新)</td><td>22</td><td>负面互动极高；官方教育内容体系化</td></tr>
+      <tr><td>7</td><td>C10 海狮06 对比</td><td>22</td><td>单帖468评=极度活跃的对比战场</td></tr>
+      <tr><td>8</td><td>C16 理想L6 对比</td><td>20</td><td>新L6讨论主导，C16对比内容偏弱</td></tr>
+      <tr><td>9</td><td>唐DMi C16</td><td>22</td><td>亲子场景是主要对比角度</td></tr>
+      <tr><td>10</td><td>C11 深蓝S07 对比</td><td>22</td><td>评论量爆炸(289/265/173/143/122/117评)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">高互动对比帖TOP10（按评论量排序）</h3>
+  <table>
+    <thead>
+      <tr><th>标题</th><th>作者</th><th>赞</th><th>评</th><th>对比组合</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>海狮06ev 对比零跑c10</td><td>每天晒白牙</td><td>75</td><td>468</td><td>C10 vs 海狮06</td></tr>
+      <tr><td>自己总结的海狮06EV缺点合集</td><td>老郭小马</td><td>509</td><td>328</td><td>海狮06(负面)</td></tr>
+      <tr><td>纠结…… C11 还是深蓝 S07</td><td>cheney</td><td>235</td><td>289</td><td>C11 vs S07</td></tr>
+      <tr><td>(无标题对比帖)</td><td>啧啧啧</td><td>64</td><td>278</td><td>C16 vs L6</td></tr>
+      <tr><td>海狮06,零跑c11，深蓝s07选哪个</td><td>啦啦啦啦啦</td><td>86</td><td>265</td><td>C11三方对比</td></tr>
+      <tr><td>提车即emo海狮06EV710远航版</td><td>零七八碎</td><td>101</td><td>208</td><td>海狮06(负面)</td></tr>
+      <tr><td>理想 i6 半壁江山</td><td>车范思</td><td>56</td><td>214</td><td>L6讨论</td></tr>
+      <tr><td>海狮06值不值得购买</td><td>小红薯</td><td>276</td><td>203收</td><td>海狮06购买决策</td></tr>
+      <tr><td>纠结了，不知道选择哪台车</td><td>爆破大队</td><td>18</td><td>173</td><td>C11/S07/海狮06</td></tr>
+      <tr><td>帮忙选车，深蓝s07 VS 零跑C11</td><td>我妈是朵朵</td><td>57</td><td>143</td><td>C11 vs S07</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-gray">
+    <strong>信号：</strong>评论量 >> 点赞量 = 用户处于购买决策阶段，正在评论区寻求建议。这些帖子下的评论区就是零跑达人内容最应该"出现"的地方。
+  </div>
+</div>
+
+</div><!-- end tab-strategy -->
+
+<!-- ==================== TAB 2: 热点监测SOP ==================== -->
+<div id="tab-sop" class="tab-content">
+
+<div class="callout callout-yellow">
+  <strong>核心原则：</strong>热点是锦上添花，不是核心。达人内容的基本盘是搜索优化和竞品拦截。热点内容仅在以下三个条件同时成立时才执行：<br>
+  1. 达人账号调性与热点天然契合（不硬蹭）<br>
+  2. 创意方案自然不做作（用户看不出是"借热点"）<br>
+  3. 零跑产品有真实的功能/场景连接点（不是强行关联）<br>
+  <strong>三条缺一不做。热点内容占整体达人内容产出的比例建议不超过20%。</strong>
+</div>
+
+<!-- 三模块及优先级 -->
+<div class="section">
+  <h2 class="section-title">三模块及优先级</h2>
+  <table>
+    <thead>
+      <tr><th>优先级</th><th>模块</th><th>说明</th><th>产出频率</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="ptag ptag-p0">1</span></td><td>品牌热点洞察</td><td>以零跑品牌整体视角，追踪与品牌认知相关的平台信号</td><td>持续</td></tr>
+      <tr><td><span class="ptag ptag-p1">2</span></td><td>小红书官方推流汇总</td><td>平台官方扶持的内容方向、话题活动、流量倾斜</td><td>周度</td></tr>
+      <tr><td><span class="ptag ptag-p2">3</span></td><td>周热梗追踪</td><td>平台级热梗/叙事模式/情绪趋势</td><td>周度</td></tr>
+      <tr><td><span class="ptag ptag-p3">4</span></td><td>热点内容汇总</td><td>蒲公英热点/热搜词/官方账号动态等多源采集</td><td>周度</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-blue">
+    <strong>优先级逻辑：</strong>品牌热点直接服务于品牌认知建设，价值最高。官方推流有流量加持，ROI确定性强。周热梗和热点内容属于"碰运气"——碰上合适的就做，碰不上不强求。
+  </div>
+</div>
+
+<!-- 模块一 -->
+<div class="section">
+  <h2 class="section-title">模块一：品牌热点洞察</h2>
+  <p class="section-desc">不区分车型，以零跑品牌整体视角追踪以下信号</p>
+
+  <h3 class="sub-title">监测维度</h3>
+  <ul class="criteria-list">
+    <li>零跑品牌在小红书的用户自发讨论（正面口碑放大/负面情绪预警）</li>
+    <li>零跑相关的平台热搜词变化</li>
+    <li>行业事件中零跑被提及的语境（如新能源政策、竞品发布时用户的横向比较）</li>
+    <li>零跑品牌认知关键词的搜索趋势（"性价比""半价理想""配置天花板"等）</li>
+  </ul>
+
+  <h3 class="sub-title">输出要求</h3>
+  <ul class="criteria-list">
+    <li>每周提炼2-3条品牌层面的认知信号</li>
+    <li>标注信号方向（正面强化/负面需对冲/中性待观察）</li>
+    <li>给出达人内容响应建议（放大/回应/忽略）</li>
+  </ul>
+
+  <div class="callout callout-blue">
+    <strong>示例：</strong><br>
+    信号：本周"零跑刀法精准"帖(1660赞)带动用户自发讨论零跑定价策略<br>
+    方向：正面强化<br>
+    建议：安排1-2位知识型达人做"零跑为什么能把价格打下来"的供应链/技术解读内容，放大"精准刀法"的品牌认知
+  </div>
+</div>
+
+<!-- 模块二 -->
+<div class="section">
+  <h2 class="section-title">模块二：小红书官方推流汇总</h2>
+
+  <h3 class="sub-title">采集来源</h3>
+  <ul class="criteria-list">
+    <li>小红书官方话题活动/挑战赛</li>
+    <li>蒲公英平台推荐的内容方向</li>
+    <li>小红书行业扶持政策（汽车垂类）</li>
+  </ul>
+
+  <h3 class="sub-title">筛选标准</h3>
+  <ul class="criteria-list">
+    <li>是否有明确的流量加持（官方加权/话题页入口）</li>
+    <li>零跑达人是否具备参与条件（粉丝量/内容类型/账号标签）</li>
+    <li>参与成本是否可控（不需要额外制作/改变原有内容节奏）</li>
+  </ul>
+
+  <h3 class="sub-title">输出格式</h3>
+  <table>
+    <thead>
+      <tr><th>活动/话题</th><th>流量机制</th><th>参与门槛</th><th>零跑适配度</th><th>建议动作</th></tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5" style="text-align:center; color:#8f959e; font-style:italic;">（每周根据平台实际情况填充）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 模块三 -->
+<div class="section">
+  <h2 class="section-title">模块三：周热梗追踪</h2>
+  <p class="section-desc">追踪范围：小红书发现页高频内容形态、跨品类爆款叙事模式、平台级情绪趋势</p>
+
+  <h3 class="sub-title">采集方法</h3>
+  <ul class="criteria-list">
+    <li>人工浏览发现页（核心，不可替代）</li>
+    <li>小红书热搜词监测</li>
+    <li>跨平台热点参考（微博/抖音/B站向小红书迁移的趋势）</li>
+  </ul>
+
+  <h3 class="sub-title">筛选标准（四项同时满足）</h3>
+  <ol class="criteria-list">
+    <li><strong>价值导向健康：</strong>内容基调积极正向，无争议风险</li>
+    <li><strong>情绪锚点准确：</strong>热梗承载的情绪与零跑目标受众共振（家庭幸福感/独立自主/精致生活/理性消费）</li>
+    <li><strong>内容具备深度：</strong>不是纯跟风模仿，能结合产品场景做出差异化</li>
+    <li><strong>规模效应潜力：</strong>该热梗仍处于上升期或平台期，非尾部衰退期</li>
+  </ol>
+</div>
+
+<!-- 模块四 -->
+<div class="section">
+  <h2 class="section-title">模块四：热点内容汇总</h2>
+  <div class="callout callout-gray">
+    采集来源：蒲公英热点推荐、小红书热搜词、品牌官方账号动态、竞品热点动作。<br>
+    此模块为信息池，不直接指导执行。其价值是为模块一到三提供数据支撑。
+  </div>
+</div>
+
+<!-- 统一输出格式 -->
+<div class="section">
+  <h2 class="section-title">统一输出格式：热点汇总表</h2>
+  <p class="section-desc">所有进入候选的热点统一录入以下表格</p>
+  <table>
+    <thead>
+      <tr><th>热点关键词</th><th>情绪类型</th><th>迁移可能性</th><th>平台调性匹配度</th><th>受众匹配度</th><th>建议借用方式</th><th>优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="7" style="text-align:center; color:#8f959e; font-style:italic;">（每周根据采集结果填充）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-blue" style="font-size:12px;">
+    <strong>字段说明：</strong><br>
+    迁移可能性：高（天然关联如出行/家庭/消费决策）/ 中（需创意桥接）/ 低（强行关联显生硬）<br>
+    平台调性匹配度：高（图文/视频均适合）/ 中（需调整表达）/ 低（更适合其他平台）<br>
+    受众匹配度：高（25-35岁家庭/首购/理性消费者）/ 中（泛人群部分重合）/ 低（不重合）<br>
+    优先级：A（三个"高"+四项筛选标准，本周执行）/ B（两个"高"，可选执行）/ C（仅储备）
+  </div>
+</div>
+
+<!-- 执行流程 -->
+<div class="section">
+  <h2 class="section-title">执行流程</h2>
+  <div class="flow-grid">
+    <div class="flow-col">
+      <h4>周一：采集</h4>
+      <ul>
+        <li>人工浏览小红书发现页（30分钟）→ 记录5-10个候选热梗</li>
+        <li>AI搜索品牌关键词+竞品关键词 → 品牌热点信号</li>
+        <li>整理官方活动/蒲公英推荐</li>
+      </ul>
+    </div>
+    <div class="flow-col">
+      <h4>周二：筛选</h4>
+      <ul>
+        <li>候选热点录入汇总表，逐项评估</li>
+        <li>品牌热点信号标注方向和建议</li>
+        <li>筛选出A级热点（通常0-2个）</li>
+      </ul>
+    </div>
+    <div class="flow-col">
+      <h4>周三前：输出</h4>
+      <ul>
+        <li>热点汇总表（完整版）</li>
+        <li>品牌认知信号周报（2-3条）</li>
+        <li>A级热点的具体达人brief建议（如有）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout callout-yellow">
+    <strong>注意：</strong>如果本周无A级热点，正常。不为了填表而凑热点。把精力放回搜索优化和竞品拦截。
+  </div>
+</div>
+
+</div><!-- end tab-sop -->
+
+<!-- Footer -->
+<div class="report-footer">
+  <div>
+    <div>报告生成：Claude Code + 小红书MCP</div>
+    <div>版本：Prompt 1 V2 + Prompt 2 5W2</div>
+  </div>
+  <div style="text-align:right;">
+    <div>数据时效：2026-05-13 采集</div>
+    <div>约220条笔记数据（10组搜索）</div>
+  </div>
+</div>
+
+</div><!-- end page -->
+
+<script>
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
