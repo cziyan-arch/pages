@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公关文案 AI Skill 工程方法论</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  background: #f8f9fa;
+  color: #1a1a2e;
+  line-height: 1.8;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.header .subtitle {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.header .meta {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+section {
+  margin-bottom: 48px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3b82f6;
+  display: inline-block;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+p {
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: #374151;
+}
+
+.insight-box {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.insight-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #1e40af;
+}
+
+.warning-box {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.warning-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #92400e;
+}
+
+.step-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.step-card .step-number {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.step-card .step-title {
+  display: inline;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.step-card .step-body {
+  margin-top: 14px;
+  padding-left: 38px;
+}
+
+.step-card .step-body ul {
+  list-style: none;
+  padding: 0;
+}
+
+.step-card .step-body ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.step-card .step-body ul li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.principle {
+  background: #f0fdf4;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #166534;
+}
+
+.error-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.error-table th {
+  background: #f1f5f9;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.error-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.error-table .wrong {
+  color: #dc2626;
+}
+
+.error-table .right {
+  color: #16a34a;
+}
+
+.file-list {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.file-list .file-group {
+  margin-bottom: 16px;
+}
+
+.file-list .file-group:last-child {
+  margin-bottom: 0;
+}
+
+.file-list .group-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.file-list .file-item {
+  display: flex;
+  align-items: baseline;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.file-list .file-name {
+  font-family: "SF Mono", "Fira Code", monospace;
+  color: #3b82f6;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.file-list .file-desc {
+  color: #64748b;
+}
+
+.checklist {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+.checklist .check-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.checklist .check-box {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  margin-right: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.summary-box {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  color: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  margin: 32px 0;
+  text-align: center;
+}
+
+.summary-box p {
+  color: #e2e8f0;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.summary-box .highlight {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.flow-diagram {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.flow-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.flow-node {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+.flow-arrow {
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.flow-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.versus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.versus .vs-card {
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.versus .vs-wrong {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.versus .vs-wrong .vs-label {
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.versus .vs-right {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.versus .vs-right .vs-label {
+  color: #16a34a;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.versus .vs-card p {
+  font-size: 13px;
+  margin: 0;
+}
+
+footer {
+  text-align: center;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>公关文案 AI Skill 工程方法论</h1>
+  <div class="subtitle">基于奕派项目实操复盘，总结的可复制方法论<br>目标：独立完成任何公关客户的 AI Skill 工程搭建</div>
+  <div class="meta">AI工程队内部文档 · 2026年5月</div>
+</div>
+
+<section>
+  <h2>一、核心认知</h2>
+  <h3>为什么"扔文件"不等于"AI学会了"</h3>
+
+  <div class="versus">
+    <div class="vs-card vs-wrong">
+      <div class="vs-label">常见误区</div>
+      <p>把客户的历史稿件上传为知识库，以为 AI 就能写出同等质量的稿子。RAG 检索 = AI 写稿时搜到一篇相关的，照猫画虎，每次只看片段。</p>
+    </div>
+    <div class="vs-card vs-right">
+      <div class="vs-label">正确做法</div>
+      <p>读完所有稿件后，提炼出结构化的规则和示范，写进 system prompt。消化成能力 = 把几十篇稿子的共性规律变成明确规则。</p>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <p>打个比方：给新人看100篇过往稿件 vs 带着新人总结"客户要什么、好句子长什么样、禁区是什么"——后者才叫带教。AI也一样。</p>
+  </div>
+</section>
+
+<section>
+  <h2>二、六步法</h2>
+  <p>搭建一套完整 Skill 的标准流程：</p>
+
+  <div class="step-card">
+    <span class="step-number">1</span>
+    <span class="step-title">找标杆对比</span>
+    <div class="step-body">
+      <ul>
+        <li>拿一个做得好的 skill 当参照物（如鹏超的理想 skill）</li>
+        <li>逐项对比：它有什么我没有？颗粒度到什么程度？规则有多具体？</li>
+        <li>不要闭门造车，先知道"好"长什么样</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-number">2</span>
+    <span class="step-title">提取产品硬数据</span>
+    <div class="step-body">
+      <ul>
+        <li>把客户所有车型/产品的关键参数结构化整理</li>
+        <li>尺寸、价格、性能数据（精确到官方口径）</li>
+        <li>每个技术参数对应的"传播翻译"（参数→场景→获益）</li>
+        <li>近期销量、获奖、合作等可引用的成绩</li>
+      </ul>
+      <div class="principle">原则：数据半年内稳定，建一次管半年。必须来自官方来源，不确定的标 [待核实]。AI 写稿时直接调用，不允许自己编。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-number">3</span>
+    <span class="step-title">提炼写作模式</span>
+    <div class="step-body">
+      <ul>
+        <li>从历史稿件中提取 sentence-level 的句式模板（不是抽象规则）</li>
+        <li>导语怎么开头？产品怎么描述？权益怎么包装？结尾怎么收？</li>
+        <li>必须同时提取反面案例——AI 最容易犯的错</li>
+      </ul>
+      <div class="warning-box" style="margin-top:12px;">
+        <p>核心纪律：每写一句话，问"这句话里有没有只有这个品牌才能说的具体信息？"没有就删。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-number">4</span>
+    <span class="step-title">建立客户画像</span>
+    <div class="step-body">
+      <ul>
+        <li>跟一线执行人员聊 15-20 分钟</li>
+        <li>搞清：谁审稿？决策链？审稿人偏好？最大卡点？改稿改什么？</li>
+        <li>写成文档，AI 写稿时直接适配审稿人偏好，减少返工</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-number">5</span>
+    <span class="step-title">设计 intake 层（防呆机制）</span>
+    <div class="step-body">
+      <ul>
+        <li>输入：客户的碎片信息</li>
+        <li>输出：结构化 brief（信息完整、可执行）</li>
+        <li>自动判断信息完备度，不够的标 [待补充]，够了再写</li>
+      </ul>
+      <div class="principle">原则：信息不齐时不要硬写。宁可说"以下信息缺失"，也不要出一版注定会被推翻的废稿。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-number">6</span>
+    <span class="step-title">四层质检内嵌</span>
+    <div class="step-body">
+      <ul>
+        <li>L1：硬性红线扫描（禁用词、名称规范、数据可追溯）</li>
+        <li>L2：结构格式检查（模板完整、标题规范）</li>
+        <li>L3：内容质量（传播目标达成度、技术翻译质量）</li>
+        <li>L4：品牌调性终审（读起来像品牌说话，还是像 AI 堆信息）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>三、产出物清单</h2>
+  <p>以奕派项目为参考，一个完整的 Skill 工程包含：</p>
+
+  <div class="file-list">
+    <div class="file-group">
+      <div class="group-label">主文件</div>
+      <div class="file-item"><span class="file-name">SKILL.md</span><span class="file-desc">主写稿引擎（双层架构+规则+质检体系）</span></div>
+      <div class="file-item"><span class="file-name">INTAKE.md</span><span class="file-desc">需求结构化系统</span></div>
+    </div>
+    <div class="file-group">
+      <div class="group-label">知识库 references/</div>
+      <div class="file-item"><span class="file-name">brand_bible.md</span><span class="file-desc">品牌资产库（slogan/标签/禁用词）</span></div>
+      <div class="file-item"><span class="file-name">product_facts.md</span><span class="file-desc">全系车型硬参数+传播翻译</span></div>
+      <div class="file-item"><span class="file-name">writing_patterns.md</span><span class="file-desc">sentence-level 写作模式+反面案例</span></div>
+      <div class="file-item"><span class="file-name">newsrelease.md</span><span class="file-desc">新闻稿六子类型结构模板</span></div>
+      <div class="file-item"><span class="file-name">speech.md</span><span class="file-desc">讲话稿指南</span></div>
+      <div class="file-item"><span class="file-name">mediabf.md</span><span class="file-desc">媒体 Brief 七板块模板</span></div>
+      <div class="file-item"><span class="file-name">client_profiles.md</span><span class="file-desc">审稿人偏好画像</span></div>
+    </div>
+    <div class="file-group">
+      <div class="group-label">测试产出</div>
+      <div class="file-item"><span class="file-name">brief_demo.md</span><span class="file-desc">intake 层 demo</span></div>
+      <div class="file-item"><span class="file-name">article_demo.md</span><span class="file-desc">写稿层 demo</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>四、常见错误</h2>
+
+  <table class="error-table">
+    <thead>
+      <tr><th style="width:30%">错误</th><th style="width:35%">表现</th><th style="width:35%">正确做法</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>只写规则不给示范</td>
+        <td class="wrong">skill 里写"要用排比句"</td>
+        <td class="right">附3个真实排比句案例</td>
+      </tr>
+      <tr>
+        <td>产品数据不入库</td>
+        <td class="wrong">让 AI 自己从 docx 里找数据</td>
+        <td class="right">人工提取，结构化整理成 md</td>
+      </tr>
+      <tr>
+        <td>没有反面案例</td>
+        <td class="wrong">只告诉 AI "要写得好"</td>
+        <td class="right">明确列出 AI 典型烂句子</td>
+      </tr>
+      <tr>
+        <td>不了解审稿人</td>
+        <td class="wrong">写完扔给客户碰运气</td>
+        <td class="right">提前适配审稿人偏好</td>
+      </tr>
+      <tr>
+        <td>信息不齐硬写</td>
+        <td class="wrong">brief 一句话就出稿</td>
+        <td class="right">先判断完备度，够了再写</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>五、新客户复制 Checklist</h2>
+  <p>接到新客户的文案 AI 需求时，按以下顺序推进：</p>
+
+  <div class="checklist">
+    <div class="check-item"><div class="check-box"></div>收集该客户所有历史稿件（越多越好）</div>
+    <div class="check-item"><div class="check-box"></div>通读 10-15 篇代表性稿件，提取写作 pattern</div>
+    <div class="check-item"><div class="check-box"></div>整理产品硬数据进 knowledge base</div>
+    <div class="check-item"><div class="check-box"></div>找一线执行人员聊 15 分钟，搞清审稿流程和偏好</div>
+    <div class="check-item"><div class="check-box"></div>对比已有标杆 skill，确认差距项</div>
+    <div class="check-item"><div class="check-box"></div>搭建 skill 主文件（规则+质检）</div>
+    <div class="check-item"><div class="check-box"></div>搭建 intake 层（如果客户 brief 经常不齐）</div>
+    <div class="check-item"><div class="check-box"></div>用一个真实场景测试，验证产出质量</div>
+    <div class="check-item"><div class="check-box"></div>交付 + 迭代</div>
+  </div>
+
+  <div class="insight-box">
+    <p>整个流程，一个客户 1-2 天可以搞定。</p>
+  </div>
+</section>
+
+<section>
+  <h2>六、底层原理</h2>
+  <h3>为什么这样做有效</h3>
+
+  <p>AI 大模型的特点：</p>
+  <div class="step-card" style="border-left: 3px solid #3b82f6;">
+    <div class="step-body" style="padding-left: 0;">
+      <ul>
+        <li>通用能力极强，但没有"记忆"和"判断"</li>
+        <li>你给它什么 context，它就在那个 context 里工作</li>
+        <li>System prompt 里的信息权重 远大于 RAG 检索到的片段</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>所以：</p>
+  <div class="step-card" style="border-left: 3px solid #16a34a;">
+    <div class="step-body" style="padding-left: 0;">
+      <ul>
+        <li>把最重要的规则、数据、示范直接写进 system prompt（skill 文件）</li>
+        <li>知识库文件作为补充参考</li>
+        <li>不要指望 AI 自己"领悟"——你必须替它总结好</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <p>一句话总结</p>
+    <p class="highlight">Skill 工程 = 把资深人类撰稿人脑子里的隐性知识<br>变成 AI 可执行的显性规则</p>
+  </div>
+</section>
+
+<footer>
+  AI工程队 · 公关文案Skill工程方法论 · 2026年5月13日
+</footer>
+
+</div>
+</body>
+</html>
