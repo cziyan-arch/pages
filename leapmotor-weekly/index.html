@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书平台热点及大事件周报 5W2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f6f7;
+    color: #1f2329;
+    line-height: 1.75;
+    font-size: 14px;
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    padding: 48px 56px 80px;
+  }
+  /* Header */
+  .report-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #e8e8e8;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2329;
+    margin-bottom: 8px;
+  }
+  .report-header .meta {
+    font-size: 13px;
+    color: #8f959e;
+  }
+  .report-header .meta span {
+    margin-right: 20px;
+  }
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2329;
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 4px solid #3370ff;
+  }
+  .section-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2329;
+    margin: 24px 0 12px;
+    padding: 8px 12px;
+    background: #f0f5ff;
+    border-radius: 4px;
+  }
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 13px;
+  }
+  th {
+    background: #3370ff;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  tr:hover td {
+    background: #f7f8fa;
+  }
+  /* Hotspot card */
+  .hotspot-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .hotspot-card .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .hotspot-card .card-number {
+    width: 32px;
+    height: 32px;
+    background: #3370ff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+  .hotspot-card .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2329;
+  }
+  .field-group {
+    margin-bottom: 14px;
+  }
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3370ff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-label::before {
+    content: "▸";
+    font-size: 11px;
+  }
+  .field-content {
+    font-size: 13px;
+    color: #4e5969;
+    padding-left: 14px;
+  }
+  .field-content ul {
+    padding-left: 16px;
+    margin: 4px 0;
+  }
+  .field-content li {
+    margin: 4px 0;
+  }
+  /* Note reference */
+  .note-ref {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 12px;
+    background: #f7f8fa;
+    border-radius: 6px;
+    margin: 6px 0;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .note-ref .note-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    background: #ff4757;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .note-ref .note-body {
+    flex: 1;
+  }
+  .note-ref .note-title {
+    font-weight: 600;
+    color: #1f2329;
+  }
+  .note-ref .note-meta {
+    color: #8f959e;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .note-ref a {
+    color: #3370ff;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .note-ref a:hover {
+    text-decoration: underline;
+  }
+  /* Tag */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 4px;
+  }
+  .tag-hot { background: #fff0f0; color: #f53f3f; }
+  .tag-high { background: #fff7e6; color: #ff7d00; }
+  .tag-mid { background: #e8f7ff; color: #3370ff; }
+  /* Competitor table */
+  .comp-table th {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+  .comp-table td {
+    font-size: 12.5px;
+    padding: 8px 10px;
+    line-height: 1.6;
+  }
+  .comp-table tr td:first-child {
+    font-weight: 600;
+    white-space: nowrap;
+    background: #f7f8fa;
+  }
+  /* Insight box */
+  .insight-box {
+    background: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .insight-box .insight-title {
+    font-weight: 700;
+    color: #d46b08;
+    margin-bottom: 6px;
+  }
+  /* Opportunity table */
+  .opp-table th {
+    background: #00b96b;
+  }
+  .opp-table td {
+    font-size: 13px;
+  }
+  /* Action card */
+  .action-group {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+  }
+  .action-card {
+    flex: 1;
+    background: #f0f5ff;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .action-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #3370ff;
+    margin-bottom: 8px;
+  }
+  .action-card ol {
+    padding-left: 18px;
+    font-size: 13px;
+    color: #4e5969;
+  }
+  .action-card li {
+    margin: 4px 0;
+  }
+  /* Appendix */
+  .appendix-table th {
+    background: #646a73;
+  }
+  .appendix-table td {
+    font-size: 12.5px;
+  }
+  .rank-num {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .rank-1 { background: #f53f3f; }
+  .rank-2 { background: #ff7d00; }
+  .rank-3 { background: #ffb400; }
+  .rank-other { background: #c9cdd4; color: #4e5969; }
+  /* Footer */
+  .report-footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid #e8e8e8;
+    font-size: 12px;
+    color: #8f959e;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- Header -->
+<div class="report-header">
+  <h1>小红书平台热点及大事件周报</h1>
+  <div class="meta">
+    <span>5W2（2026年5月5日 - 5月11日）</span>
+    <span>出品：蓝色光标 · 零跑项目组</span>
+    <span>生成方式：AI自动化原型</span>
+  </div>
+</div>
+
+<!-- Section 1: 营销日历 -->
+<div class="section">
+  <div class="section-title">一、本周营销日历</div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:90px">日期</th>
+        <th style="width:130px">营销节点</th>
+        <th style="width:60px">热度</th>
+        <th>汽车品牌可切入角度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>5月20日</td>
+        <td>520表白日</td>
+        <td><span class="tag tag-hot">极高</span></td>
+        <td>"送TA第一辆车"叙事、情侣提车Vlog、车内浪漫场景布置</td>
+      </tr>
+      <tr>
+        <td>5月18日起</td>
+        <td>618预售开启</td>
+        <td><span class="tag tag-hot">极高</span></td>
+        <td>购车优惠攻略、国补叠加618政策解读、限时权益包装</td>
+      </tr>
+      <tr>
+        <td>5月12日</td>
+        <td>母亲节</td>
+        <td><span class="tag tag-high">高</span></td>
+        <td>送妈妈一辆车、亲子出行场景、女性车主故事</td>
+      </tr>
+      <tr>
+        <td>5月15日</td>
+        <td>乐道L80上市</td>
+        <td><span class="tag tag-mid">中</span></td>
+        <td>竞品上市借势、大五座SUV对比向内容</td>
+      </tr>
+      <tr>
+        <td>持续</td>
+        <td>2026国补新政</td>
+        <td><span class="tag tag-high">高</span></td>
+        <td>以旧换新补贴攻略、首购/置换政策解读、"算账"类内容</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Section 2: 热梗/内容趋势 -->
+<div class="section">
+  <div class="section-title">二、小红书内容趋势</div>
+
+  <div class="section-subtitle">趋势1："送TA第一辆车" 情感叙事模式爆发</div>
+  <div class="note-ref">
+    <div class="note-icon">书</div>
+    <div class="note-body">
+      <div class="note-title">"送博士男朋友的第一辆车"</div>
+      <div class="note-meta">@Lucky · 2835赞 / 6567转 / 1616评 · 图文</div>
+      <a href="https://www.xiaohongshu.com/explore/68aaae76000000001d02fc00" target="_blank">查看笔记 →</a>
+    </div>
+  </div>
+  <div class="field-content">
+    核心叙事 = "为TA选车的理由" + 购车过程 + 提车惊喜。520前该类型内容互动量激增，用户重点讨论预算、实用性、品牌认同。小米已率先以YU7切入节日营销。
+  </div>
+
+  <div class="section-subtitle">趋势2：国补/618 "算账型" 攻略内容收藏率极高</div>
+  <div class="note-ref">
+    <div class="note-icon">书</div>
+    <div class="note-body">
+      <div class="note-title">"2026年618活动时间表"</div>
+      <div class="note-meta">@灌饼高手 · 847赞 / 593转 / 578收 · 图文</div>
+      <a href="https://www.xiaohongshu.com/explore/69fea74e000000003503b162" target="_blank">查看笔记 →</a>
+    </div>
+  </div>
+  <div class="note-ref">
+    <div class="note-icon">书</div>
+    <div class="note-body">
+      <div class="note-title">"购车补贴风向变了：想花小钱办大事？难了"</div>
+      <div class="note-meta">@张大发说车 · 388赞 / 363转 / 396评 · 视频</div>
+      <a href="https://www.xiaohongshu.com/explore/6953f69d000000002103e947" target="_blank">查看笔记 →</a>
+    </div>
+  </div>
+  <div class="field-content">
+    收藏率 > 点赞率的典型品类。用户购车决策窗口收窄，"什么时候买最划算"成为核心搜索诉求。清单/日历式图文最高效。
+  </div>
+
+  <div class="section-subtitle">趋势3：品牌 "创作者招募计划" 成常态化运营手段</div>
+  <div class="note-ref">
+    <div class="note-icon">书</div>
+    <div class="note-body">
+      <div class="note-title">"有理想的创作者招募计划"</div>
+      <div class="note-meta">@理想汽车（官方） · 88赞 / 97转 / 83评 · 图文</div>
+      <a href="https://www.xiaohongshu.com/explore/6827fec7000000002100f8f8" target="_blank">查看笔记 →</a>
+    </div>
+  </div>
+  <div class="field-content">
+    车企品牌在小红书持续运营UGC征集，以官方名义激励车主创作。理想的"创作者招募"已成体系，低成本构建内容矩阵。
+  </div>
+
+  <div class="section-subtitle">趋势4：竞品新车密集上市，对比向内容需求激增</div>
+  <div class="note-ref">
+    <div class="note-icon">书</div>
+    <div class="note-body">
+      <div class="note-title">"全新理想L6登陆工信部 配置有何亮点？"</div>
+      <div class="note-meta">@电车记录仪 · 10赞 · 新发布 · 图文</div>
+      <a href="https://www.xiaohongshu.com/explore/6a03f08a00000000070107c1" target="_blank">查看笔记 →</a>
+    </div>
+  </div>
+  <div class="field-content">
+    全新理想L6登陆工信部、26款海狮06 EV上市、深蓝S07华为ADS版主推——竞品同期发力，零跑需在信息流中保持存在感。
+  </div>
+</div>
+
+<!-- Section 3: 平台热点 × 汽车投放 -->
+<div class="section">
+  <div class="section-title">三、平台热点与汽车品牌达人投放应用</div>
+
+  <!-- Hotspot 1 -->
+  <div class="hotspot-card">
+    <div class="card-header">
+      <div class="card-number">1</div>
+      <div class="card-title">520送礼季 × 汽车购车决策</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">热点相关笔记示例</div>
+      <div class="field-content">
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"送博士男朋友的第一辆车"</div>
+            <div class="note-meta">@Lucky · 2835赞 / 6567转 / 1616评</div>
+            <a href="https://www.xiaohongshu.com/explore/68aaae76000000001d02fc00" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"七夕如何给伴侣准备一份超YU7的节日惊喜？"</div>
+            <div class="note-meta">@小米汽车（官方） · 98赞 / 74转</div>
+            <a href="https://www.xiaohongshu.com/explore/68b03405000000001c010e8e" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">汽车品牌达人投放应用</div>
+      <div class="field-content">小米已率先布局520/七夕汽车营销，以YU7为核心做节日惊喜内容。情侣购车叙事是高转发内容类型（转发率 > 200%）。</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容结合示意</div>
+      <div class="field-content">"和男朋友一起去试驾零跑C10的一天" → 记录选车过程 → 520当天提车 → 交钥匙仪式 → 第一次一起开车兜风</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">建议结合汽车产品的功能点</div>
+      <div class="field-content">
+        <ul>
+          <li><b>C10:</b> 15万价值天花板 + NAPPA真皮 + 800V快充 → "给TA最有面子的15万礼物"</li>
+          <li><b>C16:</b> 冰箱+后排娱乐屏+一键成床 → "送TA一个移动的家"</li>
+          <li><b>C11:</b> 座椅按摩+香氛+HUD → "送TA一辆懂浪漫的车"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容参考笔记</div>
+      <div class="field-content">"送博士男朋友的第一辆车"——高互动模板：选车理由 + 预算公开 + 提车惊喜 + 行驶体验。转发量6567远超点赞，说明该内容形成了"推荐给身边人"的传播链路。</div>
+    </div>
+  </div>
+
+  <!-- Hotspot 2 -->
+  <div class="hotspot-card">
+    <div class="card-header">
+      <div class="card-number">2</div>
+      <div class="card-title">618预热 + 国补新政 × 购车决策窗口</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">热点相关笔记示例</div>
+      <div class="field-content">
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"2026年618活动时间表"</div>
+            <div class="note-meta">@灌饼高手 · 847赞 / 593转 / 578收</div>
+            <a href="https://www.xiaohongshu.com/explore/69fea74e000000003503b162" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"2026汽车国补正策速览 补帖全梳理！"</div>
+            <div class="note-meta">@小周爱玩车 · 74赞 / 86转 / 46收</div>
+            <a href="https://www.xiaohongshu.com/explore/69e12e8400000000230151f4" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"2026汽车以旧换新补贴申请步骤！"</div>
+            <div class="note-meta">@汽车实用知识 · 129赞 / 63转 / 194收</div>
+            <a href="https://www.xiaohongshu.com/explore/69ec72710000000038035cb0" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">汽车品牌达人投放应用</div>
+      <div class="field-content">国补+618双节点叠加，"什么时候买最划算"成为核心搜索诉求。攻略型内容收藏率极高（以旧换新步骤：194收藏/129赞 = 1.5倍收藏率），适合知识型达人矩阵投放。</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容结合示意</div>
+      <div class="field-content">"2026年买零跑能省多少钱？帮你算一笔账" → 国补+地补+618优惠全拆解 → C10/C11/C16各车型到手价一览 → "现在下定锁价最划算"</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">建议结合汽车产品的功能点</div>
+      <div class="field-content">
+        <ul>
+          <li><b>C10:</b> 13.28万起 + 国补 → "10万出头开上800V纯电SUV"</li>
+          <li><b>C16 增程:</b> 首购/置换补贴均可享 → "20万以内的六座豪华增程"</li>
+          <li><b>C11 全系:</b> 800V + 双叉臂 → "15万级最强性价比，618再省X千"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容参考笔记</div>
+      <div class="field-content">"2026年618活动时间表"——高收藏模板：清单式排版 + 关键日期标注 + 省钱公式。内容结构清晰，易于保存查阅，汽车版可复刻该格式。</div>
+    </div>
+  </div>
+
+  <!-- Hotspot 3 -->
+  <div class="hotspot-card">
+    <div class="card-header">
+      <div class="card-number">3</div>
+      <div class="card-title">竞品新车密集上市 × 对比截流</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">热点相关笔记示例</div>
+      <div class="field-content">
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"试驾完海狮06EV，真的是如鲠在喉，不吐不快！"</div>
+            <div class="note-meta">@淏爸不懂车 · 350赞 / 168转 / 234评</div>
+            <a href="https://www.xiaohongshu.com/explore/69cd2da4000000001d01d981" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"26款比亚迪海狮06EV上市，一篇了解这款新车"</div>
+            <div class="note-meta">@小黑说车 · 281赞 / 305转 / 188收</div>
+            <a href="https://www.xiaohongshu.com/explore/69b2ca48000000001b01c8c9" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+        <div class="note-ref">
+          <div class="note-icon">书</div>
+          <div class="note-body">
+            <div class="note-title">"提车即emo 海狮06EV710远航版真实吐槽"</div>
+            <div class="note-meta">@零七八碎 · 101赞 / 50转 / 207评</div>
+            <a href="https://www.xiaohongshu.com/explore/69f8ae7500000000380235ff" target="_blank">查看笔记 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">汽车品牌达人投放应用</div>
+      <div class="field-content">5月竞品新车密集期：全新理想L6上工信部、26款海狮06 EV上市、深蓝S07华为ADS版主推。海狮06出现大量"真实吐槽"内容（评论远超点赞），说明用户对该价位段更信"真话"。</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容结合示意</div>
+      <div class="field-content">
+        <ul>
+          <li>"理想L6 vs 零跑C16 到底该买谁？" → 实际体验对比（空间/配置/智驾/价格）→ "省下来的钱能干什么"</li>
+          <li>"海狮06车主想换零跑C10的三个理由" → 真实对比 → 攻防要点自然融入</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">建议结合汽车产品的功能点</div>
+      <div class="field-content">
+        <ul>
+          <li><b>C16 vs 理想L6:</b> 纯电续航280km vs 212km，标配后排娱乐屏+冰箱+座椅按摩，价格低数万</li>
+          <li><b>C10 vs 海狮06 EV:</b> 同级唯一800V + 激光雷达CNAP + 8295芯片，C10 605悦享版13.28万 vs 海狮06领航版15.99万</li>
+          <li><b>C11 vs 深蓝S07:</b> NAPPA真皮全系标配 + 双叉臂前悬架 + 800V全系，S07价格虚高且悬架落后</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">达人内容参考笔记</div>
+      <div class="field-content">"试驾完海狮06EV，如鲠在喉"——真实吐槽类内容模板：评论量（234）远超收藏（202），说明引发了强烈讨论。零跑可布局同类"真话"内容，用竞品痛点引流。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 4: 竞品监测 -->
+<div class="section">
+  <div class="section-title">四、竞品达人投放动态监测</div>
+
+  <div class="section-subtitle">4.1 C系列直接竞品动态</div>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th style="width:70px">品牌</th>
+        <th style="width:85px">主推车型</th>
+        <th>达人投放动作</th>
+        <th style="width:140px">平台IP/明星合作</th>
+        <th style="width:120px">新车动态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>理想</td>
+        <td>L6</td>
+        <td>"有理想的创作者招募"持续运营（UGC征集）；于适代言内容长尾传播（9531赞/942转）；莉卡电车姐姐评测（2903赞/2564转）</td>
+        <td>于适代言持续发酵；创作者招募计划</td>
+        <td>全新理想L6登陆工信部，换代在即</td>
+      </tr>
+      <tr>
+        <td>比亚迪海洋</td>
+        <td>海狮06 EV</td>
+        <td>官方"产品使用说明书"系列（上1594赞+下1348赞）；"海狮EV家族三兄弟"1916赞/1787转；KOC车主体验大量产出</td>
+        <td>官方账号矩阵体系化运营</td>
+        <td>26款海狮06 EV已上市，新增"闪充版"</td>
+      </tr>
+      <tr>
+        <td>深蓝</td>
+        <td>S07</td>
+        <td>赵今麦"智驾出发"（771赞）；初晓敏评测（451赞）；笛笛Brenda vlog（469赞）；欣怡Cindy"四娃妈带娃"（1331赞）；玩车教授ADS实测（104赞）</td>
+        <td>赵今麦代言 + 华为ADS技术联名</td>
+        <td>全新深蓝S07华为ADS版主推智驾</td>
+      </tr>
+      <tr>
+        <td>吉利银河</td>
+        <td>M9</td>
+        <td colspan="3" style="color:#8f959e;text-align:center">本周搜索因平台限流超时，数据待人工补充</td>
+      </tr>
+      <tr>
+        <td>尚界(问界)</td>
+        <td>H5</td>
+        <td colspan="3" style="color:#8f959e;text-align:center">本周搜索因平台限流超时，数据待人工补充</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">4.2 竞品投放策略洞察</div>
+
+  <div class="insight-box">
+    <div class="insight-title">理想：明星代言 + UGC征集 双轮驱动</div>
+    于适×理想L6内容发布数月后仍有9531赞，说明选对艺人+场景共振可持续产出。同时"创作者招募计划"低成本构建内容矩阵——两种策略互补，前者打声量，后者保日常。
+  </div>
+
+  <div class="insight-box">
+    <div class="insight-title">比亚迪海洋：体系化官方内容 + 海量KOC口碑</div>
+    官方"产品使用说明书"系列内容表现极佳（上下集合计近3000赞），用教程型内容建立信任。达人端"提车即emo""如鲠在喉"等真实吐槽高互动（评论>收藏），说明该价位段用户更信真话。比亚迪在小红书的达人内容密度极高，几乎覆盖所有垂类KOL。
+  </div>
+
+  <div class="insight-box">
+    <div class="insight-title">深蓝：多层级达人矩阵 + 华为技术背书（最值得零跑关注）</div>
+    投放矩阵最完整：明星（赵今麦）→ 垂类KOL（初晓敏/玩车教授）→ 生活方式（笛笛Brenda）→ 亲子博主（欣怡Cindy 1331赞）。华为ADS智驾成为核心差异化卖点，"15万华为城区领航"是主打话术。亲子场景（四娃妈1331赞）在SUV达人营销中效果突出。
+  </div>
+</div>
+
+<!-- Section 5: 零跑内容机会 -->
+<div class="section">
+  <div class="section-title">五、零跑内容机会点</div>
+
+  <div class="section-subtitle">5.1 对标竞品的内容缺口</div>
+  <table class="opp-table">
+    <thead>
+      <tr>
+        <th style="width:150px">内容方向</th>
+        <th>竞品参考</th>
+        <th>零跑可做</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>官方体系化教育</td>
+        <td>比亚迪海狮06"产品使用说明书"系列（上下集2900+赞）</td>
+        <td>C10/C16/C11 功能说明书系列，用教程建立信任</td>
+      </tr>
+      <tr>
+        <td>明星/艺人长尾</td>
+        <td>理想×于适（9531赞）、深蓝×赵今麦（771赞）</td>
+        <td>评估合适的艺人合作，或用素人KOC矩阵作为替代</td>
+      </tr>
+      <tr>
+        <td>亲子场景达人</td>
+        <td>深蓝S07"四娃妈带娃搭子"（1331赞）</td>
+        <td>C16 六座+后排屏+一键成床 = 亲子场景天然匹配</td>
+      </tr>
+      <tr>
+        <td>真实车主口碑</td>
+        <td>海狮06"提车即emo""血泪总结"高互动</td>
+        <td>征集C系列真实车主用车报告（1000km/3月/半年）</td>
+      </tr>
+      <tr>
+        <td>UGC创作者招募</td>
+        <td>理想"有理想的创作者招募计划"</td>
+        <td>建立"零跑创作者计划"，低成本高产出</td>
+      </tr>
+      <tr>
+        <td>智驾实测</td>
+        <td>深蓝S07 华为ADS城区领航实测多篇</td>
+        <td>C10/C16 激光雷达领航CNAP实测系列</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">5.2 近两周选题建议</div>
+  <div class="action-group">
+    <div class="action-card">
+      <h4>520选题包（5/12-20投放）</h4>
+      <ol>
+        <li>"15万送TA的520礼物——零跑C10提车Vlog"（情侣向）</li>
+        <li>"送给全家的520礼物——零跑C16六座的一天"（家庭向）</li>
+        <li>"给自己的520礼物——独立女性的第一辆车 C11"（女性向）</li>
+      </ol>
+    </div>
+    <div class="action-card">
+      <h4>618选题包（5/18起预热）</h4>
+      <ol>
+        <li>"零跑618购车全攻略——国补+618到手价拆解"（攻略型）</li>
+        <li>"10万出头开上800V纯电SUV——C10购车方案"（种草型）</li>
+        <li>"618买车不踩坑——C16/C10/C11怎么选？"（对比型）</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- Section 6: 数据附录 -->
+<div class="section">
+  <div class="section-title">六、数据附录：本周高互动笔记 TOP10</div>
+  <table class="appendix-table">
+    <thead>
+      <tr>
+        <th style="width:35px">#</th>
+        <th>标题</th>
+        <th style="width:110px">作者</th>
+        <th style="width:50px">赞</th>
+        <th style="width:50px">转</th>
+        <th style="width:50px">评</th>
+        <th style="width:50px">收</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rank-num rank-1">1</span></td>
+        <td>理想L6×于适 回到阿勒泰</td>
+        <td>理想汽车（官方）</td>
+        <td>9,531</td>
+        <td>942</td>
+        <td>1,550</td>
+        <td>1,501</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-2">2</span></td>
+        <td>24款理想L6还有竞争力吗</td>
+        <td>莉卡电车姐姐</td>
+        <td>2,903</td>
+        <td>2,564</td>
+        <td>163</td>
+        <td>1,030</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-3">3</span></td>
+        <td>送博士男朋友的第一辆车</td>
+        <td>Lucky</td>
+        <td>2,835</td>
+        <td>6,567</td>
+        <td>1,616</td>
+        <td>215</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">4</span></td>
+        <td>海狮EV家族三兄弟</td>
+        <td>电车网界</td>
+        <td>1,916</td>
+        <td>1,787</td>
+        <td>258</td>
+        <td>1,150</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">5</span></td>
+        <td>海狮06EV产品使用说明书（上）</td>
+        <td>比亚迪海洋（官方）</td>
+        <td>1,594</td>
+        <td>821</td>
+        <td>34</td>
+        <td>1,309</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">6</span></td>
+        <td>海狮06EV产品使用说明书（下）</td>
+        <td>比亚迪海洋（官方）</td>
+        <td>1,348</td>
+        <td>512</td>
+        <td>27</td>
+        <td>981</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">7</span></td>
+        <td>四娃妈带娃搭子 深蓝S07</td>
+        <td>欣怡Cindy</td>
+        <td>1,331</td>
+        <td>29</td>
+        <td>99</td>
+        <td>358</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">8</span></td>
+        <td>国庆相册一半是风景一半是S07</td>
+        <td>郭郭少吃点</td>
+        <td>1,091</td>
+        <td>66</td>
+        <td>41</td>
+        <td>280</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">9</span></td>
+        <td>海狮06全车功能按键图解</td>
+        <td>小北的海狮06</td>
+        <td>920</td>
+        <td>551</td>
+        <td>32</td>
+        <td>1,239</td>
+      </tr>
+      <tr>
+        <td><span class="rank-num rank-other">10</span></td>
+        <td>618活动时间表</td>
+        <td>灌饼高手</td>
+        <td>847</td>
+        <td>593</td>
+        <td>78</td>
+        <td>578</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Footer -->
+<div class="report-footer">
+  <span>蓝色光标 · 零跑项目组 | AI自动化原型（Claude Code + 小红书MCP）</span>
+  <span>生成时间：2026-05-13 | 银河M9/尚界H5数据因限流待补充</span>
+</div>
+
+</div>
+</body>
+</html>
