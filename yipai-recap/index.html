@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奕派文案AI工程 Recap</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  background: #f8f9fa;
+  color: #1a1a2e;
+  line-height: 1.8;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.header .subtitle {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.header .meta {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+section {
+  margin-bottom: 48px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3b82f6;
+  display: inline-block;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+p {
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: #374151;
+}
+
+.insight-box {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.insight-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #1e40af;
+}
+
+.warning-box {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.warning-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #92400e;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.card ul li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.quote-block {
+  background: #f8fafc;
+  border-left: 3px solid #94a3b8;
+  padding: 14px 20px;
+  margin: 16px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.quote-block p {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  font-style: italic;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.compare-table th {
+  background: #f1f5f9;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.compare-table .miss {
+  color: #dc2626;
+}
+
+.compare-table .hit {
+  color: #16a34a;
+}
+
+.person-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.person-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.person-card .name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.person-card .role {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.person-card .trait {
+  font-size: 13px;
+  color: #475569;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.scenario-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.scenario-card .label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 6px;
+}
+
+.scenario-card .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.scenario-card .desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.scenario-card.active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.checklist {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+.checklist .check-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.checklist .check-box {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  margin-right: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.summary-box {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  color: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  margin: 32px 0;
+  text-align: center;
+}
+
+.summary-box p {
+  color: #e2e8f0;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.summary-box .highlight {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.tag.green {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.tag.orange {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.progress-bar {
+  background: #e2e8f0;
+  border-radius: 4px;
+  height: 8px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.progress-bar .fill {
+  background: #3b82f6;
+  height: 100%;
+  border-radius: 4px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+  .person-grid, .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>奕派文案 AI 工程 Recap</h1>
+  <div class="subtitle">项目全貌、实测结论、接下来要做什么</div>
+  <div class="meta">AI工程队内部文档 · 2026年5月13日</div>
+</div>
+
+<section>
+  <h2>一、核心结论</h2>
+
+  <div class="summary-box">
+    <p>一句话</p>
+    <p class="highlight">写作不是瓶颈，信息供给才是</p>
+  </div>
+
+  <div class="quote-block">
+    <p>"如果信息提前一周给齐 + 了解客户偏好，一版就能过，顶多改细节。"<br>—— 周杨（奕派专职文案，6年经验，服务过比亚迪/阿维塔/长城）</p>
+  </div>
+
+  <p>所有改3-5版的根因都是信息不齐，不是写作水平问题。</p>
+
+  <table class="compare-table">
+    <thead><tr><th>客户</th><th>信息供给</th><th>结果</th></tr></thead>
+    <tbody>
+      <tr><td>比亚迪</td><td class="hit">全且及时</td><td class="hit">基本一版过</td></tr>
+      <tr><td>奕派</td><td class="miss">晚且碎，会反复</td><td class="miss">V1-V3是废稿，V4才有效</td></tr>
+      <tr><td>阿维塔</td><td class="miss">晚且碎</td><td class="miss">被迫写过程稿</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <p>结论：skill写作引擎本身已经够用，不需要过度打磨。真正要解决的是前端信息收集和客户管理问题。</p>
+  </div>
+</section>
+
+<section>
+  <h2>二、实测验证</h2>
+  <p>用真实场景（M8工信部公告新闻稿）测试skill系统，然后与客户最终确认版对比。</p>
+
+  <h3>测试条件</h3>
+  <div class="card">
+    <ul>
+      <li>输入：客户brief（三句话要求）+ 工信部公告图（参数）+ 华为乾崑合作文章</li>
+      <li>工具：训练好的skill系统直接生成</li>
+      <li>对比物：客户最终确认版（官方稿 + 媒体视角稿各一篇）</li>
+    </ul>
+  </div>
+
+  <h3>信息层面：差距80%来自信息缺失</h3>
+  <table class="compare-table">
+    <thead><tr><th>确认版有的信息</th><th>我们有没有</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>华为乾崑五大智能</td><td class="miss">初版没有</td><td>brief里没给</td></tr>
+      <tr><td>全球首批ADS 5 Pro</td><td class="miss">初版没有</td><td>brief里没给</td></tr>
+      <tr><td>宁德时代动力电池</td><td class="miss">没强调</td><td>brief没提</td></tr>
+      <tr><td>供应链（博世/福耀等）</td><td class="miss">没有</td><td>brief里没给</td></tr>
+      <tr><td>大六座布局</td><td class="miss">错写成大五座</td><td>brief没说，类推错了</td></tr>
+      <tr><td>设计细节（小蓝灯等）</td><td class="miss">没有</td><td>brief里没给</td></tr>
+      <tr><td>5月下旬亮相/三季度上市</td><td class="miss">只写"下半年"</td><td>brief没给时间</td></tr>
+      <tr><td>同级唯一双动力</td><td class="hit">准确命中</td><td>brief明确要求</td></tr>
+      <tr><td>800V/4C/续航数据</td><td class="hit">完全正确</td><td>brief明确要求</td></tr>
+      <tr><td>尺寸/轴距</td><td class="hit">完全正确</td><td>工信部公告图</td></tr>
+    </tbody>
+  </table>
+
+  <h3>写作层面：文字水平无差距，甚至更高</h3>
+  <p>纯看文字功底（句式结构、节奏感、逻辑推进、修辞精度），AI生成版不比确认版差。确认版的优势是两个"场景校准"：</p>
+  <div class="card">
+    <ul>
+      <li>公告稿该更短（~600字），我们按默认规则写了1000+字 → 补一条篇幅规则即可</li>
+      <li>媒体视角稿该更口语化（自媒体博主风格），我们写成了行业分析师风格 → 补语气规则即可</li>
+    </ul>
+  </div>
+
+  <h3>结论</h3>
+  <div class="insight-box">
+    <p>信息给齐时，skill系统产出质量可达确认版的85-90%。剩下10-15%是篇幅/语气的微调，迭代两轮规则就能补上。</p>
+  </div>
+
+  <p>补充华为素材后重新生成的v3版本，与确认版在信息覆盖度和结构上已基本对齐。</p>
+</section>
+
+<section>
+  <h2>三、客户内部运作</h2>
+
+  <h3>关键人物</h3>
+  <div class="person-grid">
+    <div class="person-card">
+      <div class="name">江贝</div>
+      <div class="role">新闻稿第一审核人 · 80%+决策权</div>
+      <div class="trait">标题必须产品点前置；重视信息准确&gt;文字华丽；面对面逐字批改，远程给大块意见</div>
+    </div>
+    <div class="person-card">
+      <div class="name">王帅</div>
+      <div class="role">公关负责人 · 最终签发</div>
+      <div class="trait">焦虑型审核者；讲话稿开头不好直接否定全篇；江贝过了他基本放行</div>
+    </div>
+    <div class="person-card">
+      <div class="name">于总</div>
+      <div class="role">销售总经理 · 讲话稿终极拍板</div>
+      <div class="trait">想法不透明；不满意直接推翻；下属不敢过多确认</div>
+    </div>
+    <div class="person-card">
+      <div class="name">周杨</div>
+      <div class="role">蓝标执行 · 专职文案</div>
+      <div class="trait">6年经验，负责新闻稿，已摸清江贝风格，信息齐了一版过</div>
+    </div>
+  </div>
+
+  <h3>审核流程</h3>
+  <div class="card">
+    <div class="card-title">新闻稿</div>
+    <p style="font-size:14px;color:#475569;margin:0;">写稿 → 江贝审（80%决策）→ 王帅终审（20%补充）→ 定稿</p>
+  </div>
+  <div class="card">
+    <div class="card-title">讲话稿</div>
+    <p style="font-size:14px;color:#475569;margin:0;">写稿 → 王帅审 → 于总拍板（可能推翻）→ 循环修改</p>
+  </div>
+
+  <h3>产能基准</h3>
+  <div class="card">
+    <ul>
+      <li>每月约3场活动</li>
+      <li>新闻稿：~9篇/月</li>
+      <li>讲话稿：3-6篇/月</li>
+      <li>实际有效写作时间：活动前最后2-3天</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>四、项目目标</h2>
+
+  <div class="warning-box">
+    <p>奕派项目的目标不是商业模式突破，是省人。央企客户不可能按新方式付费。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">三个层次的目标</div>
+    <ul>
+      <li>极大提高效率，消除甲乙双方无谓消耗</li>
+      <li>释放人力——好的skill + 信息前置 → 不需要两个专职文案</li>
+      <li>奕派是练兵场，训练出的能力和产品形态放到别的客户上收费</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>五、Skill系统当前状态</h2>
+
+  <div class="card">
+    <div class="card-title">已完成的文件</div>
+    <ul>
+      <li><strong>SKILL.md</strong> — 主写稿引擎（双层架构+规则+四层质检）</li>
+      <li><strong>INTAKE.md</strong> — 需求结构化系统</li>
+      <li><strong>brand_bible.md</strong> — 品牌资产库</li>
+      <li><strong>product_facts.md</strong> — 全系车型硬参数+传播翻译</li>
+      <li><strong>writing_patterns.md</strong> — sentence-level写作模式+反面案例</li>
+      <li><strong>newsrelease.md</strong> — 新闻稿六子类型结构模板</li>
+      <li><strong>speech.md</strong> — 讲话稿指南</li>
+      <li><strong>mediabf.md</strong> — 媒体Brief七板块模板</li>
+      <li><strong>client_profiles.md</strong> — 审稿人偏好画像</li>
+      <li><strong>dongfeng_group_context.md</strong> — 集团兄弟品牌背景</li>
+    </ul>
+  </div>
+
+  <h3>待迭代（实测发现）</h3>
+  <div class="card">
+    <ul>
+      <li><span class="tag orange">规则补充</span> "公告/曝光类"新闻稿篇幅规则（~600-800字，比上市稿短）</li>
+      <li><span class="tag orange">规则补充</span> 媒体视角稿口语化程度（自媒体博主风格，有"我"视角）</li>
+      <li><span class="tag orange">规则更新</span> 华为合作在M8上的表述尺度（品牌策略已迭代）</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>六、你接下来要做什么</h2>
+
+  <div class="checklist">
+    <div class="check-item"><div class="check-box"></div>通读整套skill系统文件（1-2小时）</div>
+    <div class="check-item"><div class="check-box"></div>跑一个真实测试：拿过去的brief + 确认稿，用skill生成后对比差异</div>
+    <div class="check-item"><div class="check-box"></div>根据对比结果迭代规则（重点：篇幅校准、语气校准）</div>
+    <div class="check-item"><div class="check-box"></div>客户有新反馈时更新 client_profiles.md</div>
+    <div class="check-item"><div class="check-box"></div>M8正式发布后补完整数据到 product_facts.md</div>
+  </div>
+
+  <div class="insight-box">
+    <p>核心原则：信息不齐时不要硬写，宁可标 [待补充]。所有"写得不好"的问题，先问"是不是信息不够"。</p>
+  </div>
+</section>
+
+<section>
+  <h2>七、更大的图景</h2>
+  <p>公关文案AI改造的三种场景分类（供理解全局，不需要你现在动手）：</p>
+
+  <div class="scenario-grid">
+    <div class="scenario-card">
+      <div class="label">场景一</div>
+      <div class="title">信息成熟型</div>
+      <div class="desc">如理想汽车。产品部信息标准化程度高，给到就能写。AI直接替代执行层。投入轻量，做skill即可。</div>
+    </div>
+    <div class="scenario-card active">
+      <div class="label">场景二 · 奕派属于这个</div>
+      <div class="title">信息混沌型</div>
+      <div class="desc">信息碎片化、来得晚、会反复。Skill只解决后半段，前半段需要产品化（信息蓄水池）。投入中等。</div>
+    </div>
+    <div class="scenario-card">
+      <div class="label">场景三</div>
+      <div class="title">中间型</div>
+      <div class="desc">如现代中国。信息基本能给但格式不标准。Intake层做一次结构化就能跑。投入适中。</div>
+    </div>
+  </div>
+
+  <p>奕派属于场景二，所以skill工程只是基础设施，真正的效率突破要靠信息端的产品化。但这是老板来推的事，你先把skill这条线稳住就行。</p>
+</section>
+
+<footer>
+  AI工程队 · 奕派文案AI工程项目Recap · 2026年5月13日
+</footer>
+
+</div>
+</body>
+</html>
