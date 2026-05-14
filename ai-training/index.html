@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI认知三层架构 - 培训课件（含案例演示）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 72px 100px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .slide-num {
+    position: absolute;
+    top: 36px;
+    right: 56px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    font-weight: 500;
+  }
+
+  /* ========== COVER ========== */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    text-align: center;
+  }
+  .cover h1 {
+    font-size: 54px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  .cover .subtitle { font-size: 21px; color: rgba(255,255,255,0.55); margin-bottom: 48px; }
+  .cover .meta { font-size: 14px; color: rgba(255,255,255,0.25); }
+
+  /* ========== PROBLEM ========== */
+  .problem h2 { font-size: 40px; font-weight: 700; color: #f87171; margin-bottom: 44px; }
+  .stat-row { display: flex; align-items: center; gap: 36px; margin-bottom: 32px; }
+  .big-num { font-size: 88px; font-weight: 800; color: #f87171; line-height: 1; }
+  .stat-desc { font-size: 22px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .insight-bar {
+    margin-top: 44px; padding: 22px 28px;
+    background: rgba(248,113,113,0.07); border-left: 4px solid #f87171;
+    border-radius: 0 12px 12px 0; font-size: 18px; color: rgba(255,255,255,0.75); line-height: 1.7;
+  }
+
+  /* ========== OVERVIEW ========== */
+  .overview h2 { font-size: 38px; font-weight: 700; margin-bottom: 52px; color: #fff; }
+  .layers-stack { display: flex; flex-direction: column; gap: 18px; max-width: 780px; }
+  .lbar {
+    display: flex; align-items: center; padding: 26px 32px; border-radius: 14px; gap: 20px;
+  }
+  .lbar .n { font-size: 34px; font-weight: 800; opacity: 0.4; }
+  .lbar .info h3 { font-size: 20px; font-weight: 700; margin-bottom: 3px; }
+  .lbar .info p { font-size: 14px; opacity: 0.65; }
+  .lbar .pct { margin-left: auto; font-size: 13px; opacity: 0.4; white-space: nowrap; }
+  .l3 { background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.25); }
+  .l3 .n, .l3 h3 { color: #f472b6; }
+  .l2 { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); }
+  .l2 .n, .l2 h3 { color: #a78bfa; }
+  .l1 { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); }
+  .l1 .n, .l1 h3 { color: #60a5fa; }
+
+  /* ========== LAYER DETAIL ========== */
+  .layer-slide .tag {
+    display: inline-block; padding: 5px 14px; border-radius: 18px;
+    font-size: 12px; font-weight: 600; margin-bottom: 16px;
+  }
+  .layer-slide h2 { font-size: 38px; font-weight: 700; margin-bottom: 12px; }
+  .layer-slide .oneliner { font-size: 19px; color: rgba(255,255,255,0.55); margin-bottom: 44px; }
+  .fg { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 36px; }
+  .fc { padding: 22px; border-radius: 11px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); }
+  .fc h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .fc p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .analogy {
+    padding: 22px 28px; border-radius: 11px; font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.7);
+  }
+
+  /* ========== COMPARISON TABLE ========== */
+  .comparison h2 { font-size: 36px; font-weight: 700; margin-bottom: 44px; color: #fff; }
+  .ctable { width: 100%; border-collapse: separate; border-spacing: 0 7px; }
+  .ctable th {
+    padding: 14px 20px; text-align: left; font-size: 12px;
+    color: rgba(255,255,255,0.35); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .ctable td {
+    padding: 16px 20px; font-size: 14px; background: rgba(255,255,255,0.025); color: rgba(255,255,255,0.75);
+  }
+  .ctable tr td:first-child { border-radius: 8px 0 0 8px; font-weight: 600; color: rgba(255,255,255,0.45); }
+  .ctable tr td:last-child { border-radius: 0 8px 8px 0; }
+  .hl { color: #a78bfa; font-weight: 600; }
+
+  /* ========== MOMENT ========== */
+  .moment h2 { font-size: 36px; font-weight: 700; color: #fbbf24; margin-bottom: 44px; }
+  .moment .story {
+    font-size: 19px; line-height: 2; color: rgba(255,255,255,0.7); max-width: 700px; margin-bottom: 44px;
+  }
+  .moment .punch {
+    font-size: 26px; font-weight: 700; color: #fbbf24;
+    padding: 28px; background: rgba(251,191,36,0.07);
+    border-radius: 14px; border: 1px solid rgba(251,191,36,0.18); max-width: 700px; line-height: 1.6;
+  }
+
+  /* ========== CASE DEMO SLIDES ========== */
+  .case-slide h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+  .case-slide .case-sub { font-size: 15px; color: rgba(255,255,255,0.4); margin-bottom: 36px; }
+
+  /* Mock terminal */
+  .mock-terminal {
+    background: #1e1e1e; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1); max-width: 820px;
+  }
+  .term-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; background: #2d2d2d;
+  }
+  .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .term-body { padding: 24px; font-family: "SF Mono", "Fira Code", monospace; font-size: 13px; line-height: 1.8; }
+  .term-prompt { color: #7dd3fc; }
+  .term-cmd { color: #e2e8f0; }
+  .term-output { color: #86efac; }
+  .term-comment { color: #6b7280; }
+
+  /* Mock table output */
+  .mock-table {
+    width: 100%; border-collapse: collapse; margin-top: 20px;
+    font-size: 12px; background: #1a1a2e; border-radius: 10px; overflow: hidden;
+  }
+  .mock-table th {
+    padding: 12px 16px; background: #16213e; color: #94a3b8;
+    text-align: left; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .mock-table td {
+    padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1;
+  }
+  .badge-green { display: inline-block; background: #065f46; color: #6ee7b7; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-yellow { display: inline-block; background: #78350f; color: #fcd34d; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-red { display: inline-block; background: #7f1d1d; color: #fca5a5; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+
+  /* Mock chat */
+  .mock-chat { max-width: 680px; }
+  .chat-bubble {
+    margin-bottom: 16px; padding: 16px 20px; border-radius: 14px;
+    font-size: 14px; line-height: 1.7; max-width: 85%;
+  }
+  .chat-user {
+    background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.2);
+    margin-left: auto; border-bottom-right-radius: 4px;
+  }
+  .chat-ai {
+    background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.15);
+    border-bottom-left-radius: 4px;
+  }
+  .chat-label { font-size: 11px; font-weight: 600; margin-bottom: 6px; opacity: 0.5; }
+
+  /* Mock webapp */
+  .mock-webapp {
+    background: #fff; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1); max-width: 820px;
+  }
+  .webapp-bar {
+    display: flex; align-items: center; padding: 10px 16px; background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0; gap: 8px;
+  }
+  .webapp-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .webapp-url {
+    flex: 1; background: #fff; border-radius: 6px; padding: 6px 12px;
+    font-size: 12px; color: #64748b; border: 1px solid #e2e8f0;
+  }
+  .webapp-body { padding: 28px; color: #1e293b; }
+  .webapp-body h3 { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px; }
+  .webapp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .webapp-card {
+    padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;
+  }
+  .webapp-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .webapp-card .label { font-size: 12px; color: #475569; }
+  .webapp-btn {
+    display: inline-block; padding: 10px 24px; background: #2563eb; color: #fff;
+    border-radius: 8px; font-size: 14px; font-weight: 600;
+  }
+
+  /* Mock file output */
+  .mock-file-output {
+    background: #1a1a2e; border-radius: 12px; padding: 24px 28px;
+    border: 1px solid rgba(255,255,255,0.1); max-width: 820px;
+  }
+  .file-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px;
+  }
+  .file-icon { font-size: 20px; }
+  .file-name { color: #e2e8f0; font-weight: 500; }
+  .file-desc { color: #64748b; font-size: 12px; margin-left: auto; }
+
+  /* Workflow diagram */
+  .workflow {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 20px 0;
+  }
+  .wf-step {
+    padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    text-align: center; min-width: 100px;
+  }
+  .wf-arrow { color: rgba(255,255,255,0.3); font-size: 20px; }
+
+  /* Time comparison */
+  .time-compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 700px; margin-top: 20px;
+  }
+  .tc-box { padding: 24px; border-radius: 12px; }
+  .tc-box .tc-label { font-size: 12px; font-weight: 600; opacity: 0.5; margin-bottom: 8px; text-transform: uppercase; }
+  .tc-box .tc-time { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .tc-box .tc-detail { font-size: 13px; opacity: 0.6; line-height: 1.5; }
+  .tc-old { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.15); }
+  .tc-old .tc-time { color: #f87171; }
+  .tc-new { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.15); }
+  .tc-new .tc-time { color: #34d399; }
+
+  /* ========== CHINA-US ========== */
+  .vs-grid { display: grid; grid-template-columns: 1fr 50px 1fr; gap: 0; align-items: start; }
+  .vs-box { padding: 28px; border-radius: 14px; }
+  .vs-box h3 { font-size: 19px; font-weight: 700; margin-bottom: 18px; }
+  .vs-box ul { list-style: none; }
+  .vs-box li { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 11px; padding-left: 18px; position: relative; line-height: 1.6; }
+  .vs-box li::before { content: ''; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; }
+  .us-box { background: rgba(96,165,250,0.05); border: 1px solid rgba(96,165,250,0.12); }
+  .us-box h3 { color: #60a5fa; }
+  .us-box li::before { background: #60a5fa; }
+  .cn-box { background: rgba(244,114,182,0.05); border: 1px solid rgba(244,114,182,0.12); }
+  .cn-box h3 { color: #f472b6; }
+  .cn-box li::before { background: #f472b6; }
+  .vs-mid { display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.15); }
+  .vs-note { margin-top: 32px; padding: 18px 24px; background: rgba(167,139,250,0.06); border-radius: 11px; border: 1px solid rgba(167,139,250,0.12); font-size: 15px; color: rgba(255,255,255,0.65); }
+
+  /* ========== COST ========== */
+  .cost-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 36px; }
+  .cc { padding: 28px; border-radius: 14px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); text-align: center; }
+  .cc .tier { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 10px; text-transform: uppercase; }
+  .cc .price { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+  .cc .unit { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+  .cc .desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .cost-note { font-size: 15px; color: rgba(255,255,255,0.6); padding: 18px 24px; background: rgba(96,165,250,0.05); border-radius: 11px; border: 1px solid rgba(96,165,250,0.12); line-height: 1.8; }
+
+  /* ========== ACTION ========== */
+  .steps { max-width: 680px; }
+  .si { display: flex; gap: 20px; margin-bottom: 28px; align-items: flex-start; }
+  .si-num { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .si-content h4 { font-size: 17px; font-weight: 600; margin-bottom: 5px; }
+  .si-content p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ========== CLOSING ========== */
+  .closing { text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); }
+  .closing .bq {
+    font-size: 34px; font-weight: 700; line-height: 1.5; max-width: 680px; margin: 0 auto 44px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .closing .sq { font-size: 17px; color: rgba(255,255,255,0.45); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+  .closing .ft { margin-top: 56px; font-size: 12px; color: rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDE 01: COVER ============ -->
+<div class="slide cover">
+  <div class="slide-num">01 / 16</div>
+  <h1>AI 认知三层架构</h1>
+  <div class="subtitle">从「会用ChatGPT」到「搭建个人AI操作系统」的认知跃迁</div>
+  <div class="meta">Chris Wang | 2026</div>
+</div>
+
+<!-- ============ SLIDE 02: PROBLEM ============ -->
+<div class="slide problem">
+  <div class="slide-num">02 / 16</div>
+  <h2>一个危险的舒适区</h2>
+  <div class="stat-row">
+    <div class="big-num">90%</div>
+    <div class="stat-desc">的人停在AI能力的第一层<br>以为自己「已经在用AI了」</div>
+  </div>
+  <div class="insight-bar">
+    典型状态：用ChatGPT/Kimi/豆包写邮件、翻译、做PPT初稿。觉得效率提升了30%。<br>
+    但不知道这只是整个AI能力栈的底层。上面还有两层完全不同的世界。
+  </div>
+</div>
+
+<!-- ============ SLIDE 03: OVERVIEW ============ -->
+<div class="slide overview">
+  <div class="slide-num">03 / 16</div>
+  <h2>AI能力的三个层次</h2>
+  <div class="layers-stack">
+    <div class="lbar l3">
+      <div class="n">3</div>
+      <div class="info"><h3>系统层 / Agent</h3><p>AI自主运转，不需要你每次下指令</p></div>
+      <div class="pct">< 0.1% 的人</div>
+    </div>
+    <div class="lbar l2">
+      <div class="n">2</div>
+      <div class="info"><h3>动手层 / AI Coding</h3><p>AI能操作电脑、执行任务、有记忆</p></div>
+      <div class="pct">~5% 的人</div>
+    </div>
+    <div class="lbar l1">
+      <div class="n">1</div>
+      <div class="info"><h3>对话层 / Chatbot</h3><p>问答式交互，复制粘贴结果</p></div>
+      <div class="pct">90%+ 的人</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 04: LAYER 1 ============ -->
+<div class="slide layer-slide">
+  <div class="slide-num">04 / 16</div>
+  <span class="tag" style="background:rgba(96,165,250,0.15);color:#60a5fa;">第一层</span>
+  <h2 style="color:#60a5fa;">对话层 — 智能笔友</h2>
+  <div class="oneliner">你问它答，聊完关掉，下次从零开始</div>
+  <div class="fg">
+    <div class="fc"><h4 style="color:#60a5fa;">代表产品</h4><p>ChatGPT、Kimi、豆包、DeepSeek、文心一言、通义千问</p></div>
+    <div class="fc"><h4 style="color:#60a5fa;">能做什么</h4><p>写文案、翻译、回答问题、头脑风暴、总结摘要、辅助写作</p></div>
+    <div class="fc"><h4 style="color:#60a5fa;">核心限制</h4><p>不能操作你的电脑、不记得你是谁、产出需要人工搬运</p></div>
+    <div class="fc"><h4 style="color:#60a5fa;">你的角色</h4><p>操作者+搬运工（问AI → 复制答案 → 粘贴到别处）</p></div>
+  </div>
+  <div class="analogy" style="background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.12);">
+    比喻：你有了一个很聪明的笔友。但他住在另一个城市，来不了你办公室，碰不到你的电脑，也记不住你上封信写了啥。
+  </div>
+</div>
+
+<!-- ============ SLIDE 05: LAYER 2 ============ -->
+<div class="slide layer-slide">
+  <div class="slide-num">05 / 16</div>
+  <span class="tag" style="background:rgba(167,139,250,0.15);color:#a78bfa;">第二层</span>
+  <h2 style="color:#a78bfa;">动手层 — 个人AI操作系统</h2>
+  <div class="oneliner">AI不再只给文字回复，它能动手干活了</div>
+  <div class="fg">
+    <div class="fc"><h4 style="color:#a78bfa;">代表工具</h4><p>Claude Code、Cursor、Windsurf（在VS Code环境中运行）</p></div>
+    <div class="fc"><h4 style="color:#a78bfa;">能做什么</h4><p>读写文件、搜索互联网、操作飞书/日历、生成文档/网页/数据分析、搭建工具</p></div>
+    <div class="fc"><h4 style="color:#a78bfa;">核心突破</h4><p>有持久记忆（知道你是谁）、有工具（操作外部系统）、有执行力（需求→交付）</p></div>
+    <div class="fc"><h4 style="color:#a78bfa;">你的角色</h4><p>决策者（提需求 → AI执行 → 你验收）不需要写代码</p></div>
+  </div>
+  <div class="analogy" style="background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.12);">
+    核心认知：「Code」不是让你写代码。就像你用Excel不需要知道它是C++写的。AI替你写代码来完成你的指令。你只需要说清楚想要什么。
+  </div>
+</div>
+
+<!-- ============ SLIDE 06: LAYER 3 ============ -->
+<div class="slide layer-slide">
+  <div class="slide-num">06 / 16</div>
+  <span class="tag" style="background:rgba(244,114,182,0.15);color:#f472b6;">第三层</span>
+  <h2 style="color:#f472b6;">系统层 — 无人值守</h2>
+  <div class="oneliner">AI不需要你每次下指令，自己按流程运转</div>
+  <div class="fg">
+    <div class="fc"><h4 style="color:#f472b6;">形态</h4><p>AI Agent、自动化平台、业务工具（用户甚至不需要知道背后是AI）</p></div>
+    <div class="fc"><h4 style="color:#f472b6;">能做什么</h4><p>定时出报告、自动监控舆情、服务于团队的AI工具/平台</p></div>
+    <div class="fc"><h4 style="color:#f472b6;">核心特征</h4><p>一次设计反复运行，从个人工具升级为组织能力</p></div>
+    <div class="fc"><h4 style="color:#f472b6;">你的角色</h4><p>架构师（设计系统 → AI执行 → 团队使用）</p></div>
+  </div>
+  <div class="analogy" style="background:rgba(244,114,182,0.05);border:1px solid rgba(244,114,182,0.12);">
+    类比：你设计好一个流程之后，相当于有了一个不需要管理的员工、一个不会请假的实习生团队。
+  </div>
+</div>
+
+<!-- ============ SLIDE 07: COMPARISON ============ -->
+<div class="slide comparison">
+  <div class="slide-num">07 / 16</div>
+  <h2>三层对比一览</h2>
+  <table class="ctable">
+    <thead><tr><th>维度</th><th>第一层 · 对话</th><th>第二层 · 动手</th><th>第三层 · 系统</th></tr></thead>
+    <tbody>
+      <tr><td>AI角色</td><td>顾问（给建议）</td><td class="hl">执行者（帮你干活）</td><td>员工（自己跑）</td></tr>
+      <tr><td>你的角色</td><td>操作者+搬运工</td><td class="hl">决策者+验收者</td><td>架构师</td></tr>
+      <tr><td>记忆</td><td>无（每次从零）</td><td class="hl">有（记得你是谁）</td><td>完整知识库</td></tr>
+      <tr><td>操作能力</td><td>无（只输出文字）</td><td class="hl">有（读写文件/调用工具）</td><td>全自动</td></tr>
+      <tr><td>交付物</td><td>一段文字</td><td class="hl">完整文档/数据/网页</td><td>可运行的平台</td></tr>
+      <tr><td>效率提升</td><td>30-50%</td><td class="hl">3-10倍</td><td>量级变化</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ SLIDE 08: MOMENT ============ -->
+<div class="slide moment">
+  <div class="slide-num">08 / 16</div>
+  <h2>跨层的关键瞬间</h2>
+  <div class="story">
+    我用ChatGPT用了很久，觉得自己很会用AI。直到有一天我突然意识到——<br><br>
+    我每天都在做同一个动作：问AI问题，得到答案，然后把答案<strong style="color:#fbbf24">复制粘贴</strong>到该去的地方。<br><br>
+    AI已经能直接操作文件了，我还在当中间商？
+  </div>
+  <div class="punch">
+    第一层：你是操作者，AI是顾问<br>
+    第二层：你是决策者，AI是执行层<br><br>
+    区别不在工具，在于你把自己放在什么位置
+  </div>
+</div>
+
+<!-- ============ SLIDE 09: CASE 1 - 简历筛选 ============ -->
+<div class="slide case-slide">
+  <div class="slide-num">09 / 16</div>
+  <h2 style="color:#34d399;">案例一：15份简历，15分钟筛完</h2>
+  <div class="case-sub">场景：收到15份应届生简历PDF，需要按岗位匹配度分层推荐</div>
+
+  <div class="mock-terminal" style="margin-bottom: 24px;">
+    <div class="term-bar">
+      <div class="term-dot" style="background:#ff5f57;"></div>
+      <div class="term-dot" style="background:#febc2e;"></div>
+      <div class="term-dot" style="background:#28c840;"></div>
+    </div>
+    <div class="term-body">
+      <span class="term-prompt">我：</span><span class="term-cmd">桌面上有15份简历PDF，帮我按营销岗位匹配度筛选，分三个梯队输出汇总表</span><br><br>
+      <span class="term-comment">// AI 自动读取15份PDF → 提取学历/经验/成果数据 → 按评分标准排序 → 输出HTML表格</span><br><br>
+      <span class="term-output">✓ 已读取15份简历</span><br>
+      <span class="term-output">✓ 第一梯队（强推面试）：5人</span><br>
+      <span class="term-output">✓ 第二梯队（可以考虑）：4人</span><br>
+      <span class="term-output">✓ 第三梯队（不推荐）：6人</span><br>
+      <span class="term-output">✓ 汇总表已生成 → 应届生简历筛选汇总.html</span>
+    </div>
+  </div>
+
+  <table class="mock-table">
+    <thead><tr><th>推荐</th><th>姓名</th><th>学历</th><th>核心经历</th><th>判断</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge-green">强推</span></td><td>赵安琦</td><td>UCL硕士</td><td>比亚迪海外营销 + 字节GMV+45%</td><td>行业直接匹配</td></tr>
+      <tr><td><span class="badge-green">强推</span></td><td>毛钟惠</td><td>宾大硕士(藤校)</td><td>野村综研汽车咨询 + 京东运营</td><td>素质天花板</td></tr>
+      <tr><td><span class="badge-yellow">可选</span></td><td>白梦澜</td><td>河北工业大学</td><td>中科闻歌AI售前</td><td>有AI理解力</td></tr>
+      <tr><td><span class="badge-red">不推荐</span></td><td>杨小目</td><td>南安普敦硕士</td><td>嘉实财富+村镇银行</td><td>纯金融无营销</td></tr>
+    </tbody>
+  </table>
+
+  <div class="time-compare">
+    <div class="tc-box tc-old"><div class="tc-label">传统方式</div><div class="tc-time">2-3小时</div><div class="tc-detail">逐份打开PDF → 记笔记 → Excel汇总 → 主观排序</div></div>
+    <div class="tc-box tc-new"><div class="tc-label">AI方式</div><div class="tc-time">15分钟</div><div class="tc-detail">一句话指令 → AI全量读取+评估 → 直接输出可视化表格</div></div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 10: CASE 2 - 飞书自动化 ============ -->
+<div class="slide case-slide">
+  <div class="slide-num">10 / 16</div>
+  <h2 style="color:#60a5fa;">案例二：一句话操作飞书</h2>
+  <div class="case-sub">场景：创建日程、发消息、管理文档，不需要打开飞书App</div>
+
+  <div class="mock-chat">
+    <div class="chat-bubble chat-user">
+      <div class="chat-label">我</div>
+      帮我把今天上午10点到12点block住，主题写「专注时间」
+    </div>
+    <div class="chat-bubble chat-ai">
+      <div class="chat-label">Claude Code</div>
+      已创建日程：<br>
+      - 主题：专注时间<br>
+      - 时间：2026-05-14 10:00-12:00<br>
+      - 已设置为忙碌状态，含飞书视频会议链接<br>
+      - 开始前5分钟提醒
+    </div>
+    <div class="chat-bubble chat-user">
+      <div class="chat-label">我</div>
+      明天下午两点跟小王开会，主题「Q2复盘」，提前一天提醒我
+    </div>
+    <div class="chat-bubble chat-ai">
+      <div class="chat-label">Claude Code</div>
+      已创建：<br>
+      - Q2复盘 | 明天14:00-15:00<br>
+      - 已邀请小王（ou_xxx）<br>
+      - 提醒：提前1天 + 提前5分钟
+    </div>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.8;">
+    同样的方式还能：发飞书消息、创建文档、搜索会议室、查看日程安排、管理审批流<br>
+    本质：用自然语言操控整个办公系统，不再需要在App里点来点去
+  </div>
+</div>
+
+<!-- ============ SLIDE 11: CASE 3 - 行业研究 ============ -->
+<div class="slide case-slide">
+  <div class="slide-num">11 / 16</div>
+  <h2 style="color:#a78bfa;">案例三：行业研究报告自动生成</h2>
+  <div class="case-sub">场景：每周自动出一份汽车行业AI动态周报</div>
+
+  <div class="workflow">
+    <div class="wf-step" style="background:rgba(167,139,250,0.12);color:#a78bfa;">一句话触发<br><span style="font-size:11px;opacity:0.6;">「出周报」</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(52,211,153,0.12);color:#34d399;">搜索全网<br><span style="font-size:11px;opacity:0.6;">中英文信息源</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(96,165,250,0.12);color:#60a5fa;">按框架整理<br><span style="font-size:11px;opacity:0.6;">自定义分析模板</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(244,114,182,0.12);color:#f472b6;">生成HTML<br><span style="font-size:11px;opacity:0.6;">排版+截图</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(251,191,36,0.12);color:#fbbf24;">发布上线<br><span style="font-size:11px;opacity:0.6;">GitHub Pages</span></div>
+  </div>
+
+  <div class="mock-file-output" style="margin-top: 24px;">
+    <div style="font-size: 13px; color: #94a3b8; margin-bottom: 16px; font-weight: 600;">输出文件（每周自动生成）</div>
+    <div class="file-row"><span class="file-icon">📄</span><span class="file-name">汽车行业AI周报_20260512.html</span><span class="file-desc">6800字 完整排版</span></div>
+    <div class="file-row"><span class="file-icon">🖼️</span><span class="file-name">汽车行业AI周报_20260512.png</span><span class="file-desc">长图版 可直接微信分享</span></div>
+    <div class="file-row"><span class="file-icon">🌐</span><span class="file-name">https://xxx.github.io/pages/auto-weekly/</span><span class="file-desc">在线网页版</span></div>
+  </div>
+
+  <div style="margin-top: 24px; font-size: 14px; color: rgba(255,255,255,0.5);">
+    关键区别：信息不是别人组织的，是按「我的分析框架」组织的。同样的信息，不同组织方式导出完全不同的判断。
+  </div>
+</div>
+
+<!-- ============ SLIDE 12: CASE 4 - PR平台 ============ -->
+<div class="slide case-slide">
+  <div class="slide-num">12 / 16</div>
+  <h2 style="color:#f472b6;">案例四：3小时搭一个团队级AI平台</h2>
+  <div class="case-sub">场景：某公关团队每天写大量稿件（通稿/声明/回应口径），需要一个AI创作平台</div>
+
+  <div class="mock-webapp">
+    <div class="webapp-bar">
+      <div class="webapp-dot" style="background:#ff5f57;"></div>
+      <div class="webapp-dot" style="background:#febc2e;"></div>
+      <div class="webapp-dot" style="background:#28c840;"></div>
+      <div class="webapp-url">http://ai-pr-platform.local</div>
+    </div>
+    <div class="webapp-body">
+      <h3>公关稿件创作中心</h3>
+      <div class="webapp-grid">
+        <div class="webapp-card"><div class="icon">📰</div><div class="label">新闻通稿</div></div>
+        <div class="webapp-card"><div class="icon">📋</div><div class="label">声明/回应</div></div>
+        <div class="webapp-card"><div class="icon">🎤</div><div class="label">领导讲话</div></div>
+        <div class="webapp-card"><div class="icon">📝</div><div class="label">活动通知</div></div>
+        <div class="webapp-card"><div class="icon">⚡</div><div class="label">危机回应</div></div>
+        <div class="webapp-card"><div class="icon">🏷️</div><div class="label">品牌宣传</div></div>
+        <div class="webapp-card"><div class="icon">📊</div><div class="label">业绩快报</div></div>
+        <div class="webapp-card"><div class="icon">🤝</div><div class="label">合作官宣</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="webapp-btn">选择类型 → 填要素 → 一键生成</div>
+        <span style="font-size:12px;color:#94a3b8;">团队无需接触AI，直接使用</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="time-compare">
+    <div class="tc-box tc-old"><div class="tc-label">传统开发</div><div class="tc-time">3个月</div><div class="tc-detail">1个产品经理 + 2个工程师<br>需求文档 → 设计 → 开发 → 测试 → 上线</div></div>
+    <div class="tc-box tc-new"><div class="tc-label">AI Coding</div><div class="tc-time">3小时</div><div class="tc-detail">1个不会写代码的人<br>用自然语言描述需求 → AI完成全部开发</div></div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 13: CASE 5 - 录音变文章 ============ -->
+<div class="slide case-slide">
+  <div class="slide-num">13 / 16</div>
+  <h2 style="color:#fbbf24;">案例五：录音10分钟 = 一篇完整文章</h2>
+  <div class="case-sub">场景：公众号内容创作，从想法到发布的完整流程</div>
+
+  <div class="workflow">
+    <div class="wf-step" style="background:rgba(251,191,36,0.12);color:#fbbf24;">录音10分钟<br><span style="font-size:11px;opacity:0.6;">讯飞语音/手机</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(167,139,250,0.12);color:#a78bfa;">AI整理成文<br><span style="font-size:11px;opacity:0.6;">按你的写作风格</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(96,165,250,0.12);color:#60a5fa;">排版设计<br><span style="font-size:11px;opacity:0.6;">公众号适配格式</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(52,211,153,0.12);color:#34d399;">你微调确认<br><span style="font-size:11px;opacity:0.6;">改几句话就行</span></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-step" style="background:rgba(244,114,182,0.12);color:#f472b6;">发布<br><span style="font-size:11px;opacity:0.6;">30分钟完成</span></div>
+  </div>
+
+  <div style="margin-top: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="padding: 24px; background: rgba(251,191,36,0.06); border-radius: 12px; border: 1px solid rgba(251,191,36,0.12);">
+      <div style="font-size: 13px; color: #fbbf24; font-weight: 600; margin-bottom: 12px;">为什么能做到</div>
+      <div style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.8;">
+        AI已经「蒸馏」了你的写作风格：<br>
+        - 你的用词偏好和禁忌<br>
+        - 你的段落节奏和转场方式<br>
+        - 你的开头习惯和结尾模式<br>
+        - 你讨厌的AI味表达
+      </div>
+    </div>
+    <div style="padding: 24px; background: rgba(167,139,250,0.06); border-radius: 12px; border: 1px solid rgba(167,139,250,0.12);">
+      <div style="font-size: 13px; color: #a78bfa; font-weight: 600; margin-bottom: 12px;">适用于</div>
+      <div style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.8;">
+        - 公众号/自媒体文章<br>
+        - 工作汇报/周报月报<br>
+        - 会议纪要/决策备忘<br>
+        - 任何「你有想法但懒得坐下来写」的场景
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 14: CHINA-US ============ -->
+<div class="slide">
+  <div class="slide-num">14 / 16</div>
+  <h2 style="font-size:36px;font-weight:700;margin-bottom:44px;">中美AI路线差异</h2>
+  <div class="vs-grid">
+    <div class="vs-box us-box">
+      <h3>美国路线</h3>
+      <ul>
+        <li>巨头做模型，SaaS卖订阅</li>
+        <li>用户等产品出来再用</li>
+        <li>护城河在模型和产品</li>
+        <li>贵（$200/月起步）</li>
+      </ul>
+    </div>
+    <div class="vs-mid">VS</div>
+    <div class="vs-box cn-box">
+      <h3>中国路线</h3>
+      <ul>
+        <li>模型价格战打到接近免费</li>
+        <li>应用层没护城河</li>
+        <li>真正创新在方法论和工作流</li>
+        <li>个人可低成本自建系统</li>
+      </ul>
+    </div>
+  </div>
+  <div class="vs-note">
+    对你的好消息：不需要等大公司做完美产品。模型几乎免费，工具开源。门槛是认知，不是资本。谁先理解并动手搭建，谁先受益。
+  </div>
+</div>
+
+<!-- ============ SLIDE 15: COST & ACTION ============ -->
+<div class="slide">
+  <div class="slide-num">15 / 16</div>
+  <h2 style="font-size:36px;font-weight:700;margin-bottom:40px;">入门路径</h2>
+
+  <div class="steps">
+    <div class="si">
+      <div class="si-num" style="background:rgba(96,165,250,0.2);color:#60a5fa;">1</div>
+      <div class="si-content">
+        <h4 style="color:#60a5fa;">先问自己</h4>
+        <p>你日常哪些事是「问AI → 复制 → 粘贴」的？列出来就是你的第二层入口。</p>
+      </div>
+    </div>
+    <div class="si">
+      <div class="si-num" style="background:rgba(167,139,250,0.2);color:#a78bfa;">2</div>
+      <div class="si-content">
+        <h4 style="color:#a78bfa;">下载Cherry Studio（入门级，免翻墙）</h4>
+        <p>多模型切换 + 知识库。充值100-200元覆盖日常80%需求。先让AI的使用频率和深度提上去。</p>
+      </div>
+    </div>
+    <div class="si">
+      <div class="si-num" style="background:rgba(244,114,182,0.2);color:#f472b6;">3</div>
+      <div class="si-content">
+        <h4 style="color:#f472b6;">选一个高频场景体验「不经你手」</h4>
+        <p>周报、数据整理、文件分类、PPT初稿。体验一次从需求到交付不需要你动手的感觉。</p>
+      </div>
+    </div>
+    <div class="si">
+      <div class="si-num" style="background:rgba(251,191,36,0.2);color:#fbbf24;">4</div>
+      <div class="si-content">
+        <h4 style="color:#fbbf24;">准备好时进入第二层（VS Code + Claude Code）</h4>
+        <p>花1-2天喂入个人信息和工作背景。系统越用越懂你，一周后就离不开了。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cost-note" style="margin-top: 36px;">
+    <strong>核心门槛不是钱，是认知转变：</strong><br>
+    从「我来操作，AI来回答」 → 「我来决策，AI来执行」
+  </div>
+</div>
+
+<!-- ============ SLIDE 16: CLOSING ============ -->
+<div class="slide closing">
+  <div class="slide-num">16 / 16</div>
+  <div class="bq">
+    AI改造工作的杀伤力不在于<br>「用更少的人做同样的事」<br><br>
+    而在于让每个人<br>做以前想都不敢想的事
+  </div>
+  <div class="sq">
+    每次用AI的时候问自己一句话：我现在在第几层？<br>
+    能回答这个问题的人，已经在往上走了。
+  </div>
+  <div class="ft">Chris Wang | AI认知三层架构 | 2026</div>
+</div>
+
+</body>
+</html>
