@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华熙生物2025年度股东大会</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  background: #0a0a0a;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.slides-container {
+  display: flex;
+  height: 100vh;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide {
+  min-width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background themes */
+.bg-cover { background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5c 50%, #234e78 100%); }
+.bg-deep { background: linear-gradient(180deg, #060e18 0%, #0f1f33 100%); }
+.bg-navy { background: linear-gradient(135deg, #0a1628 0%, #152238 60%, #1a3050 100%); }
+.bg-accent { background: linear-gradient(135deg, #0d2137 0%, #0f3460 100%); }
+.bg-warm { background: linear-gradient(135deg, #1a1020 0%, #2a1540 50%, #1a2040 100%); }
+.bg-vision { background: linear-gradient(135deg, #081420 0%, #0a2540 50%, #061830 100%); }
+
+/* Decorative elements */
+.slide::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(ellipse, rgba(79,195,247,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Typography */
+.slide-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  line-height: 1.3;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.slide-subtitle {
+  font-size: 22px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.slide-body {
+  font-size: 20px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.9;
+  max-width: 1000px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Cover */
+.cover-logo {
+  font-size: 16px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 6px;
+  margin-bottom: 50px;
+}
+
+.cover-title {
+  font-size: 60px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: 4px;
+}
+
+.cover-subtitle {
+  font-size: 26px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 60px;
+  font-weight: 300;
+}
+
+.cover-info {
+  font-size: 17px;
+  color: rgba(255,255,255,0.4);
+  line-height: 2.2;
+}
+
+/* Big statement */
+.big-statement {
+  font-size: 36px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  line-height: 2;
+  max-width: 900px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.big-statement em {
+  font-style: normal;
+  color: #4fc3f7;
+  font-weight: 600;
+}
+
+/* Data cards */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  width: 100%;
+  max-width: 1100px;
+  position: relative;
+  z-index: 1;
+}
+
+.data-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.data-number {
+  font-size: 52px;
+  font-weight: 700;
+  color: #4fc3f7;
+  margin-bottom: 6px;
+}
+
+.data-unit {
+  font-size: 16px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 10px;
+}
+
+.data-label {
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+}
+
+.data-growth {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 14px;
+  background: rgba(76, 175, 80, 0.15);
+  border-radius: 20px;
+  color: #81c784;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Segment bars */
+.segment-list {
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+}
+
+.segment-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.segment-name {
+  width: 140px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.8);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.segment-bar-bg {
+  flex: 1;
+  height: 36px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.segment-bar {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+}
+
+.bar-1 { background: linear-gradient(90deg, #1565c0, #42a5f5); }
+.bar-2 { background: linear-gradient(90deg, #6a1b9a, #ab47bc); }
+.bar-3 { background: linear-gradient(90deg, #00695c, #26a69a); }
+.bar-4 { background: linear-gradient(90deg, #e65100, #fb8c00); }
+
+.segment-value {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.segment-pct {
+  width: 55px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+
+/* Strategy cards */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 1050px;
+  position: relative;
+  z-index: 1;
+}
+
+.strategy-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 26px 28px;
+}
+
+.strategy-card h3 {
+  font-size: 17px;
+  color: #4fc3f7;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.strategy-card p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+}
+
+/* Three columns */
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+  width: 100%;
+  max-width: 1100px;
+  position: relative;
+  z-index: 1;
+}
+
+.col-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 30px 22px;
+  text-align: center;
+}
+
+.col-card h3 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.col-card p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+  text-align: left;
+}
+
+/* Bullet list */
+.bullet-list {
+  list-style: none;
+  max-width: 950px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.bullet-list li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 16px;
+  font-size: 17px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.8;
+}
+
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4fc3f7;
+}
+
+/* Highlight box */
+.highlight-box {
+  background: rgba(79, 195, 247, 0.06);
+  border-left: 3px solid rgba(79, 195, 247, 0.6);
+  padding: 22px 28px;
+  border-radius: 0 10px 10px 0;
+  margin-top: 24px;
+  max-width: 950px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.highlight-box p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.8;
+}
+
+/* Flow arrows */
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 1000px;
+  width: 100%;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-box {
+  background: rgba(79,195,247,0.08);
+  border: 1px solid rgba(79,195,247,0.25);
+  border-radius: 10px;
+  padding: 14px 22px;
+  color: #fff;
+  font-size: 15px;
+  text-align: center;
+  min-width: 150px;
+}
+
+.flow-arrow {
+  color: rgba(79,195,247,0.5);
+  font-size: 22px;
+}
+
+/* Section number */
+.section-num {
+  font-size: 100px;
+  font-weight: 800;
+  color: rgba(79, 195, 247, 0.06);
+  position: absolute;
+  top: 50px;
+  right: 70px;
+}
+
+/* Four cards */
+.four-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+  max-width: 1050px;
+  position: relative;
+  z-index: 1;
+}
+
+.four-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 26px;
+}
+
+.four-card .num {
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba(79, 195, 247, 0.35);
+  margin-bottom: 6px;
+}
+
+.four-card h3 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.four-card p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+}
+
+/* Paradigm shift visual */
+.paradigm-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 30px;
+  align-items: center;
+  max-width: 1000px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.paradigm-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.paradigm-box h4 {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.paradigm-box ul {
+  list-style: none;
+}
+
+.paradigm-box ul li {
+  font-size: 16px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 10px;
+  padding-left: 14px;
+  position: relative;
+}
+
+.paradigm-box ul li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: rgba(255,255,255,0.4);
+}
+
+.paradigm-arrow {
+  font-size: 36px;
+  color: #4fc3f7;
+  opacity: 0.6;
+}
+
+.paradigm-box.new-era {
+  border-color: rgba(79, 195, 247, 0.3);
+  background: rgba(79, 195, 247, 0.04);
+}
+
+.paradigm-box.new-era ul li {
+  color: rgba(255,255,255,0.9);
+}
+
+/* R&D highlight */
+.rd-row {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  max-width: 1050px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.rd-left {
+  text-align: center;
+  min-width: 180px;
+}
+
+.rd-big {
+  font-size: 64px;
+  font-weight: 700;
+  color: #4fc3f7;
+}
+
+.rd-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+}
+
+.rd-right {
+  flex: 1;
+}
+
+.rd-right li {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  list-style: none;
+  padding-left: 18px;
+  position: relative;
+}
+
+.rd-right li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #4fc3f7;
+  font-size: 18px;
+}
+
+/* Closing */
+.closing-quote {
+  font-size: 34px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 300;
+  text-align: center;
+  line-height: 2;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.closing-mission {
+  font-size: 20px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 40px;
+  letter-spacing: 3px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Navigation */
+.nav-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 24px;
+  z-index: 1000;
+}
+
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-dot.active {
+  background: #4fc3f7;
+  width: 20px;
+  border-radius: 3px;
+}
+
+.page-num {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-left: 10px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .slide { padding: 40px 28px; }
+  .cover-title { font-size: 36px; }
+  .slide-title { font-size: 32px; }
+  .big-statement { font-size: 24px; }
+  .data-number { font-size: 38px; }
+  .strategy-grid, .four-grid { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .paradigm-grid { grid-template-columns: 1fr; }
+  .rd-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+
+  <!-- ==================== SLIDE 1: COVER ==================== -->
+  <div class="slide bg-cover">
+    <div class="cover-logo">BLOOMAGE BIOTECHNOLOGY</div>
+    <div class="cover-title">2025年度股东大会</div>
+    <div class="cover-subtitle">总经理工作报告</div>
+    <div class="cover-info">
+      华熙生物科技股份有限公司<br>
+      董事长兼总经理 赵燕<br>
+      2026年5月
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 2: 时代背景 ==================== -->
+  <div class="slide bg-vision">
+    <div class="big-statement">
+      我们正站在<em>第三次生物革命</em>的起点上。<br><br>
+      <span style="font-size:22px; color:rgba(255,255,255,0.6);">
+        AI浪潮以天为单位刷新认知，生物科技以同样惊人的速度演进——<br>
+        基因编辑、细胞重编程、合成生物制造……<br>
+        两股力量的交汇，正在系统性地重构生命科学的范式。
+      </span>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 3: 范式转变 ==================== -->
+  <div class="slide bg-deep">
+    <div class="slide-title">生命科学范式的系统性重构</div>
+    <div class="slide-subtitle">从单一功能满足，到生命质量的综合诉求</div>
+    <div class="paradigm-grid">
+      <div class="paradigm-box">
+        <h4>过去</h4>
+        <ul>
+          <li>单一成分补充</li>
+          <li>流量与规模驱动</li>
+          <li>依赖自然馈赠提取</li>
+          <li>产品功能导向</li>
+        </ul>
+      </div>
+      <div class="paradigm-arrow">→</div>
+      <div class="paradigm-box new-era">
+        <h4>新范式</h4>
+        <ul>
+          <li>系统性科学解决方案</li>
+          <li>科技驱动，AI加速</li>
+          <li>按需设计、生物制造</li>
+          <li>健康质量 + 生命状态 + 情绪价值</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:30px;">
+      <p>消费者的需求已从单一功能的满足，变为对整体健康质量、生命状态和情绪价值的综合诉求。这不是产品的升级，是整个产业逻辑的跃迁。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 4: 中国优势 ==================== -->
+  <div class="slide bg-navy">
+    <div class="slide-title">中国生物制造的历史性机遇</div>
+    <div class="slide-subtitle">三重优势叠加，系统性重构全球生物制造战略格局</div>
+    <div class="three-col">
+      <div class="col-card">
+        <h3 style="color:#4fc3f7;">单点技术突破</h3>
+        <p>中国在合成生物学、基因编辑、生物发酵等关键领域已实现世界级突破，从跟随者转变为引领者。</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#ba68c8;">制造业规模优势</h3>
+        <p>全球最完整的生物制造产业链、庞大的应用市场和丰富的应用场景，工程化与规模化转化能力全球领先。</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#4db6ac;">AI加速新引擎</h3>
+        <p>以人工智能为新的加速点，DBTL循环从5-10年缩减至2-3年，让生物制造进入指数级增长通道。</p>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:28px;">
+      <p>生物制造与集成电路、工业母机并列，已成为国家战略核心支柱。中国不是追随者，而是有机会成为全球的引领者。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 5: 公司定位 ==================== -->
+  <div class="slide bg-warm">
+    <div class="slide-title">华熙生物：站在变革的交汇点上</div>
+    <div class="slide-subtitle">以合成生物学为引擎，驱动糖生物学和细胞生物学从科学研究到全产业链转化</div>
+    <div class="slide-body" style="text-align:center;">
+      <p style="font-size:24px; color:rgba(255,255,255,0.85); margin-bottom:30px;">
+        在第三次生物革命与生命探索的交汇点上
+      </p>
+      <div class="flow-row" style="margin-top:0;">
+        <div class="flow-box">细胞外基质<br><span style="font-size:12px;opacity:0.6;">ECM · 重建年轻微环境</span></div>
+        <div class="flow-box">细胞间通讯<br><span style="font-size:12px;opacity:0.6;">信号传导与神经免疫调控</span></div>
+        <div class="flow-box">细胞内健康<br><span style="font-size:12px;opacity:0.6;">代谢平衡与组织再生</span></div>
+      </div>
+      <p style="margin-top:36px; font-size:17px; color:rgba(255,255,255,0.6); line-height:1.8;">
+        面向衰老干预、组织再生等关键领域<br>
+        从底层科学研究到全产业链产业端转化<br>
+        形成系统化、科学化的解决方案
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 6: 使命 ==================== -->
+  <div class="slide bg-deep">
+    <div class="big-statement">
+      致力于<em>"提高生命质量、延长生命长度"</em><br><br>
+      <span style="font-size:26px;">让每个生命都是鲜活的</span><br><br>
+      <span style="font-size:18px; color:rgba(255,255,255,0.5);">
+        为人类持续带来健康、美丽、快乐的生命体验<br>
+        合成生物创新驱动的生物科技公司 · 生物材料全产业链平台公司
+      </span>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 7: 经营业绩 ==================== -->
+  <div class="slide bg-navy">
+    <span class="section-num">01</span>
+    <div class="slide-title">2025年经营业绩</div>
+    <div class="slide-subtitle">战略转型初见成效，利润强劲回升</div>
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="data-number">41.99</div>
+        <div class="data-unit">亿元</div>
+        <div class="data-label">营业收入</div>
+      </div>
+      <div class="data-card">
+        <div class="data-number">2.92</div>
+        <div class="data-unit">亿元</div>
+        <div class="data-label">归属股东净利润</div>
+        <div class="data-growth">同比增长 67.59%</div>
+      </div>
+      <div class="data-card">
+        <div class="data-number">1.86</div>
+        <div class="data-unit">亿元</div>
+        <div class="data-label">扣非净利润</div>
+        <div class="data-growth">同比增长 73.76%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 8: 四大板块 ==================== -->
+  <div class="slide bg-deep">
+    <div class="slide-title">四大业务板块</div>
+    <div class="slide-subtitle">聚焦衰老干预与组织再生，覆盖B-B、B-C、B-B-C商业生态</div>
+    <div class="segment-list">
+      <div class="segment-item">
+        <div class="segment-name">皮肤科学</div>
+        <div class="segment-bar-bg">
+          <div class="segment-bar bar-2" style="width:72%">
+            <span class="segment-value">14.87亿元</span>
+          </div>
+        </div>
+        <div class="segment-pct">35.45%</div>
+      </div>
+      <div class="segment-item">
+        <div class="segment-name">医疗终端</div>
+        <div class="segment-bar-bg">
+          <div class="segment-bar bar-3" style="width:66%">
+            <span class="segment-value">13.69亿元</span>
+          </div>
+        </div>
+        <div class="segment-pct">32.64%</div>
+      </div>
+      <div class="segment-item">
+        <div class="segment-name">生物活性物</div>
+        <div class="segment-bar-bg">
+          <div class="segment-bar bar-1" style="width:58%">
+            <span class="segment-value">12.10亿元</span>
+          </div>
+        </div>
+        <div class="segment-pct">28.83%</div>
+      </div>
+      <div class="segment-item">
+        <div class="segment-name">营养科学</div>
+        <div class="segment-bar-bg">
+          <div class="segment-bar bar-4" style="width:12%">
+            <span class="segment-value">1.08亿元</span>
+          </div>
+        </div>
+        <div class="segment-pct">2.57%</div>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:20px;">
+      <p>国际收入6.09亿元，占原料业务51.83%，日韩/东南亚/欧洲持续增长，部分区域增速>20%</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 9: 费用管控 ==================== -->
+  <div class="slide bg-navy">
+    <div class="slide-title">管理策略落实，经营效率显著提升</div>
+    <div class="data-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="data-card">
+        <div class="data-number" style="font-size:44px;">36.07%</div>
+        <div class="data-label">销售费用率（2020年以来最低）</div>
+        <div class="data-growth">同比下降 9.81pct</div>
+      </div>
+      <div class="data-card">
+        <div class="data-number" style="font-size:44px;">5.42<span style="font-size:20px;">亿</span></div>
+        <div class="data-label">管理费用</div>
+        <div class="data-growth">同比下降 17.72%</div>
+      </div>
+    </div>
+    <div class="flow-row" style="margin-top:36px;">
+      <div class="flow-box">推广投放优化</div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box">渠道结构调整</div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box">组织整合降本</div>
+      <div class="flow-arrow">=</div>
+      <div class="flow-box" style="border-color:rgba(76,175,80,0.4); background:rgba(76,175,80,0.08);">利润增长基础</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 10: 战略转型 ==================== -->
+  <div class="slide bg-accent">
+    <span class="section-num">02</span>
+    <div class="slide-title">战略升级：从规模扩张到质量增长</div>
+    <div class="slide-subtitle">战略收敛，重构增长逻辑</div>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <h3>重返一线，创业状态</h3>
+        <p>总经理重返业务一线，强化执行与组织动员，推动关键改革措施快速落地。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>科学传播体系</h3>
+        <p>深度挖掘科研积累与创新成果，重建公司在关键细分领域的科技领先形象与合作方信心。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>业务流程重构</h3>
+        <p>建立内容、产品、渠道一体化的业务流程，从流量驱动转向科学驱动。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>组织效率提升</h3>
+        <p>完善人力资源体系，推动跨部门协同，强化绩效导向，显著降低运营成本。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 11: 研发体系 ==================== -->
+  <div class="slide bg-deep">
+    <span class="section-num">03</span>
+    <div class="slide-title">研发：久久为功、长期主义</div>
+    <div class="slide-subtitle">科学是发现，技术是发明，产品是发展，品牌是发扬</div>
+    <div class="rd-row">
+      <div class="rd-left">
+        <div class="rd-big">4.72</div>
+        <div class="rd-sub">亿元 · 2025研发费用<br>占收入 11.24%</div>
+        <div style="margin-top:20px;">
+          <div class="rd-big" style="font-size:42px;">22.92</div>
+          <div class="rd-sub">亿元 · 上市以来累计投入</div>
+        </div>
+      </div>
+      <div class="rd-right">
+        <ul>
+          <li>承担国家级/省部级项目13项，含5项国家重点研发计划</li>
+          <li>"AI与大数据驱动生物合成路径设计与高效验证平台"国家重点研发</li>
+          <li>新上市13种生物活性物原料新产品，创新产品收入占比>18%</li>
+          <li>以"零缺陷"通过美国FDA、韩国MFDS GMP审计</li>
+          <li>天津中试平台获工信部五星服务认可</li>
+          <li>华熙唐安：肝素戊糖从"毫克级"到"百克级"工艺放大跨越</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 12: 合成生物核心逻辑 ==================== -->
+  <div class="slide bg-vision">
+    <span class="section-num">04</span>
+    <div class="slide-title">合成生物学：系统性干预衰老的核心引擎</div>
+    <div class="slide-body">
+      <p style="margin-bottom:24px;">《Cell》系统性提出"衰老的十四大标志物"——从基因组不稳定、端粒损耗，到线粒体功能障碍、慢性炎症、干细胞耗竭……这些标志物相互关联，共同决定生命系统的老化进程。</p>
+      <p style="margin-bottom:24px;">单点干预无效，必须进行<span style="color:#4fc3f7; font-weight:600;">"系统性干预"</span>。</p>
+      <p style="margin-bottom:24px;">合成生物学的核心能力，在于能够针对性地设计生物制造路径，生产具有特定功能的生物活性物质，在多个标志物层面同时发挥作用——</p>
+      <p style="color:#4fc3f7; font-size:22px; font-weight:500;">这不是单一成分的补充，这是系统性的工程。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 13: 从提取到制造 ==================== -->
+  <div class="slide bg-navy">
+    <div class="slide-title">从"依赖自然馈赠"到"按需设计制造"</div>
+    <div class="slide-subtitle">合成生物学打破资源边界，实现科技平权</div>
+    <div class="three-col" style="margin-bottom:24px;">
+      <div class="col-card">
+        <h3 style="color:#4fc3f7;">肝素</h3>
+        <p>全球临床最广泛抗凝药物。合成生物源头切断致病原，已进入中试阶段。</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#ba68c8;">硫酸软骨素</h3>
+        <p>关节健康关键成分。构建高效表达系统，产率行业领先。今年完成工艺验证。</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#4db6ac;">PDRN</h3>
+        <p>皮肤修护核心活性成分。精准测序+生物制造，实现高活性国产化生产。</p>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <p>让更多对人类健康有价值的物质，以更低成本、更高质量、更大规模地惠及普通人。科技平权，让每个人都能用生物科技对抗衰老。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 14: AI加速 ==================== -->
+  <div class="slide bg-deep">
+    <div class="slide-title">AI为合成生物装上"十倍速"的翅膀</div>
+    <div class="slide-subtitle">设计-构建-测试-学习循环，从5-10年缩减至2-3年</div>
+    <div class="three-col">
+      <div class="col-card">
+        <h3 style="color:#4fc3f7;">深度学习预测</h3>
+        <p>精准模拟生物合成通路<br>秒级筛选目标分子<br>大幅缩短设计周期</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#ba68c8;">蛋白质结构设计</h3>
+        <p>AI辅助蛋白质结构预测<br>快速筛选优化路径<br>AlphaFold级能力落地</p>
+      </div>
+      <div class="col-card">
+        <h3 style="color:#4db6ac;">数据飞轮</h3>
+        <p>模型越算越准、越学越快<br>正向循环持续积累<br>企业数据壁垒加深</p>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:24px;">
+      <p>AI不是替代科学家，是将创造力以指数级效率转化为产品。合成生物正进入新纪元——AI与生物制造的深度融合。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 15: 全产业链转化 ==================== -->
+  <div class="slide bg-accent">
+    <div class="slide-title">全产业链整合解决方案</div>
+    <div class="slide-subtitle">25年产业转化能力 × 合成生物平台 × 全场景覆盖</div>
+    <div class="four-grid">
+      <div class="four-card">
+        <h3 style="color:#ab47bc;">皮肤科学</h3>
+        <p>润百颜：ECM科技护肤领导者<br>夸迪：细胞级抗老<br>BM肌活：代谢平衡<br>米蓓尔：神经免疫修敏</p>
+      </div>
+      <div class="four-card">
+        <h3 style="color:#26a69a;">医疗终端</h3>
+        <p>骨科：海力达覆盖>18,000家医院<br>眼科：海视健覆盖>1,500家<br>医美：合规水光+动能素<br>品牌出海+技术出海</p>
+      </div>
+      <div class="four-card">
+        <h3 style="color:#42a5f5;">生物活性物原料</h3>
+        <p>全球领先的生物发酵产业能力<br>国际收入占比>50%<br>四大板块协同升级<br>从产品走向解决方案</p>
+      </div>
+      <div class="four-card">
+        <h3 style="color:#fb8c00;">营养科学</h3>
+        <p>营养与抗衰/免疫/代谢/情绪<br>麦角硫因大单品战略<br>全渠道协同布局<br>构建口服大健康新曲线</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 16: 数智化 ==================== -->
+  <div class="slide bg-navy">
+    <span class="section-num">05</span>
+    <div class="slide-title">数智融合创新</div>
+    <div class="slide-subtitle">AI重构研发、运营、数据全链路</div>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <h3>流程标准化</h3>
+        <p>发布/修订100+业务流程，构建多级管理体系，ERP全面上线。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>数据资产化</h3>
+        <p>企业级数据治理体系，建立数据资产目录，驾驶舱实时决策支撑。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>AI应用落地</h3>
+        <p>企业级AI平台：对话机器人、测肤精灵、研发知识库、大模型微调。</p>
+      </div>
+      <div class="strategy-card">
+        <h3>能力纳入组织</h3>
+        <p>AI能力纳入岗位核心要求，组织扁平化，推进敏捷低代码/RPA实现。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 17: 长寿逃逸速度 ==================== -->
+  <div class="slide bg-vision">
+    <div class="slide-title">寿命逃逸速度</div>
+    <div class="slide-subtitle">Longevity Escape Velocity</div>
+    <div class="slide-body" style="text-align:center;">
+      <p style="font-size:20px; margin-bottom:24px; color:rgba(255,255,255,0.7);">当医学和生物技术进步带来的预期寿命延长，超过自然衰老所消耗的时间时，<br>人类便进入了一种"逃逸"状态。</p>
+      <p style="font-size:26px; color:rgba(255,255,255,0.9); margin-bottom:30px;">
+        活得更长，从来不是目的。<br>
+        <em style="color:#4fc3f7; font-style:normal;">活得更好、活得有质量、活得更鲜活</em>——才是追求。
+      </p>
+      <p style="font-size:16px; color:rgba(255,255,255,0.5); line-height:2;">
+        从100岁到120岁到150岁——数字背后，<br>
+        是基因编辑、细胞疗法、AI药物研发、合成生物制造等技术共同叠加的结果。<br>
+        华熙生物要做的，是让这一切从实验室走向每个人的日常生活。
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 18: 四大逻辑 ==================== -->
+  <div class="slide bg-deep">
+    <div class="slide-title">我们为什么坚定这条路</div>
+    <div class="four-grid">
+      <div class="four-card">
+        <div class="num">01</div>
+        <h3>刚需持续放大</h3>
+        <p>中国65岁以上人口已突破2.2亿，2035年将超4亿。健康寿命相关消费需求呈爆发式增长。</p>
+      </div>
+      <div class="four-card">
+        <div class="num">02</div>
+        <h3>技术拐点已至</h3>
+        <p>CRISPR、蛋白质设计与AI深度融合，"设计生命"工程化落地的时间窗口大幅缩短。</p>
+      </div>
+      <div class="four-card">
+        <div class="num">03</div>
+        <h3>中国引领优势</h3>
+        <p>最完整产业链 + 最大应用市场 + 顶尖人才储备。在合成生物赛道上，中国有机会定义全球标准。</p>
+      </div>
+      <div class="four-card">
+        <div class="num">04</div>
+        <h3>使命驱动</h3>
+        <p>让人类更健康、更长久地拥有高质量生命。从衰老十四大标志物出发，系统性延长健康寿命。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 19: 面向未来 ==================== -->
+  <div class="slide bg-accent">
+    <span class="section-num">06</span>
+    <div class="slide-title">面向未来</div>
+    <ul class="bullet-list">
+      <li>以合成生物学为核心引擎，持续强化底层平台能力</li>
+      <li>AI深度融合研发体系，加速DBTL循环，构建数据飞轮壁垒</li>
+      <li>聚焦三大方向（ECM / 细胞间通讯 / 细胞内健康），形成系统化解决方案</li>
+      <li>国际化持续推进，品牌出海与技术出海双轮驱动</li>
+      <li>以科学传播体系重建品牌认知，让科研成果转化为消费体验</li>
+      <li>坚持长期主义，注重基础研究投入，久久为功</li>
+    </ul>
+    <div class="highlight-box" style="margin-top:28px;">
+      <p>在第三次生物革命的浪潮中，华熙生物将科研成果转化为消费体验，展现中国科技的全球竞争力。</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 20: CLOSING ==================== -->
+  <div class="slide bg-cover">
+    <div class="closing-quote">
+      尊重每一个生命<br>
+      让每个生命都是鲜活的<br><br>
+      <span style="font-size:24px; opacity:0.6;">初心即是巅峰</span>
+    </div>
+    <div class="closing-mission">
+      路虽远，行必将至；事虽难，做必将成。
+    </div>
+    <div style="margin-top:50px; font-size:15px; color:rgba(255,255,255,0.3);">
+      华熙生物科技股份有限公司 · 2025年度股东大会
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar" id="navBar"></div>
+
+<script>
+const container = document.getElementById('slidesContainer');
+const slides = document.querySelectorAll('.slide');
+const navBar = document.getElementById('navBar');
+let current = 0;
+const total = slides.length;
+
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  navBar.appendChild(dot);
+}
+const pageNum = document.createElement('span');
+pageNum.className = 'page-num';
+pageNum.textContent = `1 / ${total}`;
+navBar.appendChild(pageNum);
+
+function goTo(index) {
+  if (index < 0) index = 0;
+  if (index >= total) index = total - 1;
+  current = index;
+  container.style.transform = `translateX(-${current * 100}vw)`;
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.className = 'nav-dot' + (i === current ? ' active' : '');
+  });
+  pageNum.textContent = `${current + 1} / ${total}`;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault(); goTo(current + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault(); goTo(current - 1);
+  } else if (e.key === 'Home') { goTo(0); }
+  else if (e.key === 'End') { goTo(total - 1); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) { diff > 0 ? goTo(current + 1) : goTo(current - 1); }
+});
+
+let wheelLock = false;
+document.addEventListener('wheel', (e) => {
+  if (wheelLock) return;
+  wheelLock = true;
+  if (e.deltaY > 0 || e.deltaX > 0) goTo(current + 1);
+  else goTo(current - 1);
+  setTimeout(() => { wheelLock = false; }, 600);
+});
+</script>
+</body>
+</html>
