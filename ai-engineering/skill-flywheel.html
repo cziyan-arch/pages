@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill自动迭代飞轮 - 技术方案</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: #0a0e1a;
+  color: #e0e6f0;
+  padding: 48px 60px;
+  line-height: 1.8;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.header {
+  border-bottom: 2px solid #2a3a5c;
+  padding-bottom: 28px;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 14px;
+  color: #7a8baa;
+}
+.section {
+  margin-bottom: 44px;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4a9eff;
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 3px solid #4a9eff;
+}
+.card {
+  background: #111827;
+  border: 1px solid #1e2d4a;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.card-label {
+  font-size: 12px;
+  color: #7a8baa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.card p, .card li {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 5px;
+}
+.card ul, .card ol {
+  padding-left: 20px;
+}
+.card ol li {
+  margin-bottom: 8px;
+}
+.highlight {
+  color: #fbbf24;
+  font-weight: 500;
+}
+.insight {
+  background: #1a1f2e;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.insight .label {
+  font-size: 11px;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.insight p {
+  font-size: 13px;
+  color: #d4dce8;
+}
+.flow-diagram {
+  background: #0d1b2a;
+  border: 2px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.flow-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.flow-box {
+  background: #1e3a5f;
+  color: #93c5fd;
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.flow-box.green { background: #065f46; color: #6ee7b7; }
+.flow-box.yellow { background: #78350f; color: #fbbf24; }
+.flow-box.purple { background: #312e81; color: #a5b4fc; }
+.flow-arrow-down {
+  color: #4a5568;
+  font-size: 20px;
+  display: block;
+  margin: 8px auto;
+}
+.flow-arrow {
+  color: #4a5568;
+  font-size: 16px;
+}
+.code-block {
+  background: #0f1724;
+  border: 1px solid #1e2d4a;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: #93c5fd;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.compare-card {
+  background: #111827;
+  border: 1px solid #1e2d4a;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.compare-card .title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.compare-card.left .title { color: #fca5a5; }
+.compare-card.right .title { color: #6ee7b7; }
+.compare-card p, .compare-card li {
+  font-size: 13px;
+  color: #b0bdd0;
+}
+.compare-card ul { padding-left: 16px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+th {
+  text-align: left;
+  font-size: 12px;
+  color: #7a8baa;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+td {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1e2d4a;
+  color: #b0bdd0;
+}
+.divider {
+  border: none;
+  border-top: 1px solid #1e2d4a;
+  margin: 36px 0;
+}
+.footer {
+  font-size: 12px;
+  color: #4a5568;
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid #1e2d4a;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Skill 自动迭代飞轮</h1>
+  <div class="subtitle">从"一次性训练"到"持续学习" | 技术方案 v1.0 | 2026.05.17</div>
+</div>
+
+<!-- ==================== 核心概念 ==================== -->
+<div class="section">
+  <div class="section-title">飞轮逻辑</div>
+
+  <div class="flow-diagram">
+    <div class="flow-row">
+      <span class="flow-box">一线日常使用AI出稿</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-box yellow">客户反馈/修改意见</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-box green">自动提炼规则</span>
+    </div>
+    <span class="flow-arrow-down">↓</span>
+    <div class="flow-row">
+      <span class="flow-box green">注入Skill新版本</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-box purple">自动测试验证</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-box">下周出稿质量提升</span>
+    </div>
+    <span class="flow-arrow-down">↓</span>
+    <div class="flow-row" style="margin-bottom:0;">
+      <span class="flow-box" style="background:#1a3a2a; color:#86efac;">越用越准 → 客户越离不开</span>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="label">滴滴验证过的模式</div>
+    <p>滴滴稿件创作中心已实现：每周一凌晨3点 → 取最近100条审改记录 → DeepSeek提炼规则 → 写入WritingRule表 → 下次生成时自动注入prompt。同样的逻辑，需要适配到"无服务器、Cherry Studio前端"的轻量场景。</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 两套方案对比 ==================== -->
+<div class="section">
+  <div class="section-title">两套实现方案</div>
+
+  <div class="compare-grid">
+    <div class="compare-card left">
+      <div class="title">方案A：轻量版（飞书 + 定时脚本）</div>
+      <ul>
+        <li>反馈收集：飞书表格</li>
+        <li>知识库：飞书文件夹</li>
+        <li>训练脚本：本地Python定时任务</li>
+        <li>适用：信息成熟型客户（理想/现代）</li>
+        <li>成本：零，现有工具即可</li>
+        <li>部署时间：1天</li>
+      </ul>
+    </div>
+    <div class="compare-card right">
+      <div class="title">方案B：标准版（服务器 + 自动化）</div>
+      <ul>
+        <li>反馈收集：Web表单或飞书机器人</li>
+        <li>知识库：服务器文件系统</li>
+        <li>训练脚本：服务器Cron自动执行</li>
+        <li>适用：信息混沌型客户或多客户统一管理</li>
+        <li>成本：服务器 ¥56/月（可复用滴滴同一台）</li>
+        <li>部署时间：3-5天</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">选择建议</div>
+    <p><span class="highlight">先用方案A启动（零成本验证飞轮是否能转），跑通后再决定是否升级到方案B。</span> 方案A的核心约束是需要一线手动填飞书表格记录反馈——如果他们不填，飞轮就断了。方案B把反馈收集嵌入工作流（审稿时自动留存），不依赖人的自觉性。</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 方案A详细设计 ==================== -->
+<div class="section">
+  <div class="section-title">方案A 详细设计：飞书 + 定时脚本</div>
+
+  <div class="card">
+    <div class="card-label">架构总览</div>
+    <p>三个飞书组件 + 一个定时Python脚本，组成完整闭环：</p>
+    <table>
+      <tr><th>组件</th><th>用途</th><th>更新频率</th></tr>
+      <tr><td>飞书表格「反馈记录」</td><td>一线每次收到客户修改意见后填入</td><td>实时</td></tr>
+      <tr><td>飞书文件夹「知识库/新增」</td><td>新确认稿件、新产品信息、新规范文档投入</td><td>有新材料就扔</td></tr>
+      <tr><td>飞书文档「Skill版本」</td><td>存放当前Skill的完整文本 + 版本日志</td><td>每周自动更新</td></tr>
+      <tr><td>Python训练脚本</td><td>每周定时拉取新数据 → AI提炼 → 更新Skill</td><td>每周一凌晨</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 1：反馈收集表设计</div>
+    <p>飞书表格，列结构如下：</p>
+    <table>
+      <tr><th>字段</th><th>类型</th><th>说明</th></tr>
+      <tr><td>日期</td><td>日期</td><td>自动填充</td></tr>
+      <tr><td>稿件类型</td><td>单选</td><td>新闻稿/讲话稿/社媒/周报...</td></tr>
+      <tr><td>客户原始意见</td><td>文本</td><td>客户的修改批注/反馈原文（截图或文字）</td></tr>
+      <tr><td>修改了什么</td><td>文本</td><td>一线实际改动的要点概述</td></tr>
+      <tr><td>修改原因分类</td><td>多选</td><td>事实错误/风格不符/结构问题/信息缺失/客户偏好/其他</td></tr>
+      <tr><td>是否为新规则</td><td>单选</td><td>是/否（标记：这个修改代表一条新的"客户规则"吗？）</td></tr>
+      <tr><td>填写人</td><td>人员</td><td>自动</td></tr>
+    </table>
+    <p style="margin-top: 10px; color: #93c5fd; font-size: 13px;">关键：让填表零负担。每次客户有修改意见就花2分钟记一条。不要求写长文，关键词+原文截图即可。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 2：每周训练脚本逻辑</div>
+    <p>Python脚本，每周一凌晨3点执行（macOS launchd 或服务器cron）：</p>
+  </div>
+
+  <div class="code-block">
+# skill_weekly_train.py — 每周自动迭代Skill
+# 执行时间：每周一 03:00
+
+import json
+from datetime import datetime, timedelta
+from lark_sdk import LarkClient  # 飞书SDK
+from openai import OpenAI  # DeepSeek兼容
+
+# ============ 1. 拉取本周新数据 ============
+
+def fetch_weekly_feedback(sheet_token, since_date):
+    """从飞书表格拉取上周的新反馈记录"""
+    client = LarkClient()
+    rows = client.sheets.read(sheet_token, range="反馈记录!A:G")
+    new_rows = [r for r in rows if r['日期'] >= since_date]
+    return new_rows
+
+def fetch_new_knowledge_files(folder_token):
+    """从飞书文件夹拉取新增的知识库文件"""
+    client = LarkClient()
+    files = client.drive.list_files(folder_token, order_by="modified_time")
+    # 只取最近7天新增/修改的
+    cutoff = datetime.now() - timedelta(days=7)
+    return [f for f in files if f['modified_time'] > cutoff]
+
+# ============ 2. AI提炼规则 ============
+
+def extract_rules(feedback_records):
+    """用AI从反馈记录中提炼可复用规则"""
+    client = OpenAI(base_url="https://api.deepseek.com", api_key="...")
+
+    prompt = f"""你是一个品牌文案规则提炼专家。
+以下是本周客户的修改反馈记录（共{len(feedback_records)}条）。
+
+请从中提炼出可复用的写作规则，格式为：
+- 规则描述（一句话）
+- 触发场景（什么情况下适用）
+- 正确做法
+- 错误示例（从反馈中提取）
+
+只提炼确实代表"客户标准"的规则，忽略一次性的偶发修改。
+
+反馈记录：
+{json.dumps(feedback_records, ensure_ascii=False, indent=2)}"""
+
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.3
+    )
+    return response.choices[0].message.content
+
+# ============ 3. 更新Skill ============
+
+def update_skill(current_skill, new_rules, new_knowledge_summary):
+    """将新规则和知识融入现有Skill"""
+    client = OpenAI(base_url="https://api.deepseek.com", api_key="...")
+
+    prompt = f"""你是Skill维护工程师。请将以下新规则和新知识整合到现有Skill中。
+
+要求：
+1. 新规则插入到"客户偏好规则"章节
+2. 去重：如果新规则与现有规则含义相同，合并而非重复添加
+3. 如有冲突（新规则与旧规则矛盾），以新规则为准（代表客户最新标准）
+4. 新知识（新产品/新话术）更新到知识库引用说明中
+5. 保持Skill整体结构不变，只做增量更新
+
+当前Skill：
+---
+{current_skill}
+---
+
+本周新规则：
+{new_rules}
+
+本周新增知识摘要：
+{new_knowledge_summary}"""
+
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+    return response.choices[0].message.content
+
+# ============ 4. 测试验证 ============
+
+def run_test_cases(updated_skill, test_cases):
+    """用历史测试用例验证更新后的Skill是否退化"""
+    client = OpenAI(base_url="https://api.deepseek.com", api_key="...")
+    results = []
+    for case in test_cases:
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": updated_skill},
+                {"role": "user", "content": case['brief']}
+            ]
+        )
+        output = response.choices[0].message.content
+        # 简单检查：关键词覆盖率、禁用词检测
+        results.append({
+            'case': case['name'],
+            'passed': check_quality(output, case['expected_keywords'], case['banned_words'])
+        })
+    return results
+
+# ============ 5. 主流程 ============
+
+def main():
+    since = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+
+    # 拉取数据
+    feedback = fetch_weekly_feedback(SHEET_TOKEN, since)
+    new_files = fetch_new_knowledge_files(FOLDER_TOKEN)
+
+    if not feedback and not new_files:
+        notify("本周无新反馈和新知识，Skill保持不变。")
+        return
+
+    # 提炼规则
+    new_rules = extract_rules(feedback) if feedback else "无新规则"
+    new_knowledge = summarize_files(new_files) if new_files else "无新知识"
+
+    # 读取当前Skill
+    current_skill = read_skill_from_feishu(SKILL_DOC_TOKEN)
+
+    # 更新Skill
+    updated_skill = update_skill(current_skill, new_rules, new_knowledge)
+
+    # 测试验证
+    test_results = run_test_cases(updated_skill, TEST_CASES)
+    all_passed = all(r['passed'] for r in test_results)
+
+    if all_passed:
+        # 写回飞书 + 记录版本
+        write_skill_to_feishu(SKILL_DOC_TOKEN, updated_skill, version_note=f"自动更新 {datetime.now().strftime('%Y-%m-%d')}, 新增{len(feedback)}条反馈规则")
+        notify(f"Skill已自动更新 ✓ 本周提炼{count_new_rules(new_rules)}条新规则，测试全部通过。")
+    else:
+        # 测试未通过，标记需要人工review
+        notify(f"⚠️ Skill更新后测试未通过，需人工确认。失败用例：{[r['case'] for r in test_results if not r['passed']]}")
+
+if __name__ == "__main__":
+    main()
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 3：定时任务配置</div>
+    <p>macOS本地（开发阶段）：</p>
+  </div>
+
+  <div class="code-block">
+# ~/Library/LaunchAgents/com.aieng.skill-train.plist
+# 每周一凌晨3点执行
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;com.aieng.skill-train&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/usr/bin/python3&lt;/string&gt;
+        &lt;string&gt;/Users/chriswang/工作档案/AI工程队/scripts/skill_weekly_train.py&lt;/string&gt;
+        &lt;string&gt;--client&lt;/string&gt;
+        &lt;string&gt;lixiang&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;StartCalendarInterval&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;Weekday&lt;/key&gt;
+        &lt;integer&gt;1&lt;/integer&gt;
+        &lt;key&gt;Hour&lt;/key&gt;
+        &lt;integer&gt;3&lt;/integer&gt;
+        &lt;key&gt;Minute&lt;/key&gt;
+        &lt;integer&gt;0&lt;/integer&gt;
+    &lt;/dict&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 4：通知机制</div>
+    <ul>
+      <li>更新成功 → 飞书群发消息："[理想汽车] Skill v2.3 已自动更新，本周新增3条规则：..."</li>
+      <li>测试失败 → 飞书群发消息 + @陈思琦："需人工确认本周Skill更新"</li>
+      <li>无新数据 → 静默，不发消息</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 方案B ==================== -->
+<div class="section">
+  <div class="section-title">方案B 详细设计：服务器 + 自动化采集</div>
+
+  <div class="card">
+    <div class="card-label">与方案A的核心差异</div>
+    <p>方案A依赖一线<span class="highlight">主动填表</span>记录反馈。方案B把反馈收集<span class="highlight">嵌入工作流</span>——一线用AI出稿、改稿的全过程自动留存，不需要额外动作。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">架构</div>
+    <table>
+      <tr><th>组件</th><th>技术</th><th>说明</th></tr>
+      <tr><td>写作前端</td><td>Web App（类似滴滴方案）</td><td>一线在这里写稿/改稿，全部操作自动记录</td></tr>
+      <tr><td>数据库</td><td>SQLite / PostgreSQL</td><td>存储：稿件版本、修改diff、审核意见、AI输出</td></tr>
+      <tr><td>训练Cron</td><td>服务器定时任务</td><td>每周一凌晨自动提炼规则，更新Skill</td></tr>
+      <tr><td>Skill版本管理</td><td>Git仓库或数据库表</td><td>每次更新记录版本，可回滚</td></tr>
+      <tr><td>测试引擎</td><td>Python脚本</td><td>更新后自动跑测试用例，不通过则回滚</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">自动采集的数据来源（无需一线主动填表）</div>
+    <ol>
+      <li><b>AI初稿 vs 人工终稿的diff</b> — 系统自动对比，提取"人改了什么"</li>
+      <li><b>审核意见文本</b> — 审核人（组长/客户）写的批注直接入库</li>
+      <li><b>修改次数和位置</b> — 统计哪些段落被改最多，暗示Skill在哪里不准</li>
+      <li><b>客户一版通过率</b> — 作为Skill质量的北极星指标</li>
+    </ol>
+  </div>
+
+  <div class="insight">
+    <div class="label">方案B的杀手优势</div>
+    <p>方案A飞轮能否转取决于一线是否愿意填表（现实是：忙起来一定不填）。方案B的数据采集是工作流的副产品——一线正常写稿改稿，系统自动留存一切。这是滴滴方案证明过的：飞轮能持续转，不是因为人自觉，而是因为数据采集嵌入了无法跳过的流程节点。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">部署选择</div>
+    <ul>
+      <li><b>复用滴滴服务器</b>：47.95.255.213 还有余量（2核2G跑一个Next.js不满载），加一个新项目端口3001即可</li>
+      <li><b>独立服务器</b>：如果客户数据需要隔离（蓝标客户 vs 滴滴），另开一台同规格 ¥56/月</li>
+      <li><b>未来方向</b>：多客户统一平台（一个系统管理所有客户的Skill迭代），这就是"客户AI协作平台"的雏形</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 实施建议 ==================== -->
+<div class="section">
+  <div class="section-title">落地路径建议</div>
+
+  <div class="card">
+    <div class="card-label">分三步走</div>
+    <table>
+      <tr><th>阶段</th><th>时间</th><th>做什么</th><th>验证什么</th></tr>
+      <tr>
+        <td><span class="highlight">1. 手动飞轮</span></td>
+        <td>立即开始</td>
+        <td>建飞书反馈表 → 思琪每周手动整理 → 手动更新Skill</td>
+        <td>"客户反馈能否被结构化记录？一线愿不愿意配合？"</td>
+      </tr>
+      <tr>
+        <td><span class="highlight">2. 半自动飞轮</span></td>
+        <td>W22-W23</td>
+        <td>写Python脚本自动提炼规则（方案A），人工审核后更新</td>
+        <td>"AI提炼的规则准不准？自动更新后Skill退化了吗？"</td>
+      </tr>
+      <tr>
+        <td><span class="highlight">3. 全自动飞轮</span></td>
+        <td>W24+</td>
+        <td>Cron定时执行，自动更新 + 自动测试 + 自动通知</td>
+        <td>"飞轮能否无人干预持续转？质量持续提升？"</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">方案B的触发条件</div>
+    <p>以下任一出现，就该升级到方案B：</p>
+    <ul>
+      <li>一线持续不填反馈表（飞轮断了）</li>
+      <li>管理3个以上客户的Skill，手动维护成本过高</li>
+      <li>需要把系统给客户使用（于总个人操作系统等场景）</li>
+      <li>需要精确的"一版通过率"等量化指标</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 关键设计决策 ==================== -->
+<div class="section">
+  <div class="section-title">关键设计决策</div>
+
+  <div class="card">
+    <div class="card-label">Q: 自动更新会不会把Skill改坏？</div>
+    <p>三层保护：</p>
+    <ol>
+      <li><b>测试用例卡口</b> — 更新后跑3-5个历史Case，不通过则回滚</li>
+      <li><b>版本管理</b> — 每次更新保留上一版，随时可回退</li>
+      <li><b>人工审核窗口</b> — 前期先设为"生成草案→人工确认→正式发布"，跑稳后再改为全自动</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Q: 一周一次够不够？频率该多高？</div>
+    <p><span class="highlight">一周一次是对的。</span> 理由：</p>
+    <ul>
+      <li>客户偏好不会天天变，周级别积累反馈再统一更新，避免过拟合到个别意见</li>
+      <li>每次更新需要测试验证，频率太高维护成本高</li>
+      <li>团队需要时间适应"上周的Skill和这周的不一样了"</li>
+      <li>例外：品牌规范大改（如换logo、换slogan）时手动触发一次即时更新</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Q: 知识库更新和Skill规则更新有什么区别？</div>
+    <table>
+      <tr><th></th><th>知识库更新</th><th>Skill规则更新</th></tr>
+      <tr><td>内容</td><td>事实性信息（新产品/新数据/新话术）</td><td>写作规则（客户偏好/风格/结构）</td></tr>
+      <tr><td>来源</td><td>新文件入库</td><td>客户修改反馈</td></tr>
+      <tr><td>更新方式</td><td>直接追加（不需AI处理）</td><td>需AI提炼+去重+整合</td></tr>
+      <tr><td>风险</td><td>低（加信息不影响原有规则）</td><td>中（新规则可能与旧规则冲突）</td></tr>
+      <tr><td>验证</td><td>人工检查一次即可</td><td>必须跑测试用例</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Q: 和达芬奇Auto的关系？</div>
+    <p>文字类Skill飞轮 = 达芬奇Auto"能力1（客户知识引擎）"的子集。两者共享底层逻辑：</p>
+    <ul>
+      <li>客户知识随使用积累 → 系统越来越懂客户 → 客户切换成本递增</li>
+      <li>文字类先跑通验证飞轮机制，验证成功后复制到达人选号/投后分析等场景</li>
+      <li>最终统一为：每个客户一个"客户知识引擎"，文字只是其中一个输出通道</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  AI工程队 · Skill自动迭代飞轮技术方案 v1.0 | 2026.05.17 | 内部文档
+</div>
+
+</body>
+</html>
