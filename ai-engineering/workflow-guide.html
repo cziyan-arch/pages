@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文字类工作AI工程改造 - 全流程工作指南</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: #0a0e1a;
+  color: #e0e6f0;
+  padding: 48px 60px;
+  line-height: 1.8;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.header {
+  border-bottom: 2px solid #2a3a5c;
+  padding-bottom: 28px;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 14px;
+  color: #7a8baa;
+}
+.phase {
+  margin-bottom: 48px;
+  position: relative;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.phase-number {
+  width: 36px;
+  height: 36px;
+  background: #1e3a5f;
+  border: 2px solid #4a9eff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #4a9eff;
+  flex-shrink: 0;
+}
+.phase-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.phase-duration {
+  font-size: 12px;
+  color: #7a8baa;
+  background: #1a2235;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+.phase-body {
+  margin-left: 52px;
+}
+.card {
+  background: #111827;
+  border: 1px solid #1e2d4a;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.card-label {
+  font-size: 12px;
+  color: #7a8baa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.card p, .card li {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 5px;
+}
+.card ul {
+  padding-left: 20px;
+}
+.card ol {
+  padding-left: 20px;
+}
+.card ol li {
+  margin-bottom: 8px;
+}
+.highlight {
+  color: #fbbf24;
+  font-weight: 500;
+}
+.insight {
+  background: #1a1f2e;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.insight .label {
+  font-size: 11px;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.insight p {
+  font-size: 13px;
+  color: #d4dce8;
+}
+.checklist {
+  background: #0f1724;
+  border: 1px solid #1e2d4a;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 14px;
+}
+.checklist-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a9eff;
+  margin-bottom: 10px;
+}
+.checklist li {
+  font-size: 13px;
+  color: #b0bdd0;
+  margin-bottom: 6px;
+  list-style: none;
+  padding-left: 24px;
+  position: relative;
+}
+.checklist li::before {
+  content: "☐";
+  position: absolute;
+  left: 0;
+  color: #4a9eff;
+}
+.connector {
+  position: absolute;
+  left: 69px;
+  top: 52px;
+  bottom: -16px;
+  width: 2px;
+  background: linear-gradient(to bottom, #2a3a5c, #1e2d4a);
+}
+.gate {
+  background: #1a0f0f;
+  border: 1px solid #7f1d1d;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.gate-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fca5a5;
+  margin-bottom: 6px;
+}
+.gate p {
+  font-size: 13px;
+  color: #d4b0b0;
+}
+.example-box {
+  background: #0d1b2a;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+}
+.example-box .title {
+  font-size: 12px;
+  color: #4a9eff;
+  margin-bottom: 8px;
+}
+.example-box .content {
+  font-size: 13px;
+  color: #93c5fd;
+}
+.divider {
+  border: none;
+  border-top: 1px solid #1e2d4a;
+  margin: 40px 0;
+}
+.footer {
+  font-size: 12px;
+  color: #4a5568;
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid #1e2d4a;
+}
+.flow-summary {
+  background: #111827;
+  border: 2px solid #2a3a5c;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 40px;
+}
+.flow-summary .title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+.flow-steps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.flow-step {
+  background: #1e3a5f;
+  color: #93c5fd;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.flow-arrow {
+  color: #4a5568;
+  font-size: 16px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+th {
+  text-align: left;
+  font-size: 12px;
+  color: #7a8baa;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+td {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1e2d4a;
+  color: #b0bdd0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>文字类工作 AI 工程改造</h1>
+  <div class="subtitle">全流程工作指南 | AI工程队内部标准文档 | v1.0 2026.05.17</div>
+</div>
+
+<!-- ==================== 总览 ==================== -->
+<div class="flow-summary">
+  <div class="title">全流程七阶段</div>
+  <div class="flow-steps">
+    <span class="flow-step">1 立项诊断</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">2 素材收集</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">3 Skill训练</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">4 人工校准</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">5 测试达标</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">6 前端部署</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">7 运维迭代</span>
+  </div>
+</div>
+
+<div class="insight">
+  <div class="label">核心认知</div>
+  <p>绝大多数文字类工作都适合AI改造。真正影响成败的不是"AI能不能写"，而是"喂给AI的信息是否齐全、准确、结构化"。写作从来不是瓶颈，信息供给才是。</p>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== Phase 1 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">1</div>
+    <div class="phase-title">立项诊断</div>
+    <div class="phase-duration">1-2天</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>判断该客户/场景属于哪种类型，决定投入深度和产品形态。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">三类场景判断（决策树）</div>
+      <table>
+        <tr><th>场景类型</th><th>客户特征</th><th>投入深度</th><th>实例</th></tr>
+        <tr>
+          <td><span class="highlight">信息成熟型</span></td>
+          <td>客户信息供给及时完整、对口人专业稳定、服务时间长有默契</td>
+          <td>轻量：Skill + 知识库即可</td>
+          <td>理想汽车</td>
+        </tr>
+        <tr>
+          <td><span class="highlight">信息混沌型</span></td>
+          <td>客户内部信息不通/延迟、对口人反复焦虑、Brief不清</td>
+          <td>重：Skill + 知识库 + 前端产品（信息拉齐系统）</td>
+          <td>东风奕派</td>
+        </tr>
+        <tr>
+          <td><span class="highlight">中间型</span></td>
+          <td>流程规范但灵活度有限、偶发临时状况、投产比不值得上系统</td>
+          <td>中等：Skill + 知识库，人工兜底偶发</td>
+          <td>现代中国</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">诊断问题清单（30分钟访谈即可）</div>
+      <ol>
+        <li>这个客户的文案类需求有哪几种？（新闻稿/讲话稿/社媒/周报...）</li>
+        <li>每种稿件的月产量和平均耗时？</li>
+        <li>客户给的Brief通常完整吗？信息到位率大概多少？</li>
+        <li>一篇稿件从Brief到终稿，通常改几版？卡在哪一步？</li>
+        <li>团队中谁在用AI？用到什么程度？</li>
+        <li>客户的品牌规范/禁忌事项多不多？有成文的文档吗？</li>
+      </ol>
+    </div>
+
+    <div class="insight">
+      <div class="label">经验教训</div>
+      <p>不要在诊断阶段就排除任何客户。"文字资料少"不是不能做AI的理由（现代中国证明了流程规范比资料量更重要），"Brief不清"也不是（奕派证明了这是需要前端产品解决的问题，不是放弃AI的理由）。</p>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段交付物</div>
+      <p>一份一页纸的《项目立项卡》：客户名 / 场景类型 / 文案种类 / 月产量 / 一线负责人 / AI种子用户 / 预判投入深度</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 2 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">2</div>
+    <div class="phase-title">素材收集</div>
+    <div class="phase-duration">3-5天</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>收齐训练Skill所需的全部原始材料。这是整个流程中最容易被低估的环节——素材质量直接决定Skill质量。</p>
+    </div>
+
+    <div class="checklist">
+      <div class="checklist-title">标准素材收集清单（每个客户必收）</div>
+      <ul>
+        <li><b>品牌规范文档</b> — 品牌手册、VI规范、文案规范、禁用词列表、话术标准</li>
+        <li><b>客户偏好记录</b> — 对口人/决策者的审稿习惯、常改的点、喜恶倾向（从一线口述整理）</li>
+        <li><b>过往确认版稿件</b> — 至少10-20篇最终确认版（不是过程稿），按稿件类型分类</li>
+        <li><b>客户官方信息库</b> — 产品参数、标准话术、领导层公开讲话、官网/官媒内容合集</li>
+        <li><b>过往Brief样本</b> — 客户下发的Brief原始文档，越多越好，含最终确认版的对照</li>
+        <li><b>审核反馈记录</b> — 客户批注/修改记录/退稿原因汇总（能体现客户标准的核心材料）</li>
+        <li><b>行业/竞品参考</b> — 客户认可的竞品稿件、行业标杆案例</li>
+        <li><b>一线经验总结</b> — 资深文案的口述经验（"这个客户喜欢什么/忌讳什么/踩过什么坑"）</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">收集方法</div>
+      <ul>
+        <li>指定一线对接人（最好是服务最久的文案），给他清单，约定3天内交齐</li>
+        <li>不要让一线自己整理——给飞书文件夹，按清单建好子目录，让他们直接扔进去</li>
+        <li>品牌规范和客户偏好如果没有成文文档，安排30分钟语音访谈，AI工程队负责整理成文</li>
+        <li>过往稿件优先收集"一版过"或"只改一次就过"的高质量样本</li>
+      </ul>
+    </div>
+
+    <div class="insight">
+      <div class="label">关键发现（来自实战）</div>
+      <p><b>理想：</b>服务6年+，资料极其丰富，孙鹏超本人就是行走的知识库。收集几乎零阻力。<br>
+      <b>现代中国：</b>外企流程规范，每次活动都有标准Brief模板和审核流程文档，资料自带结构化。<br>
+      <b>奕派：</b>资料少且碎，Brief经常不清楚，但这不意味着不能做——意味着需要在Phase 6补一个"信息拉齐"前端。Skill训练可以先用有的材料训，后面边用边补。</p>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段质量门</div>
+      <p>满足以下任意一条即可进入下一阶段：(1) 确认版稿件达到10篇以上 + 品牌规范齐备；(2) 稿件不足10篇但有详细的一线经验口述记录 + 客户反馈记录。不要等到"材料完美"——先训练，训练过程中暴露的缺失再补。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 3 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">3</div>
+    <div class="phase-title">Skill训练</div>
+    <div class="phase-duration">2-3天</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>基于收集的素材，训练出能产出60-70分稿件的初版Skill。注意：这一步产出的不是完美Skill，而是"能用来收集反馈的初版"。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Skill结构（标准模板）</div>
+      <ol>
+        <li><b>角色定义</b> — 你是[客户名]的[稿件类型]写手，服务该客户[X]年</li>
+        <li><b>品牌规范注入</b> — 直接嵌入品牌规范/禁用词/标准话术（作为系统指令的一部分）</li>
+        <li><b>风格样本</b> — 嵌入3-5篇代表性确认版稿件作为few-shot示例</li>
+        <li><b>客户偏好规则</b> — 从审核反馈中提炼的"客户在意什么/不在意什么"规则列表</li>
+        <li><b>输入输出格式</b> — 定义用户输入的Brief格式，和期望的输出结构</li>
+        <li><b>知识库引用</b> — 指向外挂知识库（产品信息/历史稿件/行业数据）的调用方式</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-label">训练要点</div>
+      <ul>
+        <li>一个客户可以有多个Skill（按稿件类型拆分：新闻稿Skill、讲话稿Skill、社媒Skill...）</li>
+        <li>知识库和Skill分离——知识库存事实（产品信息/数据），Skill管写法（风格/结构/规则）</li>
+        <li>初版不求完美，先跑出能看的东西，然后靠Phase 4的人工校准迭代</li>
+        <li>每个Skill附带2-3个"测试用例"：用真实的历史Brief作为输入，跑一遍看输出</li>
+      </ul>
+    </div>
+
+    <div class="example-box">
+      <div class="title">实例：理想汽车新闻稿Skill</div>
+      <div class="content">
+        知识库：理想汽车全系产品参数 + 李想/马东辉/刘杰公开讲话全文 + 2025-2026全部确认版新闻稿<br>
+        Skill规则：标题必须含核心产品点 + 第一段交代时间地点人物事件 + 数据必须准确引用知识库 + 禁止使用"赋能""生态""矩阵"<br>
+        孙鹏超在此基础上已能独立使用，日常用Cherry Studio调用
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段交付物</div>
+      <p>初版Skill文件 + 知识库文件 + 3个测试用例的输出样本。打包发给一线业务组。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 4 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">4</div>
+    <div class="phase-title">人工校准</div>
+    <div class="phase-duration">3-5天</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>让一线业务团队看AI产出的稿件，指出"哪里不对"，AI工程队据此迭代Skill。这一步是把60-70分提到80分的关键。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">校准流程</div>
+      <ol>
+        <li>把测试输出发给一线文案 + 组长，要求他们像改稿一样批注（红字标出不对的地方）</li>
+        <li>收集批注后分类：(a)事实错误 → 补知识库 (b)风格不对 → 改Skill规则 (c)结构不符 → 改模板 (d)缺信息 → 补素材清单</li>
+        <li>修改Skill后重跑同样的测试用例，对比前后差异</li>
+        <li>重复1-3次，直到一线反馈从"不能用"变成"改改能用"</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-label">常见校准点（来自实战经验）</div>
+      <ul>
+        <li>"口气不对" → 补充更多风格样本，或明确写入语气指令（正式/轻松/技术范/用户共情）</li>
+        <li>"这个数据不是最新的" → 知识库需要更新机制，标注数据有效期</li>
+        <li>"客户从来不这么说" → 品牌禁用词列表需要扩充，收集更多客户实际用语</li>
+        <li>"结构是对的但深度不够" → 可能需要行业知识补充，或引入竞品参考</li>
+        <li>"写得太安全了没亮点" → 调整Skill中的创意空间指令，加入创意方向引导</li>
+      </ul>
+    </div>
+
+    <div class="insight">
+      <div class="label">注意</div>
+      <p>校准的目标是80分，不是100分。100分永远需要人最后润色——这是不可消灭的，也是人的价值所在。如果一线说"改改能用"或"在这个基础上调整比从零写快多了"，就是达标了。</p>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段质量门</div>
+      <p>一线文案确认：AI初稿在自己动手改30分钟以内能达到可提交客户的标准。如果还需要大改重写，说明Skill未达标，继续迭代。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 5 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">5</div>
+    <div class="phase-title">测试达标</div>
+    <div class="phase-duration">1周</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>在真实业务中试跑Skill，验证稳定输出80分。不是实验室测试，是在真实项目中用起来。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">测试方法</div>
+      <ol>
+        <li>选择下一个即将到来的真实项目（不是虚构场景）</li>
+        <li>一线文案先用AI出初稿，再按正常流程修改提交客户</li>
+        <li>记录：(a)AI初稿耗时 (b)人工修改耗时 (c)客户反馈 (d)最终改版次数</li>
+        <li>对比基线：同类型稿件之前从零写需要多长时间</li>
+        <li>连续3篇以上稳定达标 = 通过</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-label">80分标准定义</div>
+      <ul>
+        <li>事实准确（产品信息、数据、人名无误）</li>
+        <li>品牌规范合规（禁用词、话术、格式全部正确）</li>
+        <li>结构完整（标题、导语、正文、结尾各部分齐全）</li>
+        <li>风格匹配（读起来像这个品牌/客户的稿件，不是通用AI腔）</li>
+        <li>只需局部润色即可提交（不需要推翻重写或大幅结构调整）</li>
+      </ul>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段交付物</div>
+      <p>《测试报告》：3-5篇真实项目的测试记录，含before/after时间对比、客户反馈、稳定性评估。通过后进入部署阶段。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 6 ==================== -->
+<div class="phase">
+  <div class="connector"></div>
+  <div class="phase-header">
+    <div class="phase-number">6</div>
+    <div class="phase-title">前端部署与协同设计</div>
+    <div class="phase-duration">1-2周</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>根据诊断结果，为该团队配置合适的日常使用界面和多人协作流程。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">前端方案选型（按场景）</div>
+      <table>
+        <tr><th>场景类型</th><th>推荐前端</th><th>理由</th></tr>
+        <tr>
+          <td>信息成熟型</td>
+          <td>Cherry Studio + Skill作为知识库</td>
+          <td>一线AI能力强，给工具就够用，不需要额外界面</td>
+        </tr>
+        <tr>
+          <td>中间型</td>
+          <td>Cherry Studio + 飞书文档协同</td>
+          <td>流程规范，加一层飞书审批/评论即可覆盖协同需求</td>
+        </tr>
+        <tr>
+          <td>信息混沌型</td>
+          <td>定制前端（Brief收集系统 + AI写作台 + 审稿流）</td>
+          <td>核心问题是信息不通，需要产品级解决方案</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">协同问题调研（必须做）</div>
+      <p>文案工作通常2-3人协作（文案+AE+组长），需要调研清楚：</p>
+      <ul>
+        <li>谁发起？谁写？谁审？谁提交客户？</li>
+        <li>多人同时修改同一篇稿件的情况多吗？还是串行流转？</li>
+        <li>审核意见怎么传递？飞书评论？微信？口头？</li>
+        <li>客户反馈回来后，谁负责改？改完谁再审？</li>
+        <li>有没有版本混乱的痛点？（改了半天发现改的是旧版）</li>
+      </ul>
+      <p style="margin-top: 8px; color: #fbbf24;">基于以上调研结果，决定是否需要加版本管理、评论流、审稿通知等协同功能。</p>
+    </div>
+
+    <div class="example-box">
+      <div class="title">实例：理想汽车当前方案</div>
+      <div class="content">
+        孙鹏超日常使用 Cherry Studio，内置理想汽车Skill + 知识库。出稿后直接贴入飞书文档，组内评论修改，终稿提交客户。不需要额外前端。协同流程已经够顺。
+      </div>
+    </div>
+
+    <div class="example-box">
+      <div class="title">实例：奕派远期方案（待开发）</div>
+      <div class="content">
+        Skill训练可以先用当前材料，但真正解决问题需要：(1) Brief结构化收集前端——让奕派产品部/GTM部直接填表，自动生成结构化Brief (2) 于总个人操作系统——口述→成稿→自改 (3) 解决"人传人"信息损耗。这属于产品级工程，不在标准流程范围内，单独立项。
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">阶段交付物</div>
+      <p>一线团队开始日常使用AI工具产出稿件。有明确的使用界面、协同流程和常见问题FAQ。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Phase 7 ==================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">7</div>
+    <div class="phase-title">自动迭代飞轮</div>
+    <div class="phase-duration">持续运转</div>
+  </div>
+  <div class="phase-body">
+    <div class="card">
+      <div class="card-label">目标</div>
+      <p>Skill不是训练一次就完事的静态产物，而是一个持续学习的活系统。建立"使用→反馈→提炼→更新→使用"的自动化闭环，让Skill越用越准，客户越来越离不开。</p>
+    </div>
+
+    <div class="card" style="background: #0d1b2a; border: 2px solid #1e3a5f;">
+      <div class="card-label">飞轮运转逻辑</div>
+      <p style="text-align: center; font-size: 13px; color: #93c5fd; margin: 12px 0;">
+        一线日常使用AI出稿 → 客户反馈/修改意见 → 自动提炼规则 → 注入Skill新版本 → 自动测试验证 → 下周出稿质量提升 → 循环
+      </p>
+      <p style="text-align: center; font-size: 12px; color: #6ee7b7;">越用越准 → 客户越离不开 → 这就是锁定</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">封装内容（进入飞轮前必须完成）</div>
+      <ul>
+        <li>Skill最终版 + 版本号 + 更新日志</li>
+        <li>知识库内容清单 + 更新机制说明</li>
+        <li>3-5个标准测试用例（用于验证每次自动更新是否退化）</li>
+        <li>使用说明文档（1页纸，给一线看的）</li>
+        <li>反馈收集渠道已建好（飞书表格或Web系统）</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">飞轮实现：方案A（轻量版 — 飞书 + 定时脚本）</div>
+      <p style="color: #fbbf24; font-size: 13px; margin-bottom: 10px;">适用：信息成熟型/中间型客户，零额外成本，立即可做</p>
+      <ul>
+        <li><b>反馈收集：</b>飞书表格，一线每次收到客户修改花2分钟填一条（日期/稿件类型/客户意见/修改内容/原因分类）</li>
+        <li><b>知识库更新：</b>飞书文件夹，新确认稿件/新产品信息/新规范直接扔进去</li>
+        <li><b>每周自动训练：</b>Python脚本每周一凌晨自动执行——
+          <ol style="margin-top: 6px;">
+            <li>拉取本周新反馈记录</li>
+            <li>AI提炼可复用规则（去重、判断是否代表客户标准）</li>
+            <li>将新规则整合进现有Skill（增量更新，不破坏原有结构）</li>
+            <li>跑测试用例验证更新后Skill未退化</li>
+            <li>通过则自动发布新版，失败则通知人工review</li>
+          </ol>
+        </li>
+        <li><b>通知：</b>飞书群消息"[客户名] Skill v2.3 已自动更新，本周新增3条规则"</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">飞轮实现：方案B（标准版 — 服务器 + 自动采集）</div>
+      <p style="color: #fbbf24; font-size: 13px; margin-bottom: 10px;">适用：信息混沌型客户，或方案A飞轮断裂时升级</p>
+      <ul>
+        <li><b>核心差异：</b>不依赖一线主动填表。反馈采集嵌入工作流——一线在Web前端写稿/改稿，修改过程自动留存</li>
+        <li><b>自动采集数据源：</b>
+          <ol style="margin-top: 6px;">
+            <li>AI初稿 vs 人工终稿的diff（系统自动对比"人改了什么"）</li>
+            <li>审核意见文本（审核人批注直接入库）</li>
+            <li>修改频率和位置（统计哪些段落被改最多 = Skill在哪里不准）</li>
+            <li>客户一版通过率（Skill质量的北极星指标）</li>
+          </ol>
+        </li>
+        <li><b>参考实现：</b>滴滴稿件创作中心已验证此模式——每周一凌晨3点，取100条审改记录，DeepSeek提炼规则，写入数据库，下次生成时自动注入prompt</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">方案选择与升级时机</div>
+      <table>
+        <tr><th>先用方案A</th><th>升级到方案B的触发条件</th></tr>
+        <tr><td>零成本验证飞轮是否能转</td><td>一线持续不填反馈表（飞轮断了）</td></tr>
+        <tr><td>适合1-2个信息成熟型客户</td><td>同时管理3个以上客户的Skill</td></tr>
+        <tr><td>1天即可部署</td><td>需要把系统给客户直接使用</td></tr>
+        <tr><td>手动维护成本低</td><td>需要精确的"一版通过率"等量化指标</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">落地三步走</div>
+      <table>
+        <tr><th>阶段</th><th>时间</th><th>做什么</th></tr>
+        <tr><td>1. 手动飞轮</td><td>立即开始</td><td>建飞书反馈表 → 思琪每周手动整理 → 手动更新Skill</td></tr>
+        <tr><td>2. 半自动飞轮</td><td>W22-W23</td><td>Python脚本自动提炼规则，人工审核后更新</td></tr>
+        <tr><td>3. 全自动飞轮</td><td>W24+</td><td>Cron定时执行，自动更新 + 自动测试 + 自动通知</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">关键保护机制</div>
+      <ul>
+        <li><b>测试用例卡口：</b>每次自动更新后跑3-5个历史Case，不通过则回滚上一版</li>
+        <li><b>版本管理：</b>每次更新保留历史版本，随时可回退</li>
+        <li><b>人工审核窗口：</b>前期"生成草案→人工确认→发布"，稳定后改全自动</li>
+        <li><b>频率控制：</b>一周一次（客户偏好不会天天变，避免过拟合个别意见）</li>
+      </ul>
+    </div>
+
+    <div class="insight">
+      <div class="label">为什么飞轮是战略级设计</div>
+      <p>飞轮不只是运维手段，它是客户锁定的核心机制。Skill越用越懂客户 = 客户切换成本递增 = 定价权。这和达芬奇Auto"能力1（客户知识引擎）"是同一个逻辑：文字类先跑通验证飞轮机制，验证成功后复制到达人选号、投后分析等所有场景。</p>
+    </div>
+
+    <div class="insight">
+      <div class="label">知识库会腐烂</div>
+      <p>产品更新了、人事变了、品牌策略调了——如果知识库不跟着更新，Skill输出会越来越离谱。飞轮的价值之一就是：通过每周自动采集新材料、新反馈，让知识库自然保鲜，而不是靠人记得去更新。</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 附录 ==================== -->
+<div class="phase">
+  <div class="phase-header" style="margin-bottom: 20px;">
+    <div class="phase-title" style="color: #4a9eff;">附录：时间估算与资源需求</div>
+  </div>
+  <div class="phase-body" style="margin-left: 0;">
+    <div class="card">
+      <div class="card-label">单个客户全流程时间线</div>
+      <table>
+        <tr><th>阶段</th><th>耗时</th><th>AI工程队投入</th><th>一线投入</th></tr>
+        <tr><td>1. 立项诊断</td><td>1-2天</td><td>1人 × 半天</td><td>30分钟访谈</td></tr>
+        <tr><td>2. 素材收集</td><td>3-5天</td><td>跟进催收</td><td>整理材料（2-4小时）</td></tr>
+        <tr><td>3. Skill训练</td><td>2-3天</td><td>1人 × 2天</td><td>无</td></tr>
+        <tr><td>4. 人工校准</td><td>3-5天</td><td>1人 × 迭代2-3轮</td><td>每轮30分钟批注</td></tr>
+        <tr><td>5. 测试达标</td><td>1周</td><td>跟进记录</td><td>正常工作中使用</td></tr>
+        <tr><td>6. 前端部署</td><td>1-2周</td><td>配置+培训</td><td>学习使用（1小时）</td></tr>
+        <tr><td>7. 运维迭代</td><td>持续</td><td>每月2-4小时</td><td>反馈问题</td></tr>
+      </table>
+      <p style="margin-top: 12px; color: #fbbf24; font-size: 13px;">信息成熟型客户：3-4周可完成全流程。信息混沌型客户：6-8周（含前端开发）。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">并行能力</div>
+      <p>AI工程队当前配置（陈思琦 + 5名实习生），可同时推进2-3个客户的改造项目。信息成熟型客户可以交给实习生独立执行（Phase 2-5），信息混沌型需要思琪+王总介入产品设计（Phase 6）。</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="phase">
+  <div class="phase-header" style="margin-bottom: 20px;">
+    <div class="phase-title" style="color: #4a9eff;">附录：三个项目的经验沉淀</div>
+  </div>
+  <div class="phase-body" style="margin-left: 0;">
+    <div class="card">
+      <div class="card-label">理想汽车 — 标杆案例</div>
+      <ul>
+        <li>成功因素：服务时间长、资料丰富、孙鹏超AI能力强、客户信息供给好</li>
+        <li>Skill状态：基本完成，日常使用中</li>
+        <li>剩余工作：协同流程优化（多人协作场景调研）</li>
+        <li>可复制经验：信息成熟型客户的标准流程从这里提炼</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">现代中国 — 规范驱动</div>
+      <ul>
+        <li>成功因素：外企流程规范、Brief模板标准化、资料虽不多但结构清晰</li>
+        <li>Skill状态：初步训练完成，质量较高</li>
+        <li>经验：不一定需要海量资料，"结构化程度高"比"数量多"更重要</li>
+        <li>启示：规范的客户可以快速复制，2周内完成全流程</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">东风奕派 — 信息供给问题</div>
+      <ul>
+        <li>核心问题：不是Skill不好，是客户Brief不清、信息碎片化、反复修改</li>
+        <li>Skill状态：已训练，但效果受限于输入质量</li>
+        <li>真正解法：需要前端产品解决信息拉齐问题（不在标准流程范围内，单独立项）</li>
+        <li>启示：诊断阶段就要识别出"信息混沌型"，避免在Skill上死磕——Skill再好也救不了烂Brief</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  AI工程队 · 文字类AI工程改造全流程工作指南 v1.0 | 2026.05.17 | 内部文档
+</div>
+
+</body>
+</html>
