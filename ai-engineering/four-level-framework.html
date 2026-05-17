@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI工程改造四级纲领</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: #0a0e1a;
+  color: #e0e6f0;
+  padding: 48px 60px;
+  line-height: 1.8;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.header {
+  border-bottom: 2px solid #2a3a5c;
+  padding-bottom: 28px;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 14px;
+  color: #7a8baa;
+}
+.overview {
+  background: #0d1b2a;
+  border: 2px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 40px;
+}
+.overview h2 {
+  font-size: 16px;
+  color: #4a9eff;
+  margin-bottom: 16px;
+}
+.overview p {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 12px;
+}
+.level-section {
+  margin-bottom: 56px;
+  border-left: 4px solid #2a3a5c;
+  padding-left: 24px;
+}
+.level-section.l1 { border-left-color: #f59e0b; }
+.level-section.l2 { border-left-color: #10b981; }
+.level-section.l3 { border-left-color: #8b5cf6; }
+.level-section.l4 { border-left-color: #3b82f6; }
+.level-section.infra { border-left-color: #ef4444; }
+.level-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.level-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.l1 .level-badge { background: #78350f; color: #fbbf24; }
+.l2 .level-badge { background: #064e3b; color: #6ee7b7; }
+.l3 .level-badge { background: #312e81; color: #a5b4fc; }
+.l4 .level-badge { background: #1e3a5f; color: #93c5fd; }
+.infra .level-badge { background: #7f1d1d; color: #fca5a5; }
+.level-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.card {
+  background: #111827;
+  border: 1px solid #1e2d4a;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.card-label {
+  font-size: 12px;
+  color: #7a8baa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.card p, .card li {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 6px;
+}
+.card ul, .card ol {
+  padding-left: 20px;
+}
+.card ol li {
+  margin-bottom: 10px;
+}
+.highlight {
+  color: #fbbf24;
+  font-weight: 500;
+}
+.highlight-green {
+  color: #6ee7b7;
+  font-weight: 500;
+}
+.highlight-blue {
+  color: #93c5fd;
+  font-weight: 500;
+}
+.insight {
+  background: #1a1f2e;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.insight .label {
+  font-size: 11px;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.insight p {
+  font-size: 13px;
+  color: #d4dce8;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+th {
+  text-align: left;
+  font-size: 12px;
+  color: #7a8baa;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+td {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1e2d4a;
+  color: #b0bdd0;
+}
+.divider {
+  border: none;
+  border-top: 1px solid #1e2d4a;
+  margin: 40px 0;
+}
+.relationship-box {
+  background: #0d1b2a;
+  border: 2px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.relationship-box h3 {
+  font-size: 14px;
+  color: #4a9eff;
+  margin-bottom: 12px;
+}
+.relationship-box p, .relationship-box li {
+  font-size: 13px;
+  color: #b0bdd0;
+  margin-bottom: 6px;
+}
+.relationship-box ul { padding-left: 18px; }
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.flow-box {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.flow-box.gold { background: #78350f; color: #fbbf24; }
+.flow-box.green { background: #065f46; color: #6ee7b7; }
+.flow-box.purple { background: #312e81; color: #a5b4fc; }
+.flow-box.blue { background: #1e3a5f; color: #93c5fd; }
+.flow-box.red { background: #7f1d1d; color: #fca5a5; }
+.flow-arrow { color: #4a5568; font-size: 14px; }
+.footer {
+  font-size: 12px;
+  color: #4a5568;
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid #1e2d4a;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI 工程改造四级纲领</h1>
+  <div class="subtitle">蓝色光标汽车事业部 | AI工程队作战指南 v2.0 | 2026.05.17</div>
+</div>
+
+<!-- ==================== 总览 ==================== -->
+<div class="overview">
+  <h2>架构总览</h2>
+  <p>AI工程改造按业务颗粒度分四级，自上而下：<span class="highlight">业务级</span>（整条业务线的AI产品化）→ <span class="highlight-green">客户级</span>（一个完整客户的全面AI改造）→ <span class="highlight-blue">项目级</span>（特定事件类型的标准化Skill）→ <span style="color:#93c5fd;">工作流级</span>（单项生产能力的AI化）。</p>
+  <p>四级不是割裂的——<span class="highlight">工作流级是原子单元</span>，项目级是工作流的编排组合，客户级是对一个客户所有项目/工作流的全面扫描和改造，业务级是跨客户的系统产品。底层支撑所有级别的是<span style="color:#fca5a5;">共享基础设施层</span>。</p>
+  <p>原则：不是所有工作流都要AI化。全面扫描后精准判定——能自动化的自动化，不能自动化的明确AI介入比例和人工补充比例。</p>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== Level 1: 业务级 ==================== -->
+<div class="level-section l1">
+  <div class="level-header">
+    <span class="level-badge">Level 1</span>
+    <span class="level-title">业务级系统：达芬奇Auto</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">定位</div>
+    <p>围绕达人营销投放业务，构建跨客户的系统级AI产品。不是提效工具，是<span class="highlight">客户锁定系统</span>——用累积的私有投放数据和客户知识形成切换成本。</p>
+    <p>类比：贝壳把每套房子的真实交易数据结构化→反向定义行业标准。达芬奇Auto把每个达人的真实投放效果结构化→反向定义达人营销选号标准。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">三层能力（优先级递降）</div>
+    <ol>
+      <li><span class="highlight">能力1：客户知识引擎</span> — 每个客户的历史知识、反馈、项目经验训练成知识库，输出80分以上策略方案。把人脑中的客户认知结构化，不随人员流动丢失。</li>
+      <li><span class="highlight">能力2：投放数据驱动匹配</span> — 基于星合全量达人数据+两年私有投放数据（CPM/CPE/A3/达人配合度），升级标签系统，提高选号适配度。这是达芬奇"数据世界B"——星合20人没接上的那层。</li>
+      <li><span class="highlight-blue">能力3：全链路自动化</span> — 选号到结算全流程自动化。优先级让位于1+2，南迁人力+RPA可覆盖大部分。</li>
+    </ol>
+    <p style="margin-top: 10px;">1+2 = 命门（定价权+商业模式）。3 = 锦上添花。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">纲领要求</div>
+    <ul>
+      <li>逐客户构建：零跑先行 → 理想/小鹏复制 → 3客户以上跨客户洞察层浮现 → 平台化</li>
+      <li>数据资产意识：每个客户的改造过程本身就是在存数据资产，不是慢是必须</li>
+      <li>技术路径：真正的AI工程（RAG/embedding/知识库/prompt工程/效果评估闭环），非RPA</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">当前切入五方向</div>
+    <table>
+      <tr><th>方向</th><th>解决什么</th><th>依赖</th></tr>
+      <tr><td>T+N自动采集调度</td><td>数据采集不遗漏</td><td>蒲公英API + cron</td></tr>
+      <tr><td>多平台选号聚合</td><td>覆盖达芬奇盲区平台</td><td>星合爬虫API + client凭证</td></tr>
+      <tr><td>云图/灵犀人群资产</td><td>月耗960h的大头需求</td><td>RPA + 客户账号权限</td></tr>
+      <tr><td>客户模板引擎</td><td>导出→填表最后一公里</td><td>各组模板收集</td></tr>
+      <tr><td>Agent框架注入</td><td>封装为达芬奇内Agent</td><td>apikey + Agent接口</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">试点与节奏</div>
+    <p>试点客户：零跑小红书（达人投放最完整闭环）</p>
+    <p>节奏：W22知识库V1 → W23选号MVP → W24闭环验证 → 7月理想复制</p>
+    <p>负责：用户本人（架构+RAG设计） + 思琦（项目管理） + 实习生（数据+标注）</p>
+  </div>
+
+  <div class="insight">
+    <div class="label">Level 1与其他级别的关系</div>
+    <p>Level 1面向达人投放业务（BU收入的40%+），是独立的产品线。Level 2-4面向公关/社会化/创意业务（BU收入的60%），形态完全不同。两棵树共享一个根（基础设施层），但产品目标和商业模式各自独立。</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== Level 2: 客户级 ==================== -->
+<div class="level-section l2">
+  <div class="level-header">
+    <span class="level-badge">Level 2</span>
+    <span class="level-title">客户级系统：全面AI改造</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">定位</div>
+    <p>围绕一个完整的客户服务生态系统，<span class="highlight-green">全面扫描所有工作流</span>，逐个判定AI化方案：</p>
+    <ul>
+      <li>能全自动化的 → 直接自动化（数据采集/格式转换/日报生成）</li>
+      <li>能大幅提效的 → AI出初稿+人精修（脚本/规划/报告）</li>
+      <li>需要人工主导的 → 明确AI辅助比例（策略/谈判/创意概念）</li>
+      <li>纯人工的 → 不碰（客户关系维护/现场执行/紧急公关）</li>
+    </ul>
+    <p>不是要求所有环节AI化，而是<span class="highlight">全面摸清后精准适配</span>。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">执行标准</div>
+    <ol>
+      <li><span class="highlight">全面摸排</span> — 对客户所有工作流做一次完整诊断（已有方法论：AI改造业务摸排工作手册）</li>
+      <li><span class="highlight">量化工时</span> — 统计各工作流占团队总工时的比例，画出人力消耗地图</li>
+      <li><span class="highlight">分类定级</span> — 每个工作流标注：全自动/AI主导/AI辅助/纯人工</li>
+      <li><span class="highlight">优先级排序</span> — 先做"工时占比高+AI化可行性高"的（落在右上象限的）</li>
+      <li><span class="highlight">客户场景诊断</span> — 判断属于信息成熟型/信息混沌型/中间型，决定投入深度</li>
+      <li><span class="highlight">迭代闭环</span> — 部署后持续采集反馈，按周迭代Skill，建立飞轮</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-label">客户场景选型</div>
+    <table>
+      <tr><th>类型</th><th>特征</th><th>AI解法</th><th>投入深度</th></tr>
+      <tr><td>信息成熟型</td><td>客户信息供给及时完整，对口人专业</td><td>Skill + 知识库即可</td><td>轻量（1-2人/2周）</td></tr>
+      <tr><td>信息混沌型</td><td>客户内部信息不通，需猜测，反复修改</td><td>Skill + 知识库 + 客户端前端产品</td><td>重量（需产品思维，4-6周）</td></tr>
+      <tr><td>中间型</td><td>基本成熟偶有混沌，不值得上系统</td><td>Skill + 知识库，人工兜底偶发问题</td><td>中等（1-2人/3周）</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">试点客户</div>
+    <table>
+      <tr><th>客户</th><th>场景类型</th><th>覆盖业务</th><th>改造重点</th><th>当前状态</th></tr>
+      <tr><td><span class="highlight-green">零跑小红书</span></td><td>中间型</td><td>达人投放全链路（规划/选号/脚本/数据/结算）</td><td>数据自动化先行，脚本生成跟进</td><td>摸排完成，数据V1启动中</td></tr>
+      <tr><td><span class="highlight-green">千里汽车</span></td><td>待诊断</td><td>公关+社会化（完整客户）</td><td>全面摸排后决定</td><td>待启动</td></tr>
+      <tr><td><span class="highlight-green">现代中国</span></td><td>中间型</td><td>公关（新闻稿/讲话稿/日常稿件）</td><td>Skill + 知识库，标准文字改造</td><td>Skill V1已完成</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">纲领要求</div>
+    <ul>
+      <li>进入客户级改造前，必须完成完整的业务摸排（四步流程/三个必问/诊断报告）</li>
+      <li>产出物：客户AI改造地图（全工作流 × AI化程度矩阵） + 改造路线图（按优先级排期）</li>
+      <li>不追求100%AI化——有些环节人做就是更好/更安全/更有温度，明确标注"不改造"</li>
+      <li>每个客户建独立知识库（品牌档案/人物小传/历史作品/客户偏好/反馈日志）</li>
+      <li>客户级改造完成标志：团队人均产能提升50%+ 或 项目人力减半不影响交付质量</li>
+    </ul>
+  </div>
+
+  <div class="insight">
+    <div class="label">客户级的核心价值</div>
+    <p>客户级改造的产出不只是效率提升——过程中积累的客户知识库、客户偏好模型、自动化工作流本身就是Level 1（达芬奇Auto）的数据资产。每改造一个客户，Level 1的知识引擎就厚一层。两个级别互相喂养。</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== Level 3: 项目级 ==================== -->
+<div class="level-section l3">
+  <div class="level-header">
+    <span class="level-badge">Level 3</span>
+    <span class="level-title">项目级系统：事件类型标准化</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">定位</div>
+    <p>围绕特定的事件类型/项目类型，建立<span class="highlight-blue">可跨客户复用的标准化AI工作流</span>。比如"发布会"作为一种事件类型，不管是理想还是奕派的发布会，底层工作流结构是一致的（只是填充的知识库不同）。</p>
+    <p>项目级改造的产出是：<span class="highlight">一套事件类型Skill包</span>——接入任何一个客户的知识库，就能产出该客户该事件类型下的全套内容。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">常见事件类型</div>
+    <table>
+      <tr><th>事件类型</th><th>包含工作流</th><th>可标准化程度</th><th>复用价值</th></tr>
+      <tr><td>新车发布会</td><td>邀请函/新闻稿/领导讲话/社交媒体/直播脚本/媒体Q&A</td><td>高（结构极固定）</td><td>极高（每年数十场）</td></tr>
+      <tr><td>媒体试驾</td><td>试驾手册/路线说明/技术Briefing/试驾报告模板/KOL邀约函</td><td>高</td><td>高</td></tr>
+      <tr><td>车展</td><td>展台话术/媒体邀约/每日快讯/领导动线/社媒内容日历</td><td>中高</td><td>高（年度集中）</td></tr>
+      <tr><td>危机公关</td><td>口径/声明/Q&A/监测报告/复盘</td><td>中（高度情境依赖）</td><td>中（模板化口径部分）</td></tr>
+      <tr><td>日常公关</td><td>日常新闻稿/稿件排期/媒体维护/舆情周报</td><td>高</td><td>高</td></tr>
+      <tr><td>达人投放Campaign</td><td>规划/选号/脚本/执行tracking/投后复盘</td><td>高</td><td>极高</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Skill包结构（以"新车发布会"为例）</div>
+    <ol>
+      <li><span class="highlight">输入采集Skill</span> — 从活动方案/产品文档/议程表中提取结构化信息（时间/地点/参会人/核心卖点/禁忌）</li>
+      <li><span class="highlight">新闻稿生成Skill</span> — 基于结构化信息+品牌知识库+历史高分样本 → 生成通稿/分稿</li>
+      <li><span class="highlight">讲话稿生成Skill</span> — 基于领导风格模型+本次核心信息 → 生成讲话稿</li>
+      <li><span class="highlight">社媒内容日历Skill</span> — 基于活动时间线+各平台调性 → 生成多平台内容排期</li>
+      <li><span class="highlight">媒体Q&A生成Skill</span> — 基于可能提问+官方口径+禁区 → 生成应答手册</li>
+      <li><span class="highlight">质检Skill</span> — 交叉比对全套物料一致性（数据/称谓/时间/信息不矛盾）</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-label">纲领要求</div>
+    <ul>
+      <li>每个事件类型拆解为标准工作流清单（不遗漏、不冗余）</li>
+      <li>每个工作流对应一个独立Skill，可单独调用也可串联为Agent链</li>
+      <li>Skill与知识库解耦：同一套Skill接入理想知识库=理想发布会内容，接入奕派知识库=奕派发布会内容</li>
+      <li>测试标准：每个Skill包配套3-5个历史Case作为回归测试基准</li>
+      <li>版本管理：Skill包按"事件类型_v版本号"管理，每次迭代有变更日志</li>
+      <li>产出评估：首版产出质量不低于70分（可直接用作修改基础），迭代后不低于80分</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">试点项目</div>
+    <table>
+      <tr><th>事件类型</th><th>试点客户</th><th>为什么选它</th><th>状态</th></tr>
+      <tr><td>日常公关（新闻稿）</td><td>理想/奕派</td><td>频率最高，模板最固定，已有Skill基础</td><td>理想Skill V1就绪，奕派信息链待通</td></tr>
+      <tr><td>发布会</td><td>奕派（下一场）</td><td>结构最完整，产出物最多，一次验证多Skill</td><td>待下一场活动触发</td></tr>
+      <tr><td>达人投放Campaign</td><td>零跑</td><td>与Level 1（达芬奇Auto）共享，数据最完整</td><td>规划Skill设计中</td></tr>
+    </table>
+  </div>
+
+  <div class="insight">
+    <div class="label">Level 3与Level 2的嵌套关系</div>
+    <p>Level 3产出的Skill包是Level 2的积木。客户级改造 = 诊断该客户涉及哪些事件类型 → 调用对应Skill包 → 接入该客户知识库 → 补充客户特有的定制化需求。Level 3做得越标准，Level 2推广到新客户时越快。</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== Level 4: 工作流级 ==================== -->
+<div class="level-section l4">
+  <div class="level-header">
+    <span class="level-badge">Level 4</span>
+    <span class="level-title">工作流级改造：生产能力AI化</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">定位</div>
+    <p>最小颗粒度的AI改造单元——<span class="highlight-blue">单项内容生产能力的AI化</span>。是Level 2/3的原子组成部分，同时也可独立运作（比如"热点监测"不依赖任何特定客户或项目）。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">方向一：内容生产</div>
+    <table>
+      <tr><th>工作流</th><th>AI化方案</th><th>成熟度</th><th>适用客户</th></tr>
+      <tr><td>文字内容（新闻稿/讲话稿/日常稿）</td><td>Skill+知识库+飞轮迭代（已有完整7阶段工作指南）</td><td>高（已跑通）</td><td>全客户</td></tr>
+      <tr><td>图文内容（小红书/社媒图文）</td><td>文案Skill+图片Prompt工程+风格一致性检查</td><td>中（文案成熟，图片待验证）</td><td>达人/社媒组</td></tr>
+      <tr><td>图片素材（海报/Banner/社交图）</td><td>Midjourney/DALL-E + 品牌视觉规范约束</td><td>低（汽车行业实拍为主）</td><td>有限场景</td></tr>
+      <tr><td>视频脚本</td><td>结构化脚本Skill（开头/痛点/卖点/CTA）+ 分镜建议</td><td>中（脚本可以，分镜待验证）</td><td>达人投放</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">方向二：社交媒体洞察与数据分析</div>
+    <table>
+      <tr><th>工作流</th><th>AI化方案</th><th>成熟度</th><th>适用场景</th></tr>
+      <tr><td>热点监测与品牌适配</td><td>定时搜索+AI筛选+品牌关联度评分+内容方向建议</td><td>中高（技术可行，评判标准待建）</td><td>社媒运营日常</td></tr>
+      <tr><td>竞品动态跟踪</td><td>定时抓取竞品社媒+数据变化+策略归纳</td><td>中（数据源稳定性待验证）</td><td>策略/规划</td></tr>
+      <tr><td>投后数据分析</td><td>自动采集+指标计算+异常标注+归因分析+报告生成</td><td>中高（依赖平台API）</td><td>达人投放组</td></tr>
+      <tr><td>舆情监测与预警</td><td>关键词监控+情感分析+升级预警+口径建议</td><td>中（灵犀已覆盖基础，深度分析待建）</td><td>公关组</td></tr>
+      <tr><td>平台趋势研判</td><td>算法变化信号采集+流量分析+策略调整建议</td><td>低（依赖经验判断多）</td><td>策略规划</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">方向三（待补充扩展）</div>
+    <ul>
+      <li>数据报表自动化（Excel/PPT自动填充，格式化输出）</li>
+      <li>客户沟通辅助（会议纪要提取/Action item跟踪/Brief结构化）</li>
+      <li>知识管理（行业信息积累/案例库维护/培训材料生成）</li>
+      <li>流程自动化（排期管理/进度提醒/多系统数据同步）</li>
+    </ul>
+    <p style="margin-top: 8px; color: #7a8baa; font-size: 13px;">更多方向随业务摸排持续补充，不预设边界。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">纲领要求</div>
+    <ul>
+      <li>每个工作流级改造遵循统一的7阶段标准流程（立项诊断→素材收集→Skill训练→人工校准→测试达标→前端部署→自动迭代飞轮）</li>
+      <li>单个工作流改造周期控制在2-3周内出V1（含知识库搭建时间）</li>
+      <li>每个工作流的Skill必须包含：系统Prompt + 知识库引用说明 + 输出格式规范 + 禁忌清单</li>
+      <li>独立的测试用例集（至少3个Case），通过率100%方可投入使用</li>
+      <li>明确标注：该工作流适用场景+不适用场景+人工兜底条件</li>
+      <li>周级迭代：投入使用后按飞轮机制每周更新（有新反馈时）</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">当前已完成/进行中</div>
+    <table>
+      <tr><th>工作流</th><th>状态</th><th>试点</th></tr>
+      <tr><td>新闻稿写作</td><td>Skill V1完成，飞轮待建</td><td>理想/现代</td></tr>
+      <tr><td>讲话稿写作</td><td>Skill V1完成</td><td>奕派（于总）</td></tr>
+      <tr><td>达人脚本生成</td><td>知识库搭建中（40份语料到位中）</td><td>零跑</td></tr>
+      <tr><td>月度规划</td><td>5步Agent链设计完成，待验证</td><td>零跑</td></tr>
+      <tr><td>数据自动采集</td><td>方案设计完成，待API对接</td><td>零跑（蒲公英）</td></tr>
+      <tr><td>热点监测</td><td>搜索MCP已配置，评判标准待建</td><td>奕派社会化</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 基础设施层 ==================== -->
+<div class="level-section infra">
+  <div class="level-header">
+    <span class="level-badge">Infra</span>
+    <span class="level-title">共享基础设施层</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">定位</div>
+    <p>支撑所有四个级别的底层能力。<span style="color:#fca5a5;">不重复造轮子</span>——每个级别的改造项目共享同一套基础设施，在此之上构建各自的应用逻辑。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">三层底座</div>
+    <table>
+      <tr><th>层</th><th>内容</th><th>服务于</th></tr>
+      <tr><td><span class="highlight">知识库层</span></td><td>品牌知识库（每客户独立）+ 行业知识库（共享）+ 客户偏好库（飞轮产出）+ 达人投放数据库（Level 1专用）</td><td>全部Level</td></tr>
+      <tr><td><span class="highlight-green">AI工程层</span></td><td>Skill开发规范 + Agent编排框架 + 飞轮迭代机制 + 测试验证体系 + 版本管理</td><td>全部Level</td></tr>
+      <tr><td><span class="highlight-blue">工具与前端层</span></td><td>Cherry Studio（一线使用）+ Claude Code（工程开发）+ MCP工具链 + 飞书集成 + 数据看板</td><td>全部Level</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">知识库架构规范</div>
+    <ul>
+      <li>每客户一个独立知识库目录（品牌档案/人物小传/历史作品/客户偏好/模板库）</li>
+      <li>客户知识库双份存储：本地完整版（含敏感判断）+ 星合品牌空间净化版（供达芬奇调用）</li>
+      <li>行业知识库共享维护（行业趋势/平台动态/竞品数据/通用最佳实践）</li>
+      <li>知识库新增与Skill规则更新分离：事实信息直接追加，写作规则需AI提炼+去重+测试</li>
+      <li>格式统一：markdown文件为主，结构化数据用JSON/YAML，长文本用独立文档</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Skill开发规范</div>
+    <ul>
+      <li>统一命名：[客户]_[事件类型]_[工作流]_v[版本号]</li>
+      <li>统一结构：角色设定 → 任务描述 → 知识库引用 → 输出格式 → 禁忌清单 → 质检要求</li>
+      <li>测试标准：每个Skill至少3个历史Case，关键词覆盖率+禁用词检测+格式检查全通过</li>
+      <li>迭代节奏：有反馈时每周更新一次，无反馈时保持稳定不动</li>
+      <li>版本管理：每次更新保留上一版可回滚，变更日志记录新增/修改/删除的规则</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">工具链标准配置</div>
+    <table>
+      <tr><th>工具</th><th>用途</th><th>使用者</th></tr>
+      <tr><td>Cherry Studio</td><td>一线日常AI写作前端</td><td>全员</td></tr>
+      <tr><td>Claude Code</td><td>工程开发/Skill训练/Agent编排</td><td>AI工程队</td></tr>
+      <tr><td>博查/Tavily MCP</td><td>实时搜索（热点/竞品/行业信息）</td><td>Agent自动调用</td></tr>
+      <tr><td>飞书API (lark-cli)</td><td>文档自动创建/消息通知/表格读写</td><td>Agent自动调用</td></tr>
+      <tr><td>星合爬虫API</td><td>达人数据/平台数据采集</td><td>Level 1专用</td></tr>
+      <tr><td>Playwright</td><td>RPA自动化（平台操作/数据采集）</td><td>特定自动化任务</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 四级嵌套关系 ==================== -->
+<div class="level-section" style="border-left-color: #4a9eff;">
+  <div class="level-header">
+    <span class="level-title">四级嵌套关系</span>
+  </div>
+
+  <div class="relationship-box">
+    <h3>递归关系</h3>
+    <div class="flow-row">
+      <span class="flow-box gold">Level 1 业务级</span>
+      <span class="flow-arrow">包含→</span>
+      <span class="flow-box green">Level 2 客户级</span>
+      <span class="flow-arrow">包含→</span>
+      <span class="flow-box purple">Level 3 项目级</span>
+      <span class="flow-arrow">包含→</span>
+      <span class="flow-box blue">Level 4 工作流级</span>
+    </div>
+    <ul style="margin-top: 12px;">
+      <li>Level 4（工作流）是最小单元，可独立运作，也嵌入任何上层</li>
+      <li>Level 3（项目）= 一组工作流的有序编排（如发布会 = 新闻稿+讲话+社媒+Q&A）</li>
+      <li>Level 2（客户）= 该客户所有项目/工作流的全面改造矩阵</li>
+      <li>Level 1（业务）= 跨客户的系统产品，吃Level 2积累的数据资产</li>
+    </ul>
+  </div>
+
+  <div class="relationship-box">
+    <h3>数据流向</h3>
+    <ul>
+      <li><span class="highlight">向上喂养</span>：Level 4产出→Level 3验证→Level 2积累知识→Level 1形成跨客户数据资产</li>
+      <li><span class="highlight-green">向下赋能</span>：Level 1跨客户洞察→Level 2改造方案→Level 3标准Skill包→Level 4执行</li>
+      <li><span style="color:#fca5a5;">基础设施层</span>同时服务所有级别，不分先后</li>
+    </ul>
+  </div>
+
+  <div class="relationship-box">
+    <h3>启动优先级</h3>
+    <ul>
+      <li><span class="highlight">立即启动</span>：Level 4（多个工作流已在进行）+ Level 2零跑（摸排完成启动改造）</li>
+      <li><span class="highlight-green">本月启动</span>：Level 3日常公关Skill包标准化 + Level 2千里/现代摸排</li>
+      <li><span class="highlight-blue">W22+启动</span>：Level 1 API对接 + Level 3发布会Skill包（等下一场活动）</li>
+      <li>基础设施层持续建设，不设独立启动节点</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 执行节奏 ==================== -->
+<div class="level-section" style="border-left-color: #4a9eff;">
+  <div class="level-header">
+    <span class="level-title">执行节奏（5-7月）</span>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th>时间</th><th>Level 1 业务级</th><th>Level 2 客户级</th><th>Level 3 项目级</th><th>Level 4 工作流级</th></tr>
+      <tr>
+        <td>5月下旬</td>
+        <td>星合API凭证获取<br>数据结构设计</td>
+        <td>零跑数据V1启动<br>千里摸排</td>
+        <td>日常公关Skill包<br>结构定义</td>
+        <td>新闻稿飞轮建立<br>热点监测V1</td>
+      </tr>
+      <tr>
+        <td>6月上旬</td>
+        <td>零跑知识库V1<br>选号MVP验证</td>
+        <td>零跑脚本生成<br>千里改造启动</td>
+        <td>发布会Skill包<br>（如有活动）</td>
+        <td>达人脚本Skill V1<br>投后分析V1</td>
+      </tr>
+      <tr>
+        <td>6月下旬</td>
+        <td>选号闭环验证<br>理想数据导入</td>
+        <td>零跑全面上线<br>现代深化</td>
+        <td>Campaign Skill包<br>标准化</td>
+        <td>月度规划Agent<br>数据报表自动化</td>
+      </tr>
+      <tr>
+        <td>7月</td>
+        <td>理想接入复制<br>跨客户洞察探索</td>
+        <td>效果评估+报告<br>第二批客户</td>
+        <td>复用验证<br>（新客户直接用包）</td>
+        <td>效率数据量化<br>推广到腰部团队</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 组织保障 ==================== -->
+<div class="level-section" style="border-left-color: #4a9eff;">
+  <div class="level-header">
+    <span class="level-title">组织保障</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">人员分配</div>
+    <table>
+      <tr><th>角色</th><th>人员</th><th>主要负责级别</th></tr>
+      <tr><td>架构设计+核心工程</td><td>用户本人（AI + Claude Code）</td><td>Level 1 + Infra + 关键Level 3设计</td></tr>
+      <tr><td>项目管理+执行统筹</td><td>陈思琦</td><td>Level 2/3执行 + Level 4推广</td></tr>
+      <tr><td>一线种子用户</td><td>崔子晔/李国新/张梓琳</td><td>Level 4验证+反馈 + Level 2试点配合</td></tr>
+      <tr><td>实习生团队</td><td>5-8人</td><td>数据采集/标注/知识库建设/测试执行</td></tr>
+      <tr><td>文案中台</td><td>孙鹏超（预备）</td><td>Level 3 Skill包维护 + Level 4质量把关</td></tr>
+      <tr><td>外部协作</td><td>贾梦/庞亭亭</td><td>Level 1 API + 达芬奇集成</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">决策权限</div>
+    <ul>
+      <li><span class="highlight">思琦自主决定</span>：任务分配/进度催促/素材方向/格式规范/实习生管理/Level 4日常迭代</li>
+      <li><span class="highlight-green">需用户确认</span>：产品方向选择/新客户进入改造/对外沟通口径/技术方案选型/优先级调整/Level 1/2重大决策</li>
+      <li>原则：不确定的先做，做错了调整。等比做错成本高。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">成功标准</div>
+    <table>
+      <tr><th>级别</th><th>北极星指标</th><th>辅助指标</th></tr>
+      <tr><td>Level 1</td><td>客户续约率 + 价格维持率</td><td>选号采纳率 / 跨客户数据量</td></tr>
+      <tr><td>Level 2</td><td>人均产能提升50%+</td><td>客户一版通过率 / 加班时长下降</td></tr>
+      <tr><td>Level 3</td><td>Skill包跨客户复用成功率</td><td>新客户接入时间 / 首版质量分</td></tr>
+      <tr><td>Level 4</td><td>单工作流提效率</td><td>AI初稿采用率 / 修改轮次减少</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  AI工程队 · 四级纲领 v2.0 | 2026.05.17 | 内部文档 · 迭代更新
+</div>
+
+</body>
+</html>
