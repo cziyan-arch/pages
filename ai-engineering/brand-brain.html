@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汽车行业品牌大脑 — 架构设计与执行方案</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: #0a0e1a;
+  color: #e0e6f0;
+  padding: 48px 60px;
+  line-height: 1.8;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.header {
+  border-bottom: 2px solid #2a3a5c;
+  padding-bottom: 28px;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 14px;
+  color: #7a8baa;
+}
+.positioning {
+  background: linear-gradient(135deg, #0d1b2a, #1a1a3e);
+  border: 2px solid #4a9eff;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 40px;
+}
+.positioning h2 {
+  font-size: 16px;
+  color: #4a9eff;
+  margin-bottom: 12px;
+}
+.positioning .big-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+.positioning p {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 8px;
+}
+
+/* Architecture Diagram */
+.arch-diagram {
+  background: #0d1b2a;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 40px;
+}
+.arch-diagram h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.arch-layer {
+  padding: 20px 24px;
+  border-radius: 8px;
+  position: relative;
+}
+.arch-layer .layer-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.arch-layer .layer-content {
+  font-size: 13px;
+  color: #b0bdd0;
+}
+.layer-ui { background: #1a1a3e; border: 1px solid #4a3a8f; }
+.layer-ui .layer-label { color: #a78bfa; }
+.layer-skill { background: #0d2818; border: 1px solid #166534; }
+.layer-skill .layer-label { color: #6ee7b7; }
+.layer-kb { background: #1a2332; border: 1px solid #1e3a5f; }
+.layer-kb .layer-label { color: #60a5fa; }
+.layer-mcp { background: #1f1a0d; border: 1px solid #78350f; }
+.layer-mcp .layer-label { color: #fbbf24; }
+.layer-flywheel { background: #1a0d0d; border: 1px solid #7f1d1d; }
+.layer-flywheel .layer-label { color: #fca5a5; }
+
+/* Three-layer Knowledge */
+.knowledge-section {
+  margin-bottom: 40px;
+}
+.knowledge-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.three-layers {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 16px;
+}
+.k-layer {
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+.k-layer h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.k-layer-industry {
+  background: #0d1b2a;
+  border: 1px solid #f59e0b;
+}
+.k-layer-industry h3 { color: #fbbf24; }
+.k-layer-business {
+  background: #0d1b2a;
+  border: 1px solid #10b981;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.k-layer-business h3 { color: #6ee7b7; grid-column: 1 / -1; }
+.biz-line h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #a3e4c7;
+  margin-bottom: 8px;
+}
+.k-layer-client {
+  background: #0d1b2a;
+  border: 1px solid #8b5cf6;
+}
+.k-layer-client h3 { color: #a78bfa; }
+.k-items {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.k-items li {
+  font-size: 12px;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: #b0bdd0;
+}
+
+/* Scenarios */
+.scenarios-section {
+  margin-bottom: 40px;
+}
+.scenarios-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.scenarios-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.scenario-card {
+  background: #0d1b2a;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.scenario-card .sc-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a9eff;
+  margin-bottom: 4px;
+}
+.scenario-card .sc-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.scenario-card .sc-io {
+  font-size: 12px;
+  color: #7a8baa;
+}
+.scenario-card .sc-io span {
+  color: #b0bdd0;
+}
+
+/* Roadmap */
+.roadmap-section {
+  margin-bottom: 40px;
+}
+.roadmap-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.phase {
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: #0d1b2a;
+  border-radius: 10px;
+  border-left: 4px solid #2a3a5c;
+}
+.phase.p0 { border-left-color: #6b7280; }
+.phase.p1 { border-left-color: #4a9eff; }
+.phase.p2 { border-left-color: #10b981; }
+.phase.p3 { border-left-color: #f59e0b; }
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.phase-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.p0 .phase-badge { background: #374151; color: #d1d5db; }
+.p1 .phase-badge { background: #1e3a5f; color: #93c5fd; }
+.p2 .phase-badge { background: #064e3b; color: #6ee7b7; }
+.p3 .phase-badge { background: #78350f; color: #fbbf24; }
+.phase-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.phase-time {
+  font-size: 12px;
+  color: #7a8baa;
+  margin-left: auto;
+}
+.phase-content {
+  font-size: 13px;
+  color: #b0bdd0;
+}
+.phase-content ul {
+  list-style: none;
+  margin-top: 8px;
+}
+.phase-content ul li {
+  padding: 3px 0;
+  padding-left: 16px;
+  position: relative;
+}
+.phase-content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  background: #4a9eff;
+  border-radius: 50%;
+}
+
+/* Roles */
+.roles-section {
+  margin-bottom: 40px;
+}
+.roles-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.roles-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a8baa;
+  padding: 10px 16px;
+  border-bottom: 1px solid #2a3a5c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.roles-table td {
+  font-size: 13px;
+  color: #b0bdd0;
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e2a3f;
+}
+.roles-table tr:hover td {
+  background: rgba(74, 158, 255, 0.03);
+}
+
+/* Metrics */
+.metrics-section {
+  margin-bottom: 40px;
+}
+.metrics-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.metric-card {
+  background: #0d1b2a;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.metric-card .mc-label {
+  font-size: 12px;
+  color: #7a8baa;
+  margin-bottom: 6px;
+}
+.metric-card .mc-before {
+  font-size: 13px;
+  color: #ef4444;
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+.metric-card .mc-after {
+  font-size: 16px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* Relationship */
+.relation-section {
+  margin-bottom: 40px;
+}
+.relation-section h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a3a5c;
+}
+.relation-box {
+  background: #0d1b2a;
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 24px;
+}
+.relation-box p {
+  font-size: 14px;
+  color: #b0bdd0;
+  margin-bottom: 12px;
+}
+.relation-box .highlight {
+  color: #4a9eff;
+  font-weight: 600;
+}
+.relation-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.rel-item {
+  text-align: center;
+  padding: 12px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.03);
+}
+.rel-item .rel-level {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.rel-item .rel-map {
+  font-size: 12px;
+  color: #b0bdd0;
+}
+.rel-l1 .rel-level { color: #fbbf24; }
+.rel-l2 .rel-level { color: #10b981; }
+.rel-l3 .rel-level { color: #8b5cf6; }
+.rel-l4 .rel-level { color: #3b82f6; }
+
+/* Principle */
+.principle-box {
+  background: linear-gradient(135deg, #0d1b2a, #0d2818);
+  border: 1px solid #10b981;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.principle-box .big {
+  font-size: 18px;
+  font-weight: 700;
+  color: #6ee7b7;
+  margin-bottom: 8px;
+}
+.principle-box .sub {
+  font-size: 13px;
+  color: #7a8baa;
+}
+
+.footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid #1e2a3f;
+  font-size: 12px;
+  color: #4a5568;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>汽车行业品牌大脑</h1>
+  <div class="subtitle">架构设计与执行方案 | AI工程队 | 2026.05</div>
+</div>
+
+<div class="positioning">
+  <h2>定位</h2>
+  <div class="big-text">汽车行业的AI首席策略官 — 不是写手，是谋士</div>
+  <p>基于行业洞察、业务方法论和客户知识，为竞标、策略提案、年度规划等关键场景输出80分以上的策略框架。</p>
+  <p>核心原则：Skill与知识库解耦。策略Skill是通用能力，客户知识库是特定数据。新增客户只需建知识库，Skill直接复用。</p>
+</div>
+
+<!-- Technical Architecture -->
+<div class="arch-diagram">
+  <h2>系统架构</h2>
+  <div class="arch-layers">
+    <div class="arch-layer layer-ui">
+      <div class="layer-label">用户界面层</div>
+      <div class="layer-content">Cherry Studio（日常使用）/ Claude Code（工程开发）/ 飞书Bot（一线轻量访问）</div>
+    </div>
+    <div class="arch-layer layer-skill">
+      <div class="layer-label">策略 Skill 层</div>
+      <div class="layer-content">竞标策略 / Campaign策略 / 月度规划 / 方案诊断 / 危机应对 / 达人投放 / 行业洞察 / 客户沟通准备</div>
+    </div>
+    <div class="arch-layer layer-kb">
+      <div class="layer-label">知识库层（三层架构）</div>
+      <div class="layer-content">行业知识库（共享） + 业务方法论库（公关线/达人线） + 客户知识库 x N（每客户独立）</div>
+    </div>
+    <div class="arch-layer layer-mcp">
+      <div class="layer-label">数据接入层（MCP）</div>
+      <div class="layer-content">搜索MCP / 飞书MCP / 达芬奇API / 社交平台数据 / 舆情监控</div>
+    </div>
+    <div class="arch-layer layer-flywheel">
+      <div class="layer-label">飞轮层</div>
+      <div class="layer-content">使用反馈采集 → 规则提炼 → Skill更新 → 知识库增量 → 质量持续提升</div>
+    </div>
+  </div>
+</div>
+
+<!-- Three-layer Knowledge -->
+<div class="knowledge-section">
+  <h2>三层知识架构</h2>
+  <div class="three-layers">
+    <div class="k-layer k-layer-industry">
+      <h3>行业层 — 共享底座</h3>
+      <ul class="k-items">
+        <li>新能源趋势</li>
+        <li>价格战格局</li>
+        <li>智驾竞赛</li>
+        <li>出海动态</li>
+        <li>消费者洞察</li>
+        <li>竞争格局图谱</li>
+        <li>平台规则</li>
+        <li>政策法规</li>
+        <li>营销方法论</li>
+        <li>品牌声量份额</li>
+      </ul>
+    </div>
+    <div class="k-layer k-layer-business">
+      <h3>业务层 — 两条业务线</h3>
+      <div class="biz-line">
+        <h4>公关 / 社会化</h4>
+        <ul class="k-items">
+          <li>传播策略框架</li>
+          <li>内容形式库</li>
+          <li>媒体关系打法</li>
+          <li>危机应对SOP</li>
+          <li>平台运营方法论</li>
+        </ul>
+      </div>
+      <div class="biz-line">
+        <h4>达人 / 媒介</h4>
+        <ul class="k-items">
+          <li>选号方法论</li>
+          <li>投放策略框架</li>
+          <li>内容适配逻辑</li>
+          <li>ROI模型</li>
+          <li>供给侧管理</li>
+        </ul>
+      </div>
+    </div>
+    <div class="k-layer k-layer-client">
+      <h3>客户层 — 每客户独立</h3>
+      <ul class="k-items">
+        <li>品牌DNA</li>
+        <li>产品库</li>
+        <li>历史方案</li>
+        <li>审核链偏好</li>
+        <li>竞品档案</li>
+        <li>反馈积累</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Scenarios -->
+<div class="scenarios-section">
+  <h2>核心使用场景</h2>
+  <div class="scenarios-grid">
+    <div class="scenario-card">
+      <div class="sc-num">场景 01</div>
+      <div class="sc-title">竞标策略生成</div>
+      <div class="sc-io">输入 brief/RFP → 输出 <span>10-15页策略框架</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 02</div>
+      <div class="sc-title">月度/季度传播规划</div>
+      <div class="sc-io">输入 客户目标+产品节奏 → 输出 <span>传播规划框架</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 03</div>
+      <div class="sc-title">Campaign策略设计</div>
+      <div class="sc-io">输入 主题+目标+预算 → 输出 <span>全案策略框架</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 04</div>
+      <div class="sc-title">方案诊断与优化</div>
+      <div class="sc-io">输入 方案草稿 → 输出 <span>多维评分+改进建议</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 05</div>
+      <div class="sc-title">新客户进入研究</div>
+      <div class="sc-io">输入 客户名称+需求 → 输出 <span>客户研究报告+切入策略</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 06</div>
+      <div class="sc-title">行业洞察按需输出</div>
+      <div class="sc-io">输入 话题/问题 → 输出 <span>深度分析+行动建议</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 07</div>
+      <div class="sc-title">危机应对策略</div>
+      <div class="sc-io">输入 舆情事件 → 输出 <span>定级+响应策略+口径</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 08</div>
+      <div class="sc-title">达人投放策略</div>
+      <div class="sc-io">输入 品牌需求+预算 → 输出 <span>达人组合+内容方向+ROI预估</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 09</div>
+      <div class="sc-title">客户沟通准备</div>
+      <div class="sc-io">输入 会议目的+议题 → 输出 <span>Talking points+预判+应对</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-num">场景 10</div>
+      <div class="sc-title">竞品动态追踪</div>
+      <div class="sc-io">输入 竞品事件 → 输出 <span>影响评估+应对建议</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Roadmap -->
+<div class="roadmap-section">
+  <h2>建设路径（8周）</h2>
+
+  <div class="phase p0">
+    <div class="phase-header">
+      <span class="phase-badge">PHASE 0</span>
+      <span class="phase-title">知识采集</span>
+      <span class="phase-time">第1-2周</span>
+    </div>
+    <div class="phase-content">
+      <ul>
+        <li>霍松筛选过去12个月中标方案15-20份（公关8-10 + 达人7-10）</li>
+        <li>AI工程队结构化拆解：行业洞察/策略框架/执行方案/数据引用</li>
+        <li>整合已有行业周报、竞争格局分析作为行业层种子数据</li>
+        <li>霍松整理策略中台已有方法论文档、模板、SOP</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p1">
+    <div class="phase-header">
+      <span class="phase-badge">PHASE 1</span>
+      <span class="phase-title">核心Skill训练</span>
+      <span class="phase-time">第3-4周</span>
+    </div>
+    <div class="phase-content">
+      <ul>
+        <li>训练竞标策略Skill（最高优先）：输入brief → 输出策略框架</li>
+        <li>训练方案诊断Skill：输入草稿 → 输出评分+改进建议</li>
+        <li>霍松用3-5个历史brief做回归测试，比对实际中标方案</li>
+        <li>输入已知被毙方案，验证诊断准确性</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p2">
+    <div class="phase-header">
+      <span class="phase-badge">PHASE 2</span>
+      <span class="phase-title">客户扩展 + 更多场景</span>
+      <span class="phase-time">第5-6周</span>
+    </div>
+    <div class="phase-content">
+      <ul>
+        <li>客户知识库：零跑（完整）/ 千里 / 奕派 / 理想</li>
+        <li>新增Skill：月度传播规划 / Campaign策略 / 危机应对</li>
+        <li>MCP数据接入：搜索（已通）/ 飞书（已通）/ 达芬奇API（贾梦）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p3">
+    <div class="phase-header">
+      <span class="phase-badge">PHASE 3</span>
+      <span class="phase-title">飞轮 + AI委员会展示</span>
+      <span class="phase-time">第7-8周</span>
+    </div>
+    <div class="phase-content">
+      <ul>
+        <li>飞轮上线：每次使用后收集反馈 → 每周自动提炼规则 → Skill更新</li>
+        <li>AI委员会现场demo：输入真实brief，30秒出策略框架</li>
+        <li>展示数据：使用次数 / 方案采用率 / 效率提升</li>
+        <li>关键定位："汽车行业品牌大脑垂直样板，底层架构行业通用"</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Roles -->
+<div class="roles-section">
+  <h2>分工</h2>
+  <table class="roles-table">
+    <thead>
+      <tr><th>角色</th><th>职责</th><th>周投入</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>架构设计（本人）</td><td>整体架构 / 关键决策 / AI委员会沟通</td><td>2-3h</td></tr>
+      <tr><td>霍松（策略中台）</td><td>方案筛选 / 方法论提炼 / 策略Skill校准</td><td>4-6h</td></tr>
+      <tr><td>陈思琦（AI工程队）</td><td>Skill训练 / 知识库建设 / MCP接入 / 飞轮</td><td>主力</td></tr>
+      <tr><td>孙鹏超（文案中台）</td><td>内容层Skill维护（已有文案Skill）</td><td>兼顾</td></tr>
+      <tr><td>贾梦（达芬奇）</td><td>达芬奇API支持（Phase 2）</td><td>按需</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Metrics -->
+<div class="metrics-section">
+  <h2>成功标准</h2>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="mc-label">竞标策略起草时间</div>
+      <div class="mc-before">3天</div>
+      <div class="mc-after">Phase 1: 1天 → 长期: 2小时</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">方案一版通过率</div>
+      <div class="mc-before">当前基线</div>
+      <div class="mc-after">Phase 1: +10% → 长期: +30%</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">AI策略框架采用率</div>
+      <div class="mc-before">0%（尚未启用）</div>
+      <div class="mc-after">Phase 1: 60% → 长期: 80%</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">覆盖客户数</div>
+      <div class="mc-before">0个</div>
+      <div class="mc-after">Phase 1: 3-4 → 长期: 全行业</div>
+    </div>
+  </div>
+</div>
+
+<!-- Relationship with 4-level framework -->
+<div class="relation-section">
+  <h2>与四级纲领的关系</h2>
+  <div class="relation-box">
+    <p>品牌大脑<span class="highlight">不是</span>四级纲领之外的新项目，而是四级纲领在<span class="highlight">策略维度</span>的具体实现。同一个系统，策略视角。</p>
+    <div class="relation-map">
+      <div class="rel-item rel-l1">
+        <div class="rel-level">L1 业务级</div>
+        <div class="rel-map">行业层<br>（跨客户知识引擎）</div>
+      </div>
+      <div class="rel-item rel-l3">
+        <div class="rel-level">L3 项目级</div>
+        <div class="rel-map">业务层<br>（标准Skill包策略版）</div>
+      </div>
+      <div class="rel-item rel-l2">
+        <div class="rel-level">L2 客户级</div>
+        <div class="rel-map">客户层<br>（客户知识库直接复用）</div>
+      </div>
+      <div class="rel-item rel-l4">
+        <div class="rel-level">L4 工作流</div>
+        <div class="rel-map">飞轮<br>（第7阶段直接复用）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="principle-box">
+  <div class="big">Skill与知识库解耦 = 无限复用</div>
+  <div class="sub">策略Skill是通用能力，客户知识库是特定数据。新增客户只需建知识库，Skill直接复用。新增行业同理。</div>
+</div>
+
+<div class="footer">
+  AI工程队 | 汽车行业品牌大脑 v1.0 | 2026.05
+</div>
+
+</body>
+</html>
