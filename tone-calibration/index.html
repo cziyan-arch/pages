@@ -346,6 +346,7 @@ body {
   font-size: 14px;
   line-height: 1.9;
   color: #d4dae8;
+  white-space: pre-line;
 }
 
 .btn-restart {
@@ -469,274 +470,281 @@ body {
 <script>
 const questions = [
   // ===== 维度1：诗意度 (5题) =====
+  // 两边都是合格文案，区别在于：A用意象/隐喻，B用精炼但直接的表达
   {
     dim: "诗意度", dimEn: "poetry",
-    prompt: "描述尾灯效果，您更喜欢哪种表达？",
+    prompt: "描述尾灯点亮的效果：",
     a: "贯穿尾灯一线点亮，背影从容不回头",
-    b: "贯穿式尾灯点亮效果特别好看，回头率超高",
-    aScore: 1 // a=诗意高
+    b: "贯穿尾灯一线拉满，辨识度拉开一条街的距离",
+    aScore: 1
   },
   {
     dim: "诗意度", dimEn: "poetry",
     prompt: "描述车色在不同光线下的变化：",
     a: "日光下沉稳内敛，夜色中暗自张扬",
-    b: "白天看起来很沉稳，晚上在灯光下又很有辨识度",
+    b: "白天沉稳有质感，夜晚辨识度在线",
     aScore: 1
   },
   {
     dim: "诗意度", dimEn: "poetry",
     prompt: "描述驾驶起步的感觉：",
     a: "轻踩油门，城市在后视镜中渐渐退场",
-    b: "起步很轻快，加速很顺滑，城市通勤毫无压力",
+    b: "起步轻快顺滑，城市通勤毫无压力",
     aScore: 1
   },
   {
     dim: "诗意度", dimEn: "poetry",
-    prompt: "描述充电速度：",
+    prompt: "描述充电等待：",
     a: "一杯咖啡的耐心，换来满格的从容",
-    b: "喝杯咖啡的功夫电就充好了，特别方便",
+    b: "一杯咖啡的时间，电量从容补满",
     aScore: 1
   },
   {
     dim: "诗意度", dimEn: "poetry",
-    prompt: "描述全景天幕的体验：",
+    prompt: "描述全景天幕：",
     a: "头顶是整片天空的馈赠",
-    b: "超大全景天幕，视野特别开阔通透",
+    b: "抬头即天空，视野通透无遮挡",
     aScore: 1
   },
 
   // ===== 维度2：句式节奏 (5题) =====
+  // A短句切分有节奏感，B完整流畅一句到底
   {
     dim: "句式节奏", dimEn: "rhythm",
-    prompt: "描述车身姿态，您更喜欢哪种节奏？",
+    prompt: "描述车身姿态：",
     a: "低趴。溜背。俯冲。猎装轿跑的全部想象。",
-    b: "低趴的车身搭配溜背造型和俯冲式前脸，完美诠释猎装轿跑的设计理念",
-    aScore: 1 // a=短句利落
-  },
-  {
-    dim: "句式节奏", dimEn: "rhythm",
-    prompt: "描述内饰氛围灯：",
-    a: "64色可选。音乐律动。氛围，由你定义。",
-    b: "64色音乐律动氛围灯，可以根据你的喜好自由定义车内氛围",
+    b: "低趴车身搭配溜背俯冲线条，猎装轿跑的想象一次到位",
     aScore: 1
   },
   {
     dim: "句式节奏", dimEn: "rhythm",
-    prompt: "描述智能泊车：",
-    a: "记住路线。识别障碍。自主泊入。全程无需接管。",
-    b: "系统记住停车路线后能自动识别障碍物并完成泊车，全程不需要驾驶员介入",
+    prompt: "描述氛围灯：",
+    a: "64色可选。音乐律动。氛围，自己定义。",
+    b: "64色音乐律动氛围灯，车内氛围由你自由定义",
+    aScore: 1
+  },
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述记忆泊车流程：",
+    a: "记住路线。识别障碍。自主泊入。全程零接管。",
+    b: "自动记忆路线并识别障碍，全程零接管完成泊入",
     aScore: 1
   },
   {
     dim: "句式节奏", dimEn: "rhythm",
     prompt: "描述续航能力：",
-    a: "1308km综合续航，从北京到上海，中间不用停。",
-    b: "综合续航达到1308公里，足以满足北京到上海的长途出行需求而无需中途补能",
+    a: "1308km。北京到上海，中间不用停。",
+    b: "1308km综合续航，北京到上海一口气跑完不补能",
     aScore: 1
   },
   {
     dim: "句式节奏", dimEn: "rhythm",
-    prompt: "描述50:50轴荷比：",
+    prompt: "描述操控稳定性：",
     a: "前后50:50。重心刚好。弯道，稳了。",
-    b: "前后50:50的黄金轴荷比让车辆重心分配恰到好处，过弯时更加稳定从容",
+    b: "50:50黄金轴荷比，重心均衡过弯更稳",
     aScore: 1
   },
 
   // ===== 维度3：情绪浓度 (5题) =====
+  // A极度克制留白，B适度展开但不啰嗦
   {
     dim: "情绪浓度", dimEn: "emotion",
-    prompt: "描述新车出场气势：",
+    prompt: "描述新车静态气势：",
     a: "不必启程，气场已然抵达。",
-    b: "还没开动呢，这气场就已经让周围人都在看了，真的太有存在感",
-    aScore: 1 // a=克制
-  },
-  {
-    dim: "情绪浓度", dimEn: "emotion",
-    prompt: "描述投影灯开门效果：",
-    a: "蝶影光毯，开门即铺就仪式感。",
-    b: "打开车门的一瞬间，蝶影光毯投射在地面上，仪式感瞬间拉满，每次下车都像走红毯",
+    b: "还没起步，存在感已经铺满整个车位。",
     aScore: 1
   },
   {
     dim: "情绪浓度", dimEn: "emotion",
-    prompt: "描述安静驾驶体验：",
+    prompt: "描述开门投影灯：",
+    a: "蝶影光毯，开门即仪式。",
+    b: "蝶影光毯落地那一刻，每次下车都有红毯感。",
+    aScore: 1
+  },
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "描述座舱隔音：",
     a: "关上门，世界安静了。",
-    b: "关上车门后隔音效果非常好，外面的噪音全都隔绝了，车内安静得像是另一个世界",
+    b: "关上门的瞬间，车外的嘈杂就跟你无关了。",
     aScore: 1
   },
   {
     dim: "情绪浓度", dimEn: "emotion",
-    prompt: "年底销量总结：",
+    prompt: "年度销量总结：",
     a: "275,752辆。感恩同行。",
-    b: "全年累计销量达到275,752辆！感谢每一位用户的选择与信任，这份成绩属于我们每一个人",
+    b: "275,752辆，每一辆背后都是一份选择和信任。",
     aScore: 1
   },
   {
     dim: "情绪浓度", dimEn: "emotion",
-    prompt: "描述长途自驾归来：",
+    prompt: "描述长途归来：",
     a: "3000公里，平安归来即是答案。",
-    b: "开了3000公里回来，一路上动力充沛、底盘扎实，全家人都觉得这趟旅程特别安心",
+    b: "3000公里跑下来，全家的安心就是最好的验证。",
     aScore: 1
   },
 
   // ===== 维度4：品牌融入 (5题) =====
+  // A场景优先品牌后置，B品牌自然前置但不生硬
   {
     dim: "品牌融入", dimEn: "brand",
-    prompt: "一篇产品文案的开头，您倾向哪种方式？",
-    a: "五月的光线，是一年中最适合看车的角度。不刺眼，不暗沉——",
-    b: "东风奕派007闪现版，以猎装轿跑姿态定义初夏出行新美学——",
-    aScore: 1 // a=隐性
-  },
-  {
-    dim: "品牌融入", dimEn: "brand",
-    prompt: "文案结尾怎么收：",
-    a: "初夏最好的出场方式——不解释，只「闪现」。",
-    b: "东风奕派007闪现版，闪耀登场，期待您的莅临品鉴。",
+    prompt: "产品文案的开头：",
+    a: "五月的光线，是一年中最适合看车的角度——",
+    b: "奕派007闪现版，选了初夏最好的光线登场——",
     aScore: 1
   },
   {
     dim: "品牌融入", dimEn: "brand",
-    prompt: "描述一次品牌合作：",
-    a: "在浩瀚雪原中，寻回出发的勇气。新年第一程，从阿勒泰启程。",
-    b: "东风奕派携手中国国家地理，在阿勒泰开启新年第一程品牌体验之旅。",
+    prompt: "文案结尾：",
+    a: "初夏最好的出场方式——不解释，只「闪现」。",
+    b: "奕派007闪现版，不解释，只闪现。",
+    aScore: 1
+  },
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "品牌合作传播：",
+    a: "在浩瀚雪原中寻回出发的勇气。新年第一程，从阿勒泰启程。",
+    b: "东风奕派联合中国国家地理，新年第一程从阿勒泰勇敢启程。",
     aScore: 1
   },
   {
     dim: "品牌融入", dimEn: "brand",
     prompt: "节日海报文案：",
     a: "春分至，万物生。愿你心中自有一片旷野。",
-    b: "春分时节，东风奕派祝您万事皆可期，一路生花。",
+    b: "春分时节，东风奕派与你一同迎接万物复苏的旷野。",
     aScore: 1
   },
   {
     dim: "品牌融入", dimEn: "brand",
     prompt: "用户故事收尾：",
     a: "人生这一路，有欢喜、有风雨。要尽兴而活。",
-    b: "感恩与每一位奕家人的相遇，东风奕派陪伴每一种方向。",
+    b: "人生这一路有欢喜有风雨，东风奕派陪你尽兴而活。",
     aScore: 1
   },
 
   // ===== 维度5：技术表达 (5题) =====
+  // A用场景/感受翻译技术，B用精炼数据+一句话场景
   {
     dim: "技术表达", dimEn: "tech",
     prompt: "描述快充能力：",
-    a: "喝杯咖啡的功夫，电量就能快速回血",
-    b: "4C超充，10%-80%充电仅需15分钟",
-    aScore: 1 // a=感知翻译
+    a: "喝杯咖啡的功夫，电量快速回满",
+    b: "4C超充15分钟，从焦虑到从容只差一杯咖啡",
+    aScore: 1
   },
   {
     dim: "技术表达", dimEn: "tech",
-    prompt: "描述大电池优势：",
-    a: "一周充一次就够，不让充电成为出行的阻碍",
-    b: "35.03kWh大电池，CLTC纯电续航200km",
+    prompt: "描述纯电续航：",
+    a: "一周通勤不用想充电这件事",
+    b: "CLTC纯电200km，覆盖一周五天通勤绰绰有余",
     aScore: 1
   },
   {
     dim: "技术表达", dimEn: "tech",
     prompt: "描述辅助驾驶：",
-    a: "高速长途，它替你盯着前方，你负责放松",
-    b: "天元T200辅助驾驶系统，覆盖高速/城区/泊车全场景",
+    a: "高速长途，它帮你盯着前方，你只管放松",
+    b: "天元T200高速领航，覆盖全程巡航+车道保持+自动变道",
     aScore: 1
   },
   {
     dim: "技术表达", dimEn: "tech",
-    prompt: "描述底盘调校：",
-    a: "过弯不慌，颠簸不散，底盘给你的安全感是无声的",
-    b: "黄金轴荷比50:50，前双叉臂+后五连杆独立悬架",
+    prompt: "描述底盘质感：",
+    a: "过弯不慌，颠簸不散——底盘给的安全感是无声的",
+    b: "50:50轴荷比+前双叉臂后五连杆，弯道和颠簸都处理得很从容",
     aScore: 1
   },
   {
     dim: "技术表达", dimEn: "tech",
-    prompt: "描述爆胎安全技术：",
-    a: "高速爆胎，大多数人只有0.5秒反应时间。它替你撑住了。",
-    b: "爆胎稳行系统，120km/h爆胎后可自动控制车辆平稳减速停车",
+    prompt: "描述爆胎稳行：",
+    a: "高速爆胎的0.5秒内，它已经替你稳住了方向",
+    b: "爆胎稳行系统，120km/h爆胎自动平稳减速至安全停车",
     aScore: 1
   },
 
   // ===== 维度6：仪式感 (5题) =====
+  // A追求庄重/精致的仪式表达，B追求轻盈/当代的品质表达
   {
     dim: "仪式感", dimEn: "ritual",
-    prompt: "描述开门仪式：",
+    prompt: "描述开门投影：",
     a: "蝶影光毯铺陈，每一次抵达都值得被优雅对待",
-    b: "开门地上有投影灯，下车的时候挺有面子的",
-    aScore: 1 // a=仪式
+    b: "蝶影光毯落地，日常通勤也有点小仪式感",
+    aScore: 1
   },
   {
     dim: "仪式感", dimEn: "ritual",
-    prompt: "描述前大灯设计：",
-    a: "104颗LED发光单元组成高透视\"双眸\"，灵动又夺目",
-    b: "前大灯很亮，晚上照路效果不错，造型也好看",
+    prompt: "描述前大灯造型：",
+    a: "104颗LED组成高透视「双眸」，灵动注视前方",
+    b: "104颗LED前大灯，点亮效果精致有辨识度",
     aScore: 1
   },
   {
     dim: "仪式感", dimEn: "ritual",
     prompt: "描述记忆泊车完成：",
     a: "轻触一键，车辆循迹而入，优雅停进属于你的位置",
-    b: "按一下就自动停好了，省得自己倒来倒去的",
+    b: "一键启动，车辆沿记忆路线自动泊入，轻松到位",
     aScore: 1
   },
   {
     dim: "仪式感", dimEn: "ritual",
-    prompt: "描述静谧座舱：",
+    prompt: "描述车内静谧：",
     a: "关上车门的瞬间，喧嚣被隔绝在外，属于你的世界启幕",
-    b: "隔音真的好，关上门外面声音基本听不到",
+    b: "关上车门那一刻起，车内就是你的安静空间",
     aScore: 1
   },
   {
     dim: "仪式感", dimEn: "ritual",
     prompt: "描述座椅通风：",
     a: "盛夏落座，凉意自座椅缓缓升起，从容不迫",
-    b: "座椅通风夏天特别实用，一上车就凉快",
+    b: "夏天上车秒开通风，凉感立刻到位不用等",
     aScore: 1
   },
 
   // ===== 维度7：文化语感 (5题) =====
+  // A文人/古典气质，B当代/利落气质，两边都有质感
   {
     dim: "文化语感", dimEn: "culture",
     prompt: "描述紫色车漆：",
-    a: "电御紫——日光下沉稳内敛，夜色中暗自张扬",
-    b: "电御紫这颜色很绝，白天高级晚上拉风，太上镜了",
-    aScore: 1 // a=文人气质
+    a: "电御紫——沉稳而不沉闷，张扬而不跋扈",
+    b: "电御紫——高级感和运动感，一个颜色全拿住了",
+    aScore: 1
   },
   {
     dim: "文化语感", dimEn: "culture",
     prompt: "春日出行文案：",
     a: "春水初生，春林初盛。此刻出发，恰逢其时。",
-    b: "春天来了必须出去浪！这个周末安排一趟公路旅行吧",
+    b: "最好的春光不等人。趁周末，出发就对了。",
     aScore: 1
   },
   {
     dim: "文化语感", dimEn: "culture",
     prompt: "描述车身线条：",
     a: "一笔勾勒，锋芒与克制并存",
-    b: "线条感拉满，运动风和高级感都拿捏住了",
+    b: "一条线拉到底，运动感和高级感刚好平衡",
     aScore: 1
   },
   {
     dim: "文化语感", dimEn: "culture",
     prompt: "年度感恩文案：",
     a: "人生得「奕」须尽欢。感恩与每位车主的相遇。",
-    b: "感谢所有车主的支持！新的一年我们继续冲！",
+    b: "这一年有你们同行，每一程都值得。感恩所有奕家人。",
     aScore: 1
   },
   {
     dim: "文化语感", dimEn: "culture",
     prompt: "描述夜间行车：",
     a: "长夜有光相伴，前路自有方向",
-    b: "大灯照射范围很远，晚上开车视野很好，安全感十足",
+    b: "夜再深，灯光到位，心里就踏实",
     aScore: 1
   }
 ];
 
 // Dimension metadata
 const dimensions = {
-  poetry:  { name: "诗意度", leftLabel: "直白表达", rightLabel: "意象隐喻" },
-  rhythm:  { name: "句式节奏", leftLabel: "长句完整", rightLabel: "短句利落" },
-  emotion: { name: "情绪浓度", leftLabel: "丰沛铺陈", rightLabel: "克制留白" },
-  brand:   { name: "品牌融入", leftLabel: "显性露出", rightLabel: "隐性收尾" },
-  tech:    { name: "技术表达", leftLabel: "参数陈述", rightLabel: "感知翻译" },
-  ritual:  { name: "仪式感", leftLabel: "日常亲切", rightLabel: "仪式庄重" },
-  culture: { name: "文化语感", leftLabel: "潮流口语", rightLabel: "文人气质" }
+  poetry:  { name: "诗意度", leftLabel: "精炼直接", rightLabel: "意象隐喻" },
+  rhythm:  { name: "句式节奏", leftLabel: "流畅完整", rightLabel: "短句切分" },
+  emotion: { name: "情绪浓度", leftLabel: "适度展开", rightLabel: "极致留白" },
+  brand:   { name: "品牌融入", leftLabel: "自然前置", rightLabel: "场景优先" },
+  tech:    { name: "技术表达", leftLabel: "数据+场景", rightLabel: "纯感知翻译" },
+  ritual:  { name: "仪式感", leftLabel: "轻盈当代", rightLabel: "庄重精致" },
+  culture: { name: "文化语感", leftLabel: "当代利落", rightLabel: "文人古典" }
 };
 
 let currentIdx = 0;
@@ -763,6 +771,7 @@ function showQuestion(idx) {
   const q = questions[idx];
   document.getElementById('qDimension').textContent = q.dim;
   document.getElementById('qNumber').textContent = `第 ${idx + 1} 题 / 共 ${questions.length} 题`;
+  document.getElementById('qPrompt').textContent = q.prompt;
 
   // Randomly swap A/B display to avoid position bias
   const swap = Math.random() > 0.5;
@@ -791,7 +800,6 @@ function nextQuestion() {
 
   const q = questions[currentIdx];
   const swapped = q._swapped;
-  // Determine if user chose the "a" option (high score)
   let choseA;
   if (!swapped) {
     choseA = currentChoice === 'A';
@@ -824,11 +832,9 @@ function showResult() {
   document.getElementById('questionArea').style.display = 'none';
   document.getElementById('resultArea').style.display = 'block';
 
-  // Show user info in subtitle
   document.querySelector('.result-subtitle').textContent =
     `${userInfo.name}（${userInfo.role}）· 东风奕派文案风格偏好报告`;
 
-  // Calculate scores per dimension (0-5 scale, normalize to 0-10)
   const scores = {};
   const dimKeys = Object.keys(dimensions);
   dimKeys.forEach(k => { scores[k] = 0; });
@@ -837,12 +843,10 @@ function showResult() {
     scores[a.dim] += a.score;
   });
 
-  // Normalize to 0-10 (each dimension has 5 questions, max score 5)
   dimKeys.forEach(k => {
     scores[k] = Math.round((scores[k] / 5) * 10);
   });
 
-  // Store for copy function
   window._resultScores = scores;
 
   drawRadar(scores);
@@ -861,7 +865,6 @@ function drawRadar(scores) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Draw grid circles
   for (let i = 1; i <= 5; i++) {
     ctx.beginPath();
     const gr = (r / 5) * i;
@@ -877,7 +880,6 @@ function drawRadar(scores) {
     ctx.stroke();
   }
 
-  // Draw axes
   for (let i = 0; i < n; i++) {
     const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
     ctx.beginPath();
@@ -888,7 +890,6 @@ function drawRadar(scores) {
     ctx.stroke();
   }
 
-  // Draw labels
   ctx.font = '22px PingFang SC, sans-serif';
   ctx.fillStyle = '#4a5568';
   ctx.textAlign = 'center';
@@ -900,7 +901,6 @@ function drawRadar(scores) {
     ctx.fillText(dimensions[dimKeys[i]].name, lx, ly);
   }
 
-  // Draw data polygon
   ctx.beginPath();
   for (let i = 0; i <= n; i++) {
     const idx = i % n;
@@ -917,7 +917,6 @@ function drawRadar(scores) {
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Draw data points
   for (let i = 0; i < n; i++) {
     const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
     const val = scores[dimKeys[i]] / 10;
@@ -940,9 +939,9 @@ function renderDimResults(scores) {
     const s = scores[k];
     let desc = '';
     if (s >= 8) desc = `强烈偏好「${d.rightLabel}」风格`;
-    else if (s >= 6) desc = `偏好「${d.rightLabel}」，但可接受适度「${d.leftLabel}」`;
-    else if (s >= 4) desc = `两种风格均可接受，无明显偏好`;
-    else if (s >= 2) desc = `偏好「${d.leftLabel}」，但可接受适度「${d.rightLabel}」`;
+    else if (s >= 6) desc = `偏好「${d.rightLabel}」，但可接受「${d.leftLabel}」`;
+    else if (s >= 4) desc = `两种风格均可接受，视场景灵活切换`;
+    else if (s >= 2) desc = `偏好「${d.leftLabel}」，但可接受「${d.rightLabel}」`;
     else desc = `强烈偏好「${d.leftLabel}」风格`;
 
     html += `
@@ -970,22 +969,21 @@ function renderConclusion(scores) {
 
   let style = '';
   if (avg >= 7) {
-    style = '整体偏好「高质感文人调性」——意象丰富、克制留白、仪式感强、品牌隐性植入。文案应以画面感和情绪留白为核心，品牌信息后置，避免直白口语和参数堆砌。';
+    style = '整体偏好「文人质感型」——意象丰富、留白克制、仪式感强、品牌隐性植入。文案应以画面感和情绪留白为核心，品牌信息后置，技术用感知语言翻译。';
   } else if (avg >= 5) {
-    style = '整体偏好「优雅均衡调性」——在诗意与直白之间取中间值，既有画面感又不失清晰表达。文案可使用适度隐喻，但核心信息需一次读懂，品牌露出自然不刻意。';
+    style = '整体偏好「优雅均衡型」——在意象与清晰之间取平衡，既有画面感又保证信息到达。文案可使用适度隐喻，核心信息需一次读懂，品牌露出自然不刻意。';
   } else {
-    style = '整体偏好「清晰直给调性」——表达直白、节奏明快、信息优先。文案应以用户语感为主，数据清晰呈现，避免过度修辞和意象化表达。';
+    style = '整体偏好「当代清晰型」——精炼利落、节奏明快、信息直达。文案以当代语感为主，数据结合场景呈现，品牌可自然前置，不过度修辞。';
   }
 
-  // Add specific highlights
   const high = dimKeys.filter(k => scores[k] >= 8).map(k => dimensions[k].name);
   const low = dimKeys.filter(k => scores[k] <= 2).map(k => dimensions[k].name);
 
   if (high.length > 0) {
-    style += `\n\n特别突出的偏好：${high.join('、')}维度得分极高，应作为文案风格的核心锚点。`;
+    style += `\n\n核心锚点：${high.join('、')}维度得分突出，应作为文案风格的优先保障。`;
   }
   if (low.length > 0) {
-    style += `\n\n需要注意：${low.join('、')}维度得分极低，说明该方向的表达可能引起反感，应明确规避。`;
+    style += `\n\n明确偏好：${low.join('、')}维度偏向左侧风格，文案应优先采用该方向的表达。`;
   }
 
   document.getElementById('conclusionText').textContent = style;
@@ -1000,7 +998,7 @@ function copyResult() {
   text += `日期：${new Date().toLocaleDateString('zh-CN')}\n\n`;
   text += `━━ 7维度得分 ━━\n`;
   dimKeys.forEach(k => {
-    text += `${dimensions[k].name}：${scores[k]}/10\n`;
+    text += `${dimensions[k].name}：${scores[k]}/10（${dimensions[k].leftLabel} ← → ${dimensions[k].rightLabel}）\n`;
   });
   const avg = Math.round(dimKeys.reduce((s, k) => s + scores[k], 0) / dimKeys.length * 10) / 10;
   text += `\n综合均分：${avg}/10\n\n`;
