@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文案调性标定 - 东风奕派</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  background: #f5f6f8;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Landing */
+.landing {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.landing h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.landing .subtitle {
+  font-size: 15px;
+  color: #5a6278;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.landing .info {
+  font-size: 13px;
+  color: #8a9ab5;
+  margin-bottom: 40px;
+}
+
+.btn-start {
+  display: inline-block;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  padding: 14px 48px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.btn-start:hover { transform: scale(1.03); }
+.btn-start:active { transform: scale(0.98); }
+
+/* Identity form */
+.identity-form {
+  margin-bottom: 32px;
+}
+
+.input-name {
+  display: block;
+  width: 240px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  border: 1px solid #d4dae8;
+  border-radius: 8px;
+  font-size: 15px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-name:focus {
+  border-color: #4a7dff;
+}
+
+.role-select {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.role-option {
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.role-option input[type="radio"] {
+  accent-color: #1a1a2e;
+}
+
+/* Progress */
+.progress-bar {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e8e8ec;
+  z-index: 100;
+  display: none;
+}
+
+.progress-track {
+  height: 4px;
+  background: #e8e8ec;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #1a1a2e;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #8a9ab5;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Question card */
+.question-area {
+  display: none;
+  padding: 40px 0;
+}
+
+.q-dimension {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #7a8aaa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.q-number {
+  font-size: 13px;
+  color: #aab5c8;
+  margin-bottom: 24px;
+}
+
+.q-prompt {
+  font-size: 15px;
+  color: #4a5568;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.choice-card {
+  background: #fff;
+  border: 2px solid #e8e8ec;
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.choice-card:hover {
+  border-color: #b8c4d8;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.choice-card.selected {
+  border-color: #1a1a2e;
+  background: #f8f9ff;
+}
+
+.choice-label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8a9ab5;
+  letter-spacing: 1px;
+}
+
+.choice-text {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #1a1a2e;
+  padding-top: 8px;
+}
+
+.btn-next {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.btn-next.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.btn-next.active:hover {
+  background: #2a2a4e;
+}
+
+/* Result page */
+.result-area {
+  display: none;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.result-area h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.result-subtitle {
+  font-size: 14px;
+  color: #5a6278;
+  margin-bottom: 40px;
+}
+
+.radar-container {
+  width: 320px;
+  height: 320px;
+  margin: 0 auto 40px;
+}
+
+.radar-container canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.dimension-results {
+  text-align: left;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 32px;
+}
+
+.dim-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f4;
+}
+
+.dim-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.dim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dim-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dim-score {
+  font-size: 13px;
+  color: #4a7dff;
+  font-weight: 600;
+}
+
+.dim-bar {
+  height: 6px;
+  background: #e8e8ec;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.dim-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a7dff, #7b5aff);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.dim-desc {
+  font-size: 12px;
+  color: #6a7a8a;
+  line-height: 1.6;
+}
+
+.dim-spectrum {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #aab5c8;
+  margin-top: 4px;
+}
+
+.conclusion-box {
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.conclusion-box h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #7ecfff;
+}
+
+.conclusion-box p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #d4dae8;
+}
+
+.btn-restart {
+  display: inline-block;
+  padding: 12px 32px;
+  border: 1px solid #d4dae8;
+  background: transparent;
+  color: #5a6278;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.btn-copy {
+  display: inline-block;
+  padding: 12px 32px;
+  border: none;
+  background: #4a7dff;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-copy:hover { background: #3a6ae8; }
+
+.copy-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #22c55e;
+  min-height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .container { padding: 12px; }
+  .landing { padding: 60px 16px; }
+  .landing h1 { font-size: 22px; }
+  .choice-text { font-size: 15px; }
+  .radar-container { width: 280px; height: 280px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-text">
+    <span id="progressLabel">1 / 35</span>
+    <span id="progressDim"></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Landing -->
+  <div class="landing" id="landing">
+    <h1>文案调性标定</h1>
+    <p class="subtitle">
+      每道题有两句文案，请选择您更喜欢的那一句。<br>
+      没有对错之分，只是风格偏好。
+    </p>
+    <p class="info">共35题 / 约5分钟 / 做完自动生成调性报告</p>
+    <div class="identity-form">
+      <input type="text" id="userName" class="input-name" placeholder="您的姓名" />
+      <div class="role-select">
+        <label class="role-option">
+          <input type="radio" name="userRole" value="客户方" checked />
+          <span>客户方</span>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="userRole" value="服务团队" />
+          <span>服务团队</span>
+        </label>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">开始标定</button>
+  </div>
+
+  <!-- Question area -->
+  <div class="question-area" id="questionArea">
+    <div class="q-dimension" id="qDimension"></div>
+    <div class="q-number" id="qNumber"></div>
+    <p class="q-prompt" id="qPrompt">选择您更偏好的表达方式：</p>
+    <div class="choices">
+      <div class="choice-card" id="choiceA" onclick="selectChoice('A')">
+        <div class="choice-label">A</div>
+        <div class="choice-text" id="textA"></div>
+      </div>
+      <div class="choice-card" id="choiceB" onclick="selectChoice('B')">
+        <div class="choice-label">B</div>
+        <div class="choice-text" id="textB"></div>
+      </div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">下一题</button>
+  </div>
+
+  <!-- Result area -->
+  <div class="result-area" id="resultArea">
+    <h2>您的调性指纹</h2>
+    <p class="result-subtitle">东风奕派 · 文案风格偏好报告</p>
+    <div class="radar-container">
+      <canvas id="radarCanvas" width="640" height="640"></canvas>
+    </div>
+    <div class="dimension-results" id="dimResults"></div>
+    <div class="conclusion-box" id="conclusionBox">
+      <h3>整体调性结论</h3>
+      <p id="conclusionText"></p>
+    </div>
+    <button class="btn-restart" onclick="location.reload()">重新测试</button>
+    <button class="btn-copy" id="btnCopy" onclick="copyResult()">复制结果文本</button>
+    <p class="copy-hint" id="copyHint"></p>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  // ===== 维度1：诗意度 (5题) =====
+  {
+    dim: "诗意度", dimEn: "poetry",
+    prompt: "描述尾灯效果，您更喜欢哪种表达？",
+    a: "贯穿尾灯一线点亮，背影从容不回头",
+    b: "贯穿式尾灯点亮效果特别好看，回头率超高",
+    aScore: 1 // a=诗意高
+  },
+  {
+    dim: "诗意度", dimEn: "poetry",
+    prompt: "描述车色在不同光线下的变化：",
+    a: "日光下沉稳内敛，夜色中暗自张扬",
+    b: "白天看起来很沉稳，晚上在灯光下又很有辨识度",
+    aScore: 1
+  },
+  {
+    dim: "诗意度", dimEn: "poetry",
+    prompt: "描述驾驶起步的感觉：",
+    a: "轻踩油门，城市在后视镜中渐渐退场",
+    b: "起步很轻快，加速很顺滑，城市通勤毫无压力",
+    aScore: 1
+  },
+  {
+    dim: "诗意度", dimEn: "poetry",
+    prompt: "描述充电速度：",
+    a: "一杯咖啡的耐心，换来满格的从容",
+    b: "喝杯咖啡的功夫电就充好了，特别方便",
+    aScore: 1
+  },
+  {
+    dim: "诗意度", dimEn: "poetry",
+    prompt: "描述全景天幕的体验：",
+    a: "头顶是整片天空的馈赠",
+    b: "超大全景天幕，视野特别开阔通透",
+    aScore: 1
+  },
+
+  // ===== 维度2：句式节奏 (5题) =====
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述车身姿态，您更喜欢哪种节奏？",
+    a: "低趴。溜背。俯冲。猎装轿跑的全部想象。",
+    b: "低趴的车身搭配溜背造型和俯冲式前脸，完美诠释猎装轿跑的设计理念",
+    aScore: 1 // a=短句利落
+  },
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述内饰氛围灯：",
+    a: "64色可选。音乐律动。氛围，由你定义。",
+    b: "64色音乐律动氛围灯，可以根据你的喜好自由定义车内氛围",
+    aScore: 1
+  },
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述智能泊车：",
+    a: "记住路线。识别障碍。自主泊入。全程无需接管。",
+    b: "系统记住停车路线后能自动识别障碍物并完成泊车，全程不需要驾驶员介入",
+    aScore: 1
+  },
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述续航能力：",
+    a: "1308km综合续航，从北京到上海，中间不用停。",
+    b: "综合续航达到1308公里，足以满足北京到上海的长途出行需求而无需中途补能",
+    aScore: 1
+  },
+  {
+    dim: "句式节奏", dimEn: "rhythm",
+    prompt: "描述50:50轴荷比：",
+    a: "前后50:50。重心刚好。弯道，稳了。",
+    b: "前后50:50的黄金轴荷比让车辆重心分配恰到好处，过弯时更加稳定从容",
+    aScore: 1
+  },
+
+  // ===== 维度3：情绪浓度 (5题) =====
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "描述新车出场气势：",
+    a: "不必启程，气场已然抵达。",
+    b: "还没开动呢，这气场就已经让周围人都在看了，真的太有存在感",
+    aScore: 1 // a=克制
+  },
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "描述投影灯开门效果：",
+    a: "蝶影光毯，开门即铺就仪式感。",
+    b: "打开车门的一瞬间，蝶影光毯投射在地面上，仪式感瞬间拉满，每次下车都像走红毯",
+    aScore: 1
+  },
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "描述安静驾驶体验：",
+    a: "关上门，世界安静了。",
+    b: "关上车门后隔音效果非常好，外面的噪音全都隔绝了，车内安静得像是另一个世界",
+    aScore: 1
+  },
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "年底销量总结：",
+    a: "275,752辆。感恩同行。",
+    b: "全年累计销量达到275,752辆！感谢每一位用户的选择与信任，这份成绩属于我们每一个人",
+    aScore: 1
+  },
+  {
+    dim: "情绪浓度", dimEn: "emotion",
+    prompt: "描述长途自驾归来：",
+    a: "3000公里，平安归来即是答案。",
+    b: "开了3000公里回来，一路上动力充沛、底盘扎实，全家人都觉得这趟旅程特别安心",
+    aScore: 1
+  },
+
+  // ===== 维度4：品牌融入 (5题) =====
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "一篇产品文案的开头，您倾向哪种方式？",
+    a: "五月的光线，是一年中最适合看车的角度。不刺眼，不暗沉——",
+    b: "东风奕派007闪现版，以猎装轿跑姿态定义初夏出行新美学——",
+    aScore: 1 // a=隐性
+  },
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "文案结尾怎么收：",
+    a: "初夏最好的出场方式——不解释，只「闪现」。",
+    b: "东风奕派007闪现版，闪耀登场，期待您的莅临品鉴。",
+    aScore: 1
+  },
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "描述一次品牌合作：",
+    a: "在浩瀚雪原中，寻回出发的勇气。新年第一程，从阿勒泰启程。",
+    b: "东风奕派携手中国国家地理，在阿勒泰开启新年第一程品牌体验之旅。",
+    aScore: 1
+  },
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "节日海报文案：",
+    a: "春分至，万物生。愿你心中自有一片旷野。",
+    b: "春分时节，东风奕派祝您万事皆可期，一路生花。",
+    aScore: 1
+  },
+  {
+    dim: "品牌融入", dimEn: "brand",
+    prompt: "用户故事收尾：",
+    a: "人生这一路，有欢喜、有风雨。要尽兴而活。",
+    b: "感恩与每一位奕家人的相遇，东风奕派陪伴每一种方向。",
+    aScore: 1
+  },
+
+  // ===== 维度5：技术表达 (5题) =====
+  {
+    dim: "技术表达", dimEn: "tech",
+    prompt: "描述快充能力：",
+    a: "喝杯咖啡的功夫，电量就能快速回血",
+    b: "4C超充，10%-80%充电仅需15分钟",
+    aScore: 1 // a=感知翻译
+  },
+  {
+    dim: "技术表达", dimEn: "tech",
+    prompt: "描述大电池优势：",
+    a: "一周充一次就够，不让充电成为出行的阻碍",
+    b: "35.03kWh大电池，CLTC纯电续航200km",
+    aScore: 1
+  },
+  {
+    dim: "技术表达", dimEn: "tech",
+    prompt: "描述辅助驾驶：",
+    a: "高速长途，它替你盯着前方，你负责放松",
+    b: "天元T200辅助驾驶系统，覆盖高速/城区/泊车全场景",
+    aScore: 1
+  },
+  {
+    dim: "技术表达", dimEn: "tech",
+    prompt: "描述底盘调校：",
+    a: "过弯不慌，颠簸不散，底盘给你的安全感是无声的",
+    b: "黄金轴荷比50:50，前双叉臂+后五连杆独立悬架",
+    aScore: 1
+  },
+  {
+    dim: "技术表达", dimEn: "tech",
+    prompt: "描述爆胎安全技术：",
+    a: "高速爆胎，大多数人只有0.5秒反应时间。它替你撑住了。",
+    b: "爆胎稳行系统，120km/h爆胎后可自动控制车辆平稳减速停车",
+    aScore: 1
+  },
+
+  // ===== 维度6：仪式感 (5题) =====
+  {
+    dim: "仪式感", dimEn: "ritual",
+    prompt: "描述开门仪式：",
+    a: "蝶影光毯铺陈，每一次抵达都值得被优雅对待",
+    b: "开门地上有投影灯，下车的时候挺有面子的",
+    aScore: 1 // a=仪式
+  },
+  {
+    dim: "仪式感", dimEn: "ritual",
+    prompt: "描述前大灯设计：",
+    a: "104颗LED发光单元组成高透视\"双眸\"，灵动又夺目",
+    b: "前大灯很亮，晚上照路效果不错，造型也好看",
+    aScore: 1
+  },
+  {
+    dim: "仪式感", dimEn: "ritual",
+    prompt: "描述记忆泊车完成：",
+    a: "轻触一键，车辆循迹而入，优雅停进属于你的位置",
+    b: "按一下就自动停好了，省得自己倒来倒去的",
+    aScore: 1
+  },
+  {
+    dim: "仪式感", dimEn: "ritual",
+    prompt: "描述静谧座舱：",
+    a: "关上车门的瞬间，喧嚣被隔绝在外，属于你的世界启幕",
+    b: "隔音真的好，关上门外面声音基本听不到",
+    aScore: 1
+  },
+  {
+    dim: "仪式感", dimEn: "ritual",
+    prompt: "描述座椅通风：",
+    a: "盛夏落座，凉意自座椅缓缓升起，从容不迫",
+    b: "座椅通风夏天特别实用，一上车就凉快",
+    aScore: 1
+  },
+
+  // ===== 维度7：文化语感 (5题) =====
+  {
+    dim: "文化语感", dimEn: "culture",
+    prompt: "描述紫色车漆：",
+    a: "电御紫——日光下沉稳内敛，夜色中暗自张扬",
+    b: "电御紫这颜色很绝，白天高级晚上拉风，太上镜了",
+    aScore: 1 // a=文人气质
+  },
+  {
+    dim: "文化语感", dimEn: "culture",
+    prompt: "春日出行文案：",
+    a: "春水初生，春林初盛。此刻出发，恰逢其时。",
+    b: "春天来了必须出去浪！这个周末安排一趟公路旅行吧",
+    aScore: 1
+  },
+  {
+    dim: "文化语感", dimEn: "culture",
+    prompt: "描述车身线条：",
+    a: "一笔勾勒，锋芒与克制并存",
+    b: "线条感拉满，运动风和高级感都拿捏住了",
+    aScore: 1
+  },
+  {
+    dim: "文化语感", dimEn: "culture",
+    prompt: "年度感恩文案：",
+    a: "人生得「奕」须尽欢。感恩与每位车主的相遇。",
+    b: "感谢所有车主的支持！新的一年我们继续冲！",
+    aScore: 1
+  },
+  {
+    dim: "文化语感", dimEn: "culture",
+    prompt: "描述夜间行车：",
+    a: "长夜有光相伴，前路自有方向",
+    b: "大灯照射范围很远，晚上开车视野很好，安全感十足",
+    aScore: 1
+  }
+];
+
+// Dimension metadata
+const dimensions = {
+  poetry:  { name: "诗意度", leftLabel: "直白表达", rightLabel: "意象隐喻" },
+  rhythm:  { name: "句式节奏", leftLabel: "长句完整", rightLabel: "短句利落" },
+  emotion: { name: "情绪浓度", leftLabel: "丰沛铺陈", rightLabel: "克制留白" },
+  brand:   { name: "品牌融入", leftLabel: "显性露出", rightLabel: "隐性收尾" },
+  tech:    { name: "技术表达", leftLabel: "参数陈述", rightLabel: "感知翻译" },
+  ritual:  { name: "仪式感", leftLabel: "日常亲切", rightLabel: "仪式庄重" },
+  culture: { name: "文化语感", leftLabel: "潮流口语", rightLabel: "文人气质" }
+};
+
+let currentIdx = 0;
+let answers = [];
+let currentChoice = null;
+let userInfo = { name: '', role: '' };
+
+function startQuiz() {
+  const name = document.getElementById('userName').value.trim();
+  const role = document.querySelector('input[name="userRole"]:checked').value;
+  if (!name) {
+    document.getElementById('userName').style.borderColor = '#ef4444';
+    document.getElementById('userName').setAttribute('placeholder', '请填写姓名后开始');
+    return;
+  }
+  userInfo = { name, role };
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'block';
+  document.getElementById('questionArea').style.display = 'block';
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  const q = questions[idx];
+  document.getElementById('qDimension').textContent = q.dim;
+  document.getElementById('qNumber').textContent = `第 ${idx + 1} 题 / 共 ${questions.length} 题`;
+
+  // Randomly swap A/B display to avoid position bias
+  const swap = Math.random() > 0.5;
+  document.getElementById('textA').textContent = swap ? q.b : q.a;
+  document.getElementById('textB').textContent = swap ? q.a : q.b;
+  questions[idx]._swapped = swap;
+
+  document.getElementById('choiceA').classList.remove('selected');
+  document.getElementById('choiceB').classList.remove('selected');
+  document.getElementById('btnNext').classList.remove('active');
+  document.getElementById('btnNext').textContent = idx === questions.length - 1 ? '查看结果' : '下一题';
+
+  currentChoice = null;
+  updateProgress(idx);
+}
+
+function selectChoice(choice) {
+  currentChoice = choice;
+  document.getElementById('choiceA').classList.toggle('selected', choice === 'A');
+  document.getElementById('choiceB').classList.toggle('selected', choice === 'B');
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function nextQuestion() {
+  if (!currentChoice) return;
+
+  const q = questions[currentIdx];
+  const swapped = q._swapped;
+  // Determine if user chose the "a" option (high score)
+  let choseA;
+  if (!swapped) {
+    choseA = currentChoice === 'A';
+  } else {
+    choseA = currentChoice === 'B';
+  }
+
+  answers.push({
+    dim: q.dimEn,
+    score: choseA ? q.aScore : 0
+  });
+
+  currentIdx++;
+  if (currentIdx < questions.length) {
+    showQuestion(currentIdx);
+  } else {
+    showResult();
+  }
+}
+
+function updateProgress(idx) {
+  const pct = ((idx) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${idx + 1} / ${questions.length}`;
+  document.getElementById('progressDim').textContent = questions[idx].dim;
+}
+
+function showResult() {
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('questionArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'block';
+
+  // Show user info in subtitle
+  document.querySelector('.result-subtitle').textContent =
+    `${userInfo.name}（${userInfo.role}）· 东风奕派文案风格偏好报告`;
+
+  // Calculate scores per dimension (0-5 scale, normalize to 0-10)
+  const scores = {};
+  const dimKeys = Object.keys(dimensions);
+  dimKeys.forEach(k => { scores[k] = 0; });
+
+  answers.forEach(a => {
+    scores[a.dim] += a.score;
+  });
+
+  // Normalize to 0-10 (each dimension has 5 questions, max score 5)
+  dimKeys.forEach(k => {
+    scores[k] = Math.round((scores[k] / 5) * 10);
+  });
+
+  // Store for copy function
+  window._resultScores = scores;
+
+  drawRadar(scores);
+  renderDimResults(scores);
+  renderConclusion(scores);
+}
+
+function drawRadar(scores) {
+  const canvas = document.getElementById('radarCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const r = 240;
+  const dimKeys = Object.keys(dimensions);
+  const n = dimKeys.length;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw grid circles
+  for (let i = 1; i <= 5; i++) {
+    ctx.beginPath();
+    const gr = (r / 5) * i;
+    for (let j = 0; j <= n; j++) {
+      const angle = (Math.PI * 2 / n) * j - Math.PI / 2;
+      const x = cx + gr * Math.cos(angle);
+      const y = cy + gr * Math.sin(angle);
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(200, 210, 225, 0.4)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw axes
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(200, 210, 225, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw labels
+  ctx.font = '22px PingFang SC, sans-serif';
+  ctx.fillStyle = '#4a5568';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    const lx = cx + (r + 40) * Math.cos(angle);
+    const ly = cy + (r + 40) * Math.sin(angle);
+    ctx.fillText(dimensions[dimKeys[i]].name, lx, ly);
+  }
+
+  // Draw data polygon
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const angle = (Math.PI * 2 / n) * idx - Math.PI / 2;
+    const val = scores[dimKeys[idx]] / 10;
+    const x = cx + r * val * Math.cos(angle);
+    const y = cy + r * val * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.fillStyle = 'rgba(74, 125, 255, 0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#4a7dff';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Draw data points
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    const val = scores[dimKeys[i]] / 10;
+    const x = cx + r * val * Math.cos(angle);
+    const y = cy + r * val * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#4a7dff';
+    ctx.fill();
+  }
+}
+
+function renderDimResults(scores) {
+  const container = document.getElementById('dimResults');
+  const dimKeys = Object.keys(dimensions);
+  let html = '';
+
+  dimKeys.forEach(k => {
+    const d = dimensions[k];
+    const s = scores[k];
+    let desc = '';
+    if (s >= 8) desc = `强烈偏好「${d.rightLabel}」风格`;
+    else if (s >= 6) desc = `偏好「${d.rightLabel}」，但可接受适度「${d.leftLabel}」`;
+    else if (s >= 4) desc = `两种风格均可接受，无明显偏好`;
+    else if (s >= 2) desc = `偏好「${d.leftLabel}」，但可接受适度「${d.rightLabel}」`;
+    else desc = `强烈偏好「${d.leftLabel}」风格`;
+
+    html += `
+      <div class="dim-item">
+        <div class="dim-header">
+          <span class="dim-name">${d.name}</span>
+          <span class="dim-score">${s}/10</span>
+        </div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:${s * 10}%"></div></div>
+        <div class="dim-spectrum">
+          <span>${d.leftLabel}</span>
+          <span>${d.rightLabel}</span>
+        </div>
+        <div class="dim-desc">${desc}</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderConclusion(scores) {
+  const dimKeys = Object.keys(dimensions);
+  const avg = dimKeys.reduce((sum, k) => sum + scores[k], 0) / dimKeys.length;
+
+  let style = '';
+  if (avg >= 7) {
+    style = '整体偏好「高质感文人调性」——意象丰富、克制留白、仪式感强、品牌隐性植入。文案应以画面感和情绪留白为核心，品牌信息后置，避免直白口语和参数堆砌。';
+  } else if (avg >= 5) {
+    style = '整体偏好「优雅均衡调性」——在诗意与直白之间取中间值，既有画面感又不失清晰表达。文案可使用适度隐喻，但核心信息需一次读懂，品牌露出自然不刻意。';
+  } else {
+    style = '整体偏好「清晰直给调性」——表达直白、节奏明快、信息优先。文案应以用户语感为主，数据清晰呈现，避免过度修辞和意象化表达。';
+  }
+
+  // Add specific highlights
+  const high = dimKeys.filter(k => scores[k] >= 8).map(k => dimensions[k].name);
+  const low = dimKeys.filter(k => scores[k] <= 2).map(k => dimensions[k].name);
+
+  if (high.length > 0) {
+    style += `\n\n特别突出的偏好：${high.join('、')}维度得分极高，应作为文案风格的核心锚点。`;
+  }
+  if (low.length > 0) {
+    style += `\n\n需要注意：${low.join('、')}维度得分极低，说明该方向的表达可能引起反感，应明确规避。`;
+  }
+
+  document.getElementById('conclusionText').textContent = style;
+}
+
+function copyResult() {
+  const scores = window._resultScores;
+  const dimKeys = Object.keys(dimensions);
+  let text = `【文案调性标定结果】\n`;
+  text += `姓名：${userInfo.name}\n`;
+  text += `身份：${userInfo.role}\n`;
+  text += `日期：${new Date().toLocaleDateString('zh-CN')}\n\n`;
+  text += `━━ 7维度得分 ━━\n`;
+  dimKeys.forEach(k => {
+    text += `${dimensions[k].name}：${scores[k]}/10\n`;
+  });
+  const avg = Math.round(dimKeys.reduce((s, k) => s + scores[k], 0) / dimKeys.length * 10) / 10;
+  text += `\n综合均分：${avg}/10\n\n`;
+  text += `━━ 调性结论 ━━\n`;
+  text += document.getElementById('conclusionText').textContent;
+
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copyHint').textContent = '已复制到剪贴板，可直接粘贴发送';
+    setTimeout(() => {
+      document.getElementById('copyHint').textContent = '';
+    }, 3000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('copyHint').textContent = '已复制到剪贴板';
+  });
+}
+</script>
+
+</body>
+</html>
